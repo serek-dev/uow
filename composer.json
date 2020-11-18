@@ -1,0 +1,34 @@
+{
+    "name": "stwarog/uow",
+    "description": "Generic Unit of Work pattern implementation, usefull to limit DB queries.",
+    "type": "library",
+    "require": {
+        "webmozart/assert": "1.9.1",
+        "myclabs/php-enum": "dev-master",
+        "fuel/orm": "^1.8"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5@dev"
+    },
+    "autoload": {
+        "psr-4": {"Stwarog\\Uow\\": "src/"}
+    },
+    "autoload-dev": {
+        "classmap": [{
+            "Tests\\": "tests/"
+        }]
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Sebastian Twarog",
+            "email": "contact@stwarog.com"
+        }
+    ],
+    "extra": {
+        "installer-paths": {
+            "vendor/{$name}/": ["type:fuel-package"]
+        }
+    },
+    "minimum-stability": "dev"
+}
