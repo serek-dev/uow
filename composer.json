@@ -4,8 +4,9 @@
     "type": "library",
     "require": {
         "webmozart/assert": "1.9.1",
-        "myclabs/php-enum": "dev-master",
-        "fuel/orm": "^1.8"
+        "myclabs/php-enum": "1.7.7",
+        "fuel/orm": "^1.8",
+        "fuel/core": "^1.8"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5@dev"
@@ -30,5 +31,5 @@
             "vendor/{$name}/": ["type:fuel-package"]
         }
     },
-    "minimum-stability": "dev"
+    "minimum-stability": "stable"
 }
