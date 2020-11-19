@@ -3,7 +3,6 @@
 
 namespace Stwarog\Uow;
 
-
 use Exception;
 
 class EntityManager implements EntityManagerInterface
