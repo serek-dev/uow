@@ -20,11 +20,7 @@ class FuelModelAdapter implements EntityInterface
 
     public function isDirty(): bool
     {
-        $data     = ReflectionHelper::getValue($this->model, '_data');
-        $original = ReflectionHelper::getValue($this->model, '_original');
-
-        # todo check relation, original method from ORM is not working due my customizations
-        return $data !== $original;
+        return !empty($this->getDifferences());
     }
 
     public function table(): string
@@ -35,11 +31,12 @@ class FuelModelAdapter implements EntityInterface
     public function columns(): array
     {
         if ($this->isNew()) {
-            return ReflectionHelper::getValue($this->model, '_properties');
-        }
-        [$old, $new] = $this->model->get_diff();
+            $data = ReflectionHelper::getValue($this->model, '_data');
 
-        return array_keys($new);
+            return array_keys($data);
+        }
+
+        return array_keys($this->getDifferences());
     }
 
     public function isNew(): bool
@@ -54,10 +51,16 @@ class FuelModelAdapter implements EntityInterface
 
             return array_values($data);
         }
-        [$old, $new] = $this->model->get_diff();
 
-        return array_values($new);
+        return array_values($this->getDifferences());
+    }
 
+    private function getDifferences(): array
+    {
+        $data     = ReflectionHelper::getValue($this->model, '_data');
+        $original = ReflectionHelper::getValue($this->model, '_original');
+
+        return array_diff($data, $original);
     }
 
     public function idValue(): string
