@@ -9,20 +9,26 @@ class EntityManager implements EntityManagerInterface
 {
     /** @var DBConnectionInterface */
     private $db;
-
-    /** @var ChangesBag */
-    private $bag;
+    /** @var UnitOfWork */
+    private $uow;
 
     public function __construct(DBConnectionInterface $db)
     {
         $this->db  = $db;
-        $this->bag = new ChangesBag();
+        $this->uow = new UnitOfWork();
     }
 
     public function persist(EntityInterface $entity): void
     {
         if ($entity->isNew()) {
-            $this->bag->insert($entity);
+
+            if (empty($entity->idValue())) {
+                $entity->generateIdValue($this->db);
+            }
+
+            $this->uow->insert($entity);
+
+//            $this->handleRelations($entity->relations(), $entity);
 
             return;
         }
@@ -31,12 +37,24 @@ class EntityManager implements EntityManagerInterface
             return;
         }
 
-        $this->bag->update($entity);
+        $this->uow->update($entity);
+//        $this->handleRelations($entity->relations());
+    }
+
+    protected function handleRelations(RelationBag $relationBag, ?EntityInterface $parentEntity): void
+    {
+        if ($relationBag->isEmpty() || $relationBag->isDirty() === false) {
+            return;
+        }
+
+        foreach ($relationBag->getData() as $model) {
+            $this->persist($model);
+        }
     }
 
     public function remove(EntityInterface $entity): void
     {
-        $this->bag->delete($entity);
+        $this->uow->delete($entity);
     }
 
     /**
@@ -46,7 +64,7 @@ class EntityManager implements EntityManagerInterface
     {
         $this->db->startTransaction();
         try {
-            $this->db->handleChanges($this->bag);
+            $this->db->handleChanges($this->uow);
         } catch (Exception $e) {
             $this->db->rollbackTransaction();
             throw $e;

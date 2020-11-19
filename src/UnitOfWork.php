@@ -4,7 +4,7 @@
 namespace Stwarog\Uow;
 
 
-class ChangesBag
+class UnitOfWork
 {
     private $data = [];
 
@@ -36,6 +36,7 @@ class ChangesBag
         $columns = $entity->columns();
         $values  = $entity->values();
         $id      = $entity->idValue();
+        $idKey   = $entity->idKey();
 
         $hash = $this->hash(array_combine($columns, $values));
 
@@ -44,7 +45,7 @@ class ChangesBag
 
         $this->data[ActionType::UPDATE][$table][$hash] = [
             'where'   => [
-                ['id', 'IN', $idsAggregate],
+                [$idKey, 'IN', $idsAggregate],
             ],
             'columns' => $columns,
             'values'  => $values,
@@ -65,6 +66,7 @@ class ChangesBag
         $table   = $entity->table();
         $idName  = $entity->idKey();
         $idValue = $entity->idValue();
+        $idKey   = $entity->idKey();
 
         $hash = $this->hash([$idName]);
 
@@ -73,7 +75,7 @@ class ChangesBag
 
         $this->data[ActionType::DELETE][$table][$hash] = [
             'where' => [
-                ['id', 'IN', $idsAggregate],
+                [$idKey, 'IN', $idsAggregate],
             ],
         ];
     }
