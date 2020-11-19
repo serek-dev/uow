@@ -9,7 +9,8 @@
         "fuel/core": "^1.8"
     },
     "require-dev": {
-        "phpunit/phpunit": "^9.5@dev"
+        "phpunit/phpunit": "^9.5@dev",
+        "symfony/var-dumper": "^5.1"
     },
     "autoload": {
         "psr-4": {"Stwarog\\Uow\\": "src/"}
