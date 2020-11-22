@@ -7,9 +7,12 @@ namespace Stwarog\Uow;
 class UnitOfWork
 {
     private $data = [];
+    private $persistedHashes = [];
 
     public function insert(EntityInterface $entity): void
     {
+        $this->mark($entity);
+
         $table   = $entity->table();
         $columns = $entity->columns();
         $values  = $entity->values();
@@ -32,6 +35,8 @@ class UnitOfWork
 
     public function update(EntityInterface $entity): void
     {
+        $this->mark($entity);
+
         $table   = $entity->table();
         $columns = $entity->columns();
         $values  = $entity->values();
@@ -63,6 +68,8 @@ class UnitOfWork
 
     public function delete(EntityInterface $entity)
     {
+        $this->mark($entity);
+
         $table   = $entity->table();
         $idName  = $entity->idKey();
         $idValue = $entity->idValue();
@@ -78,6 +85,21 @@ class UnitOfWork
                 [$idKey, 'IN', $idsAggregate],
             ],
         ];
+    }
+
+    private function mark(EntityInterface $entity): void
+    {
+        $this->persistedHashes[] = $this->objectHash($entity);
+    }
+
+    public function wasPersisted(EntityInterface $entity): bool
+    {
+        return in_array($this->objectHash($entity), $this->persistedHashes);
+    }
+
+    private function objectHash(EntityInterface $entity): string
+    {
+        return spl_object_hash($entity->originalClass());
     }
 
     public function isEmpty(): bool

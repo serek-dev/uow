@@ -12,6 +12,8 @@ class EntityManager implements EntityManagerInterface
     /** @var UnitOfWork */
     private $uow;
 
+    private $skipIdGenerationValue = [];
+
     public function __construct(DBConnectionInterface $db)
     {
         $this->db  = $db;
@@ -32,7 +34,7 @@ class EntityManager implements EntityManagerInterface
                 $entities = $relations->get(RelationType::BELONGS_TO());
                 foreach ($entities as $relatedEntity) {
                     $this->persist($relatedEntity);
-                    $entity->handleBelongsTo('user', $relatedEntity);
+                    $entity->handleBelongsTo($relatedEntity);
                 }
             }
 

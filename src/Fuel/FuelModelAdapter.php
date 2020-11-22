@@ -182,9 +182,9 @@ class FuelModelAdapter implements EntityInterface
         $strategy->handle($this, $db);
     }
 
-    public function originalClassName(): string
+    public function originalClass(): object
     {
-        return get_class($this->model);
+        return $this->model;
     }
 
     public function get(string $propertyName)

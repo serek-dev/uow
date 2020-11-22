@@ -47,7 +47,7 @@ interface EntityInterface
 
     public function setId(string $nextAutoIncrementNo): void;
 
-    public function originalClassName(): string;
+    public function originalClass(): object;
 
     /**
      * Returns value of given property.
