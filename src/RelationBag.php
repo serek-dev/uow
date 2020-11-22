@@ -12,9 +12,9 @@ class RelationBag
 
     private $isDirty = false;
 
-    public function add(EntityInterface $entity): void
+    public function add(string $type, EntityInterface $entity): void
     {
-        $this->data[] = $entity;
+        $this->data[$type][] = $entity;
         if ($entity->isNew() || $entity->isDirty()) {
             $this->isDirty = true;
         }
@@ -30,7 +30,7 @@ class RelationBag
      */
     public function getData(): Generator
     {
-        foreach ($this->data as $model) {
+        foreach ($this->data as $type => $model) {
             yield $model;
         }
     }
@@ -43,5 +43,20 @@ class RelationBag
     public function isDirty(): bool
     {
         return $this->isDirty;
+    }
+
+    public function hasRelations(RelationType $type): bool
+    {
+        return isset($this->data[(string)$type]);
+    }
+
+    /**
+     * @param RelationType $type
+     *
+     * @return array|EntityInterface[]
+     */
+    public function get(RelationType $type): array
+    {
+        return $this->data[(string) $type] ?? [];
     }
 }

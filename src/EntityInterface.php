@@ -4,6 +4,9 @@
 namespace Stwarog\Uow;
 
 
+use InvalidArgumentException;
+use OutOfBoundsException;
+
 interface EntityInterface
 {
     public function isNew(): bool;
@@ -43,4 +46,20 @@ interface EntityInterface
     public function relations(): RelationBag;
 
     public function setId(string $nextAutoIncrementNo): void;
+
+    public function originalClassName(): string;
+
+    /**
+     * Returns value of given property.
+     *
+     * @param string $propertyName
+     *
+     * @return mixed
+     * @throws OutOfBoundsException
+     */
+    public function get(string $propertyName);
+
+    public function set(string $propertyName, $value);
+
+    public function handleBelongsTo(string $field, EntityInterface $related): void;
 }

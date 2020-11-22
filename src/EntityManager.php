@@ -26,9 +26,17 @@ class EntityManager implements EntityManagerInterface
                 $entity->generateIdValue($this->db);
             }
 
-            $this->uow->insert($entity);
+            $relations = $entity->relations();
 
-//            $this->handleRelations($entity->relations(), $entity);
+            if ($relations->hasRelations(RelationType::BELONGS_TO())) {
+                $entities = $relations->get(RelationType::BELONGS_TO());
+                foreach ($entities as $relatedEntity) {
+                    $this->persist($relatedEntity);
+                    $entity->handleBelongsTo('user', $relatedEntity);
+                }
+            }
+
+            $this->uow->insert($entity);
 
             return;
         }
@@ -38,18 +46,6 @@ class EntityManager implements EntityManagerInterface
         }
 
         $this->uow->update($entity);
-//        $this->handleRelations($entity->relations());
-    }
-
-    protected function handleRelations(RelationBag $relationBag, ?EntityInterface $parentEntity): void
-    {
-        if ($relationBag->isEmpty() || $relationBag->isDirty() === false) {
-            return;
-        }
-
-        foreach ($relationBag->getData() as $model) {
-            $this->persist($model);
-        }
     }
 
     public function remove(EntityInterface $entity): void
