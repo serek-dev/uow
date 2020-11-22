@@ -5,8 +5,8 @@ namespace Stwarog\Uow\Core;
 
 
 use Stwarog\Uow\ActionType;
-use Stwarog\Uow\UnitOfWork;
 use Stwarog\Uow\DBConnectionInterface;
+use Stwarog\Uow\UnitOfWork;
 use const PHP_EOL;
 
 abstract class AbstractDBAdapter implements DBConnectionInterface

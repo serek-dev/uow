@@ -12,8 +12,6 @@ class EntityManager implements EntityManagerInterface
     /** @var UnitOfWork */
     private $uow;
 
-    private $skipIdGenerationValue = [];
-
     public function __construct(DBConnectionInterface $db)
     {
         $this->db  = $db;
@@ -22,6 +20,10 @@ class EntityManager implements EntityManagerInterface
 
     public function persist(EntityInterface $entity): void
     {
+        if ($this->uow->wasPersisted($entity)) {
+            return;
+        }
+
         if ($entity->isNew()) {
 
             if (empty($entity->idValue())) {
@@ -30,11 +32,12 @@ class EntityManager implements EntityManagerInterface
 
             $relations = $entity->relations();
 
-            if ($relations->hasRelations(RelationType::BELONGS_TO())) {
-                $entities = $relations->get(RelationType::BELONGS_TO());
-                foreach ($entities as $relatedEntity) {
+            # belongs to
+            if ($relations->isDirty()) {
+                foreach ($relations->toArray() as $field => $relation) {
+                    $relatedEntity = $relation->getObject();
                     $this->persist($relatedEntity);
-                    $entity->handleBelongsTo($relatedEntity);
+                    $entity->set($relation->keyFrom(), $relatedEntity->get($relation->keyTo()));
                 }
             }
 
@@ -68,6 +71,7 @@ class EntityManager implements EntityManagerInterface
             throw $e;
         }
         $this->db->commitTransaction();
+        $this->uow->reset();
     }
 
     public function debug(): array

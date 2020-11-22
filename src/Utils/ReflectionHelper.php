@@ -21,7 +21,7 @@ class ReflectionHelper
             return null;
         }
 
-        $p          = $reflection->getProperty($property);
+        $p = $reflection->getProperty($property);
         $p->setAccessible(true);
 
         return $p->getValue($object);

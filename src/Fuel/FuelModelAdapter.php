@@ -11,7 +11,6 @@ use Stwarog\Uow\DBConnectionInterface;
 use Stwarog\Uow\EntityInterface;
 use Stwarog\Uow\IdGenerationStrategyInterface;
 use Stwarog\Uow\RelationBag;
-use Stwarog\Uow\Relations\AbstractRelation;
 use Stwarog\Uow\Relations\BelongsTo;
 use Stwarog\Uow\Utils\ReflectionHelper;
 
@@ -21,8 +20,6 @@ class FuelModelAdapter implements EntityInterface
     private $model;
     /** @var RelationBag */
     private $relations;
-    /** @var array|AbstractRelation[] */
-    private $rel;
 
     public function __construct(Model $model)
     {
@@ -35,8 +32,6 @@ class FuelModelAdapter implements EntityInterface
     {
         $dataRelations = ReflectionHelper::getValue($this->model, '_data_relations');
 
-        $relations = [] ;
-
         foreach (FuelRelationType::toArray() as $relationTypePropName) {
             $relation = ReflectionHelper::getValue($this->model, $relationTypePropName);
 
@@ -47,54 +42,30 @@ class FuelModelAdapter implements EntityInterface
             foreach ($relation as $field => $meta) {
                 switch ($relationTypePropName) {
                     case FuelRelationType::BELONGS_TO:
-                        $relations[$relationTypePropName][$field] = new BelongsTo(
-                            $meta['key_from'], $meta['model_to'], $meta['key_to']
+                        if (empty($dataRelations[$field])) {
+                            break;
+                        }
+                        $entity = new FuelModelAdapter($dataRelations[$field]);
+                        $bag    = new BelongsTo(
+                            $entity, $meta['key_from'], $meta['model_to'], $meta['key_to']
                         );
+                        $this->relations->add($field, $bag);
                         break;
 
-//                default: throw new InvalidArgumentException('Unknown relation type ' . $relationTypePropName);
+                    case FuelRelationType::HAS_ONE:
+
+                        break;
+
+                    case FuelRelationType::HAS_MANY:
+
+                        break;
+
+                    default:
+                        throw new InvalidArgumentException('Unknown relation type '.$relationTypePropName);
                 }
             }
 
-
         }
-        $this->rel = $relations;
-
-        foreach ($dataRelations as $relationName => $models) {
-            $models = is_array($models) ? $models : [$models];
-            foreach ($models as $model) {
-                if (empty($model)) {
-                    continue;
-                }
-                $this->relations->add(
-                    $this->getRelationType($relationName),
-                    new FuelModelAdapter($model)
-                );
-            }
-        }
-    }
-
-    public function handleBelongsTo(string $field, EntityInterface $related): void
-    {
-        if (empty($this->rel[FuelRelationType::BELONGS_TO][$field])) {
-            return;
-        }
-        /** @var AbstractRelation $relation */
-        $relation = $this->rel[FuelRelationType::BELONGS_TO][$field];
-        $this->set($relation->keyFrom(), $related->get($relation->keyTo()));
-    }
-
-    private function getRelationType(string $relationName): FuelRelationType
-    {
-        foreach (FuelRelationType::toArray() as $type) {
-            $schema = ReflectionHelper::getValue($this->model, $type) ?? [];
-            $schema = array_keys($schema);
-            if (in_array($relationName, $schema)) {
-                return new FuelRelationType($type);
-            }
-        }
-
-        throw new InvalidArgumentException('No relation type found.');
     }
 
     public function isDirty(): bool
@@ -147,7 +118,7 @@ class FuelModelAdapter implements EntityInterface
         return $this->model[$this->idKey()] ?? null;
     }
 
-    public function idKey(): string
+    public function idKey(): ?string
     {
         $assoc = array_keys($this->model->get_pk_assoc());
 
@@ -159,21 +130,12 @@ class FuelModelAdapter implements EntityInterface
         return $this->relations;
     }
 
-    public function isIdAutoIncrement(): bool
+    public function setId(string $id): void
     {
-        return true;
-    }
-
-    public function setId(string $nextAutoIncrementNo): void
-    {
-        $this->model[$this->idKey()] = $nextAutoIncrementNo;
-    }
-
-    public function idValueGenerationStrategy(): IdGenerationStrategyInterface
-    {
-        if ($this->isIdAutoIncrement()) {
-            return new AutoIncrementIdStrategy();
+        if (empty($this->idKey())) {
+            throw new InvalidArgumentException('Attempted to set ID value, but no ID key name specified');
         }
+        $this->model[$this->idKey()] = $id;
     }
 
     public function generateIdValue(DBConnectionInterface $db): void
@@ -182,19 +144,23 @@ class FuelModelAdapter implements EntityInterface
         $strategy->handle($this, $db);
     }
 
+    public function idValueGenerationStrategy(): IdGenerationStrategyInterface
+    {
+        return new AutoIncrementIdStrategy();
+    }
+
     public function originalClass(): object
     {
         return $this->model;
     }
 
-    public function get(string $propertyName)
+    public function get(string $field)
     {
-        # todo throw exception if not defined
-        return $this->model[$propertyName];
+        return $this->model[$field];
     }
 
-    public function set(string $propertyName, $value)
+    public function set(string $field, $value)
     {
-        $this->model[$propertyName] = $value;
+        $this->model[$field] = $value;
     }
 }

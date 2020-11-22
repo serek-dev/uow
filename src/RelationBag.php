@@ -4,7 +4,7 @@
 namespace Stwarog\Uow;
 
 
-use Generator;
+use Stwarog\Uow\Relations\AbstractRelation;
 
 class RelationBag
 {
@@ -12,27 +12,20 @@ class RelationBag
 
     private $isDirty = false;
 
-    public function add(string $type, EntityInterface $entity): void
+    public function add(string $field, AbstractRelation $relation): void
     {
-        $this->data[$type][] = $entity;
-        if ($entity->isNew() || $entity->isDirty()) {
+        $this->data[$field] = $relation;
+        if ($relation->getObject()->isDirty() || $relation->getObject()->isNew()) {
             $this->isDirty = true;
         }
     }
 
+    /**
+     * @return array|AbstractRelation[]
+     */
     public function toArray(): array
     {
-        return iterator_to_array($this->getData());
-    }
-
-    /**
-     * @return Generator|EntityInterface[]
-     */
-    public function getData(): Generator
-    {
-        foreach ($this->data as $type => $model) {
-            yield $model;
-        }
+        return $this->data;
     }
 
     public function isEmpty(): bool
@@ -43,20 +36,5 @@ class RelationBag
     public function isDirty(): bool
     {
         return $this->isDirty;
-    }
-
-    public function hasRelations(RelationType $type): bool
-    {
-        return isset($this->data[(string)$type]);
-    }
-
-    /**
-     * @param RelationType $type
-     *
-     * @return array|EntityInterface[]
-     */
-    public function get(RelationType $type): array
-    {
-        return $this->data[(string) $type] ?? [];
     }
 }

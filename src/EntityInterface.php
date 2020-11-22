@@ -4,9 +4,6 @@
 namespace Stwarog\Uow;
 
 
-use InvalidArgumentException;
-use OutOfBoundsException;
-
 interface EntityInterface
 {
     public function isNew(): bool;
@@ -30,9 +27,9 @@ interface EntityInterface
 
     public function idValue(): ?string;
 
-    public function idKey(): string;
+    public function idKey(): ?string;
 
-    public function idValueGenerationStrategy():  IdGenerationStrategyInterface;
+    public function idValueGenerationStrategy(): IdGenerationStrategyInterface;
 
     /**
      * Generate ID by provided strategy and assign it to it self.
@@ -41,25 +38,13 @@ interface EntityInterface
      */
     public function generateIdValue(DBConnectionInterface $db): void;
 
-    public function isIdAutoIncrement(): bool;
-
     public function relations(): RelationBag;
 
-    public function setId(string $nextAutoIncrementNo): void;
+    public function setId(string $id): void;
 
     public function originalClass(): object;
 
-    /**
-     * Returns value of given property.
-     *
-     * @param string $propertyName
-     *
-     * @return mixed
-     * @throws OutOfBoundsException
-     */
-    public function get(string $propertyName);
+    public function get(string $field);
 
-    public function set(string $propertyName, $value);
-
-    public function handleBelongsTo(string $field, EntityInterface $related): void;
+    public function set(string $field, $value);
 }

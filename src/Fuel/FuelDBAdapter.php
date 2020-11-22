@@ -78,7 +78,8 @@ class FuelDBAdapter extends AbstractDBAdapter implements DBConnectionInterface
     {
         if (isset($this->cachedTableIds[$table])) {
             $this->cachedTableIds[$table]++;
-            return (string)$this->cachedTableIds[$table];
+
+            return (string) $this->cachedTableIds[$table];
         }
 
         /** @var Database_Result $result */
@@ -86,6 +87,7 @@ class FuelDBAdapter extends AbstractDBAdapter implements DBConnectionInterface
         parent::log($this->db::last_query());
 
         $this->cachedTableIds[$table] = (int) $result->get('count') + 1;
+
         return (string) $this->cachedTableIds[$table];
     }
 }

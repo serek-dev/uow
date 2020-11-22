@@ -28,6 +28,16 @@ class UnitOfWork
         ];
     }
 
+    private function mark(EntityInterface $entity): void
+    {
+        $this->persistedHashes[] = $this->objectHash($entity);
+    }
+
+    private function objectHash(EntityInterface $entity): string
+    {
+        return spl_object_hash($entity->originalClass());
+    }
+
     private function hash(array $array): string
     {
         return serialize($array);
@@ -87,23 +97,18 @@ class UnitOfWork
         ];
     }
 
-    private function mark(EntityInterface $entity): void
-    {
-        $this->persistedHashes[] = $this->objectHash($entity);
-    }
-
     public function wasPersisted(EntityInterface $entity): bool
     {
         return in_array($this->objectHash($entity), $this->persistedHashes);
     }
 
-    private function objectHash(EntityInterface $entity): string
-    {
-        return spl_object_hash($entity->originalClass());
-    }
-
     public function isEmpty(): bool
     {
         return empty($this->data);
+    }
+
+    public function reset(): void
+    {
+        $this->data = [];
     }
 }
