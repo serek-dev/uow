@@ -109,6 +109,7 @@ class UnitOfWork
 
     public function reset(): void
     {
-        $this->data = [];
+        $this->data            = [];
+        $this->persistedHashes = [];
     }
 }

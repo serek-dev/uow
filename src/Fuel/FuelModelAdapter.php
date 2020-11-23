@@ -12,6 +12,7 @@ use Stwarog\Uow\EntityInterface;
 use Stwarog\Uow\IdGenerationStrategyInterface;
 use Stwarog\Uow\RelationBag;
 use Stwarog\Uow\Relations\BelongsTo;
+use Stwarog\Uow\Relations\HasOne;
 use Stwarog\Uow\Utils\ReflectionHelper;
 
 class FuelModelAdapter implements EntityInterface
@@ -31,6 +32,9 @@ class FuelModelAdapter implements EntityInterface
     private function extractRelations()
     {
         $dataRelations = ReflectionHelper::getValue($this->model, '_data_relations');
+        $customData    = ReflectionHelper::getValue($this->model, '_custom_data');
+
+        $mergedData = array_merge($dataRelations, $customData);
 
         foreach (FuelRelationType::toArray() as $relationTypePropName) {
             $relation = ReflectionHelper::getValue($this->model, $relationTypePropName);
@@ -40,20 +44,22 @@ class FuelModelAdapter implements EntityInterface
             }
 
             foreach ($relation as $field => $meta) {
+
+                $entity = !empty($mergedData[$field]) ? new FuelModelAdapter($mergedData[$field]) : null;
+
                 switch ($relationTypePropName) {
                     case FuelRelationType::BELONGS_TO:
-                        if (empty($dataRelations[$field])) {
-                            break;
-                        }
-                        $entity = new FuelModelAdapter($dataRelations[$field]);
-                        $bag    = new BelongsTo(
-                            $entity, $meta['key_from'], $meta['model_to'], $meta['key_to']
+                        $bag = new BelongsTo(
+                            $field, $entity, $meta['key_from'], $meta['model_to'], $meta['key_to']
                         );
                         $this->relations->add($field, $bag);
                         break;
 
                     case FuelRelationType::HAS_ONE:
-
+                        $bag = new HasOne(
+                            $field, $entity, $meta['key_from'], $meta['model_to'], $meta['key_to']
+                        );
+                        $this->relations->add($field, $bag);
                         break;
 
                     case FuelRelationType::HAS_MANY:
@@ -70,7 +76,7 @@ class FuelModelAdapter implements EntityInterface
 
     public function isDirty(): bool
     {
-        return !empty($this->getDifferences());
+        return !empty($this->getDifferences()) || !$this->relations->isDirty();
     }
 
     private function getDifferences(): array

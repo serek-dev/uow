@@ -77,17 +77,17 @@ class FuelDBAdapter extends AbstractDBAdapter implements DBConnectionInterface
     public function nextAutoIncrementNo(string $table, string $idKey = 'id'): string
     {
         if (isset($this->cachedTableIds[$table])) {
-            $this->cachedTableIds[$table]++;
+            $this->cachedTableIds[$table][$idKey]++;
 
-            return (string) $this->cachedTableIds[$table];
+            return (string) $this->cachedTableIds[$table][$idKey];
         }
 
         /** @var Database_Result $result */
         $result = $this->db::select($this->db::expr('MAX('.$idKey.') as count'))->from($table)->execute();
         parent::log($this->db::last_query());
 
-        $this->cachedTableIds[$table] = (int) $result->get('count') + 1;
+        $this->cachedTableIds[$table][$idKey] = (int) $result->get('count') + 1;
 
-        return (string) $this->cachedTableIds[$table];
+        return (string) $this->cachedTableIds[$table][$idKey];
     }
 }

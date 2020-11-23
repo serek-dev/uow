@@ -16,13 +16,16 @@ abstract class AbstractRelation
     private $keyTo;
     /** @var EntityInterface */
     private $object;
+    /** @var string */
+    private $field;
 
-    public function __construct(EntityInterface $object, string $keyFrom, string $tableTo, string $keyTo)
+    public function __construct(string $field, ?EntityInterface $object = null, string $keyFrom, string $tableTo, string $keyTo)
     {
         $this->keyFrom = $keyFrom;
         $this->tableTo = $tableTo;
         $this->keyTo   = $keyTo;
         $this->object  = $object;
+        $this->field   = $field;
     }
 
     public function keyFrom(): string
@@ -45,8 +48,13 @@ abstract class AbstractRelation
         return [$this->keyFrom, $this->tableTo, $this->keyTo];
     }
 
-    public function getObject(): EntityInterface
+    public function getObject(): ?EntityInterface
     {
-        return $this->object;
+        return $this->object ?? null;
+    }
+
+    public function field(): string
+    {
+        return $this->field;
     }
 }
