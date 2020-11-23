@@ -30,16 +30,7 @@ class EntityManager implements EntityManagerInterface
                 $entity->generateIdValue($this->db);
             }
 
-            $relations = $entity->relations();
-
-            # belongs to
-            if ($relations->isDirty()) {
-                foreach ($relations->toArray() as $field => $relation) {
-                    $relatedEntity = $relation->getObject();
-                    $this->persist($relatedEntity);
-                    $entity->set($relation->keyFrom(), $relatedEntity->get($relation->keyTo()));
-                }
-            }
+            $this->handleRelations($entity);
 
             $this->uow->insert($entity);
 
@@ -50,6 +41,7 @@ class EntityManager implements EntityManagerInterface
             return;
         }
 
+        $this->handleRelations($entity);
         $this->uow->update($entity);
     }
 
@@ -77,5 +69,19 @@ class EntityManager implements EntityManagerInterface
     public function debug(): array
     {
         return $this->db->debug();
+    }
+
+    private function handleRelations(EntityInterface $entity): void
+    {
+        if ($entity->relations()->isDirty() === false) {
+            return;
+        }
+
+        # belongs to
+        foreach ($entity->relations()->toArray() as $field => $relation) {
+            $relatedEntity = $relation->getObject();
+            $this->persist($relatedEntity);
+            $entity->set($relation->keyFrom(), $relatedEntity->get($relation->keyTo()));
+        }
     }
 }
