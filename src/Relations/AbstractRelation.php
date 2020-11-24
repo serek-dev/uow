@@ -6,7 +6,7 @@ namespace Stwarog\Uow\Relations;
 
 use Stwarog\Uow\EntityInterface;
 
-abstract class AbstractRelation
+abstract class AbstractRelation implements InteractWithEntityManager
 {
     /** @var string */
     private $keyFrom;

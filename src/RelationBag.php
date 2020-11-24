@@ -6,6 +6,7 @@ namespace Stwarog\Uow;
 
 use InvalidArgumentException;
 use Stwarog\Uow\Relations\AbstractRelation;
+use Stwarog\Uow\Relations\InteractWithEntityManager;
 
 class RelationBag
 {
@@ -36,7 +37,7 @@ class RelationBag
     }
 
     /**
-     * @return array|AbstractRelation[]
+     * @return array|InteractWithEntityManager[]
      */
     public function toArray(): array
     {
