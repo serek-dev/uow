@@ -1,10 +1,11 @@
 <?php
 
 
-namespace Stwarog\Uow\Relations;
+namespace Stwarog\Uow\Shared;
 
 
 use Stwarog\Uow\EntityInterface;
+use Stwarog\Uow\Relations\RelationInterface;
 
 abstract class AbstractOneToOneRelation implements RelationInterface
 {
