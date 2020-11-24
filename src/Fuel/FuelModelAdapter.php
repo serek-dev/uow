@@ -9,6 +9,7 @@ use Orm\Model;
 use Stwarog\Uow\AutoIncrementIdStrategy;
 use Stwarog\Uow\DBConnectionInterface;
 use Stwarog\Uow\EntityInterface;
+use Stwarog\Uow\HasIdStrategy;
 use Stwarog\Uow\IdGenerationStrategyInterface;
 use Stwarog\Uow\RelationBag;
 use Stwarog\Uow\Relations\BelongsTo;
@@ -173,6 +174,9 @@ class FuelModelAdapter implements EntityInterface
 
     public function idValueGenerationStrategy(): IdGenerationStrategyInterface
     {
+        if ($this->model instanceof HasIdStrategy) {
+            return $this->model->idValueGenerationStrategy();
+        }
         return new AutoIncrementIdStrategy();
     }
 
