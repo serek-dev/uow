@@ -177,6 +177,7 @@ class FuelModelAdapter implements EntityInterface
         if ($this->model instanceof HasIdStrategy) {
             return $this->model->idValueGenerationStrategy();
         }
+
         return new AutoIncrementIdStrategy();
     }
 
@@ -202,6 +203,6 @@ class FuelModelAdapter implements EntityInterface
 
     public function toArray(): array
     {
-        $this->model->to_array();
+        return $this->model->to_array();
     }
 }
