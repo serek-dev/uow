@@ -4,14 +4,8 @@
 namespace Stwarog\Uow;
 
 
-interface EntityInterface
+interface EntityInterface extends TouchAble
 {
-    public function isNew(): bool;
-
-    public function table(): string;
-
-    public function isDirty(): bool;
-
     /**
      * @return array|string[]
      */

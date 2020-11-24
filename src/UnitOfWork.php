@@ -45,6 +45,9 @@ class UnitOfWork
 
     public function update(EntityInterface $entity): void
     {
+        if ($entity->isDirty() === false) {
+            dd($entity);
+        }
         $this->mark($entity);
 
         $table   = $entity->table();

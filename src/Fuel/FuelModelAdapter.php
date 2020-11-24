@@ -78,6 +78,7 @@ class FuelModelAdapter implements EntityInterface
                             },
                             $mergedData[$field]
                         ) : [];
+                        $entities = array_values($entities); # normalization, due fuels maps indexes as PK
 
                         $bag = new HasMany(
                             $field, $entities, $meta['key_from'], $meta['model_to'], $meta['key_to']
@@ -96,7 +97,7 @@ class FuelModelAdapter implements EntityInterface
 
     public function isDirty(): bool
     {
-        return !empty($this->getDifferences()) || !$this->relations->isDirty();
+        return !empty($this->getDifferences());
     }
 
     private function getDifferences(): array
@@ -188,5 +189,15 @@ class FuelModelAdapter implements EntityInterface
     public function set(string $field, $value)
     {
         $this->model[$field] = $value;
+    }
+
+    public function isEmpty(): bool
+    {
+        return empty($this->toArray());
+    }
+
+    public function toArray(): array
+    {
+        $this->model->to_array();
     }
 }

@@ -35,11 +35,11 @@ class EntityManager implements EntityManagerInterface
             return;
         }
 
+        $this->handleRelationsOf($entity);
+
         if ($entity->isDirty() === false) {
             return;
         }
-
-        $this->handleRelationsOf($entity);
 
         $this->uow->update($entity);
     }

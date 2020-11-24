@@ -25,9 +25,12 @@ class HasMany implements RelationInterface, HasRelationFromToSchema
         $this->keyFrom = $keyFrom;
         $this->tableTo = $tableTo;
         $this->keyTo   = $keyTo;
-        $this->related  = array_filter($related, function(EntityInterface $entity) {
-            return true;
-        });
+        $this->related = array_filter(
+            $related,
+            function (EntityInterface $entity) {
+                return true;
+            }
+        );
         $this->field   = $field;
     }
 
@@ -46,9 +49,11 @@ class HasMany implements RelationInterface, HasRelationFromToSchema
         return $this->keyTo;
     }
 
-    public function handleRelations(EntityManagerInterface $entityManager, EntityInterface $entity): void
+    public function handleRelations(EntityManagerInterface $entityManager, EntityInterface $parentEntity): void
     {
-//        dd($entity);
+        foreach ($this->toArray() as $relatedEntity) {
+            $entityManager->persist($relatedEntity);
+        }
     }
 
     public function toArray(): array
@@ -68,6 +73,7 @@ class HasMany implements RelationInterface, HasRelationFromToSchema
                 return true;
             }
         }
+
         return false;
     }
 
@@ -78,6 +84,7 @@ class HasMany implements RelationInterface, HasRelationFromToSchema
                 return false;
             }
         }
+
         return true;
     }
 }

@@ -53,17 +53,18 @@ abstract class AbstractRelation implements RelationInterface
         return $this->field;
     }
 
-    public function isEmpty(): bool
-    {
-        return empty($this->entity);
-    }
-
     public function isDirty(): bool
     {
         if ($this->isEmpty()) {
             return false;
         }
+
         return $this->entity->isDirty();
+    }
+
+    public function isEmpty(): bool
+    {
+        return empty($this->entity);
     }
 
     public function isNew(): bool
@@ -71,6 +72,7 @@ abstract class AbstractRelation implements RelationInterface
         if ($this->isEmpty()) {
             return false;
         }
+
         return $this->entity->isNew();
     }
 }
