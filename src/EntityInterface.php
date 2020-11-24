@@ -4,25 +4,8 @@
 namespace Stwarog\Uow;
 
 
-interface EntityInterface extends TouchAble, HasIdStrategy
+interface EntityInterface extends TouchAble, HasIdStrategy, PersistAble
 {
-    /**
-     * @return array|string[]
-     */
-    public function columns(): array;
-
-    /**
-     * If isNew() then all fields are returned.
-     * If isDirty() then only changed values.
-     *
-     * @return array
-     */
-    public function values(): array;
-
-    public function idValue(): ?string;
-
-    public function idKey(): ?string;
-
     /**
      * Generate ID by provided strategy and assign it to it self.
      *
@@ -33,8 +16,6 @@ interface EntityInterface extends TouchAble, HasIdStrategy
     public function relations(): RelationBag;
 
     public function setId(string $id): void;
-
-    public function originalClass(): object;
 
     public function get(string $field);
 

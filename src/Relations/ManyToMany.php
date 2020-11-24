@@ -6,6 +6,7 @@ namespace Stwarog\Uow\Relations;
 
 use Stwarog\Uow\EntityInterface;
 use Stwarog\Uow\EntityManagerInterface;
+use Stwarog\Uow\VirtualEntity;
 
 class ManyToMany implements RelationInterface
 {
@@ -21,6 +22,8 @@ class ManyToMany implements RelationInterface
     private $modelTo;
     /** @var string */
     private $keyTo;
+    /** @var EntityInterface[] */
+    private $related = [];
 
     public function __construct(string $keyFrom, string $keyThroughFrom, string $tableThrough, string $keyThroughTo, string $modelTo, string $keyTo)
     {
@@ -34,26 +37,56 @@ class ManyToMany implements RelationInterface
 
     public function handleRelations(EntityManagerInterface $entityManager, EntityInterface $entity): void
     {
-        // TODO: Implement handleRelations() method.
+        $virtualEntity = new VirtualEntity(
+            ['keyFrom', 'keyTo', '', '', ''],
+            ['']
+        );
+        dd($this);
+        dd($this->related);
     }
 
     public function toArray(): array
     {
-        // TODO: Implement toArray() method.
-    }
-
-    public function isEmpty(): bool
-    {
-        // TODO: Implement isEmpty() method.
+        $this->related;
     }
 
     public function isDirty(): bool
     {
-        // TODO: Implement isDirty() method.
+        foreach ($this->related as $entity) {
+            if ($entity->isDirty() || $entity->isNew()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function isNew(): bool
     {
-        // TODO: Implement isNew() method.
+        foreach ($this->related as $entity) {
+            if ($entity->isDirty()) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public function setRelatedData(array $relatedEntities = []): void
+    {
+        if (empty($relatedEntities)) {
+            return;
+        }
+        $this->related = array_filter(
+            $relatedEntities,
+            function (EntityInterface $entity) {
+                return true;
+            }
+        );
+    }
+
+    public function isEmpty(): bool
+    {
+        return empty($this->related);
     }
 }

@@ -15,6 +15,7 @@ use Stwarog\Uow\RelationBag;
 use Stwarog\Uow\Relations\BelongsTo;
 use Stwarog\Uow\Relations\HasMany;
 use Stwarog\Uow\Relations\HasOne;
+use Stwarog\Uow\Relations\ManyToMany;
 use Stwarog\Uow\Utils\ReflectionHelper;
 
 class FuelModelAdapter implements EntityInterface
@@ -75,6 +76,22 @@ class FuelModelAdapter implements EntityInterface
                         $bag = new HasMany($meta['key_from'], $meta['model_to'], $meta['key_to']);
                         $bag->setRelatedData($entities);
                         $this->relations->add($field, $bag);
+                        break;
+
+                    case FuelRelationType::MANY_TO_MANY:
+                        $entities = !empty($mergedData[$field]) ? array_map(
+                            function (Model $model) {
+                                return new FuelModelAdapter($model);
+                            },
+                            $mergedData[$field]
+                        ) : [];
+
+                        $entities = array_values($entities); # normalization, due fuels maps indexes as PK
+                        $bag = new ManyToMany(
+                            $meta['key_from'], $meta['key_through_from'], $meta['table_through'], $meta['key_through_to'], $meta['model_to'], $meta['key_to']
+                        );
+                        $bag->setRelatedData($entities);
+//                        $this->relations->add($field, $bag);
                         break;
 
                     default:

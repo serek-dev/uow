@@ -92,6 +92,6 @@ class HasMany implements RelationInterface, HasRelationFromToSchema
             function (EntityInterface $entity) {
                 return true;
             }
-        );;
+        );
     }
 }

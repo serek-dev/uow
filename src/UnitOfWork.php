@@ -4,12 +4,14 @@
 namespace Stwarog\Uow;
 
 
+use InvalidArgumentException;
+
 class UnitOfWork
 {
     private $data = [];
     private $persistedHashes = [];
 
-    public function insert(EntityInterface $entity): void
+    public function insert(PersistAble $entity): void
     {
         $this->mark($entity);
 
@@ -28,12 +30,12 @@ class UnitOfWork
         ];
     }
 
-    private function mark(EntityInterface $entity): void
+    private function mark(PersistAble $entity): void
     {
         $this->persistedHashes[] = $this->objectHash($entity);
     }
 
-    private function objectHash(EntityInterface $entity): string
+    private function objectHash(PersistAble $entity): string
     {
         return spl_object_hash($entity->originalClass());
     }
@@ -43,12 +45,13 @@ class UnitOfWork
         return serialize($array);
     }
 
-    public function update(EntityInterface $entity): void
+    public function update(PersistAble $entity): void
     {
-        if ($entity->isDirty() === false) {
-            dd($entity);
-        }
         $this->mark($entity);
+
+        if (empty($entity->idValue())) {
+            throw new InvalidArgumentException('Cant update entity when no idKey specified.');
+        }
 
         $table   = $entity->table();
         $columns = $entity->columns();
@@ -79,7 +82,7 @@ class UnitOfWork
         return $this->data[(string) $type];
     }
 
-    public function delete(EntityInterface $entity)
+    public function delete(PersistAble $entity)
     {
         $this->mark($entity);
 
@@ -100,7 +103,7 @@ class UnitOfWork
         ];
     }
 
-    public function wasPersisted(EntityInterface $entity): bool
+    public function wasPersisted(PersistAble $entity): bool
     {
         return in_array($this->objectHash($entity), $this->persistedHashes);
     }
