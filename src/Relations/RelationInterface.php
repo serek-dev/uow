@@ -13,4 +13,11 @@ interface RelationInterface extends InteractWithEntityManager, TouchAble
      * @return EntityInterface[]
      */
     public function toArray(): array;
+
+    /**
+     * Should contain wrapped original Models.
+     *
+     * @param EntityInterface[] $relatedEntities
+     */
+    public function setRelatedData(array $relatedEntities): void;
 }

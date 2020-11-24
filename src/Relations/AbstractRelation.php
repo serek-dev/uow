@@ -9,23 +9,19 @@ use Stwarog\Uow\EntityInterface;
 abstract class AbstractRelation implements RelationInterface
 {
     /** @var string */
-    private $keyFrom;
+    protected $keyFrom;
     /** @var string */
-    private $tableTo;
+    protected $tableTo;
     /** @var string */
-    private $keyTo;
+    protected $keyTo;
     /** @var EntityInterface */
-    private $entity;
-    /** @var string */
-    private $field;
+    protected $relatedEntity;
 
-    public function __construct(string $field, ?EntityInterface $entity = null, string $keyFrom, string $tableTo, string $keyTo)
+    public function __construct(string $keyFrom, string $tableTo, string $keyTo)
     {
         $this->keyFrom = $keyFrom;
         $this->tableTo = $tableTo;
         $this->keyTo   = $keyTo;
-        $this->entity  = $entity;
-        $this->field   = $field;
     }
 
     public function keyFrom(): string
@@ -45,12 +41,7 @@ abstract class AbstractRelation implements RelationInterface
 
     public function toArray(): array
     {
-        return [$this->entity];
-    }
-
-    public function field(): string
-    {
-        return $this->field;
+        return [$this->relatedEntity];
     }
 
     public function isDirty(): bool
@@ -59,12 +50,12 @@ abstract class AbstractRelation implements RelationInterface
             return false;
         }
 
-        return $this->entity->isDirty();
+        return $this->relatedEntity->isDirty();
     }
 
     public function isEmpty(): bool
     {
-        return empty($this->entity);
+        return empty($this->relatedEntity);
     }
 
     public function isNew(): bool
@@ -73,6 +64,14 @@ abstract class AbstractRelation implements RelationInterface
             return false;
         }
 
-        return $this->entity->isNew();
+        return $this->relatedEntity->isNew();
+    }
+
+    public function setRelatedData(array $relatedEntities = []): void
+    {
+        if (empty($relatedEntities)) {
+            return;
+        }
+        $this->relatedEntity = reset($relatedEntities);
     }
 }

@@ -50,41 +50,30 @@ class FuelModelAdapter implements EntityInterface
                 switch ($relationTypePropName) {
 
                     case FuelRelationType::BELONGS_TO:
-
-                        $entity = !empty($mergedData[$field]) ? new FuelModelAdapter($mergedData[$field]) : null;
-
-                        $bag = new BelongsTo(
-                            $field, $entity, $meta['key_from'], $meta['model_to'], $meta['key_to']
-                        );
-
+                        $entity = !empty($mergedData[$field]) ? new FuelModelAdapter($mergedData[$field]) : [];
+                        $bag = new BelongsTo($meta['key_from'], $meta['model_to'], $meta['key_to']);
+                        $bag->setRelatedData([$entity]);
                         $this->relations->add($field, $bag);
                         break;
 
                     case FuelRelationType::HAS_ONE:
-
-                        $entity = !empty($mergedData[$field]) ? new FuelModelAdapter($mergedData[$field]) : null;
-
-                        $bag = new HasOne(
-                            $field, $entity, $meta['key_from'], $meta['model_to'], $meta['key_to']
-                        );
-
+                        $entity = !empty($mergedData[$field]) ? new FuelModelAdapter($mergedData[$field]) : [];
+                        $bag = new HasOne($meta['key_from'], $meta['model_to'], $meta['key_to']);
+                        $bag->setRelatedData([$entity]);
                         $this->relations->add($field, $bag);
                         break;
 
                     case FuelRelationType::HAS_MANY:
-
                         $entities = !empty($mergedData[$field]) ? array_map(
                             function (Model $model) {
                                 return new FuelModelAdapter($model);
                             },
                             $mergedData[$field]
                         ) : [];
+
                         $entities = array_values($entities); # normalization, due fuels maps indexes as PK
-
-                        $bag = new HasMany(
-                            $field, $entities, $meta['key_from'], $meta['model_to'], $meta['key_to']
-                        );
-
+                        $bag = new HasMany($meta['key_from'], $meta['model_to'], $meta['key_to']);
+                        $bag->setRelatedData($entities);
                         $this->relations->add($field, $bag);
                         break;
 

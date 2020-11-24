@@ -15,7 +15,7 @@ class HasOne extends AbstractRelation implements InteractWithEntityManager, HasR
         if ($this->isEmpty()) {
             return;
         }
-        $relatedEntity = $this->toArray()[0];
+        $relatedEntity = $this->relatedEntity;
 
         # todo: refactor! it doesn't have to be a valid related object
 

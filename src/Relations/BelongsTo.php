@@ -14,7 +14,7 @@ class BelongsTo extends AbstractRelation implements RelationInterface, HasRelati
         if ($this->isEmpty()) {
             return;
         }
-        $relatedEntity = $this->toArray()[0];
+        $relatedEntity = $this->relatedEntity;
         $entityManager->persist($relatedEntity);
         $entity->set($this->keyFrom(), $relatedEntity->get($this->keyTo()));
     }

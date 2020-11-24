@@ -16,22 +16,13 @@ class HasMany implements RelationInterface, HasRelationFromToSchema
     /** @var string */
     private $keyTo;
     /** @var EntityInterface[] */
-    private $related;
-    /** @var string */
-    private $field;
+    private $related = [];
 
-    public function __construct(string $field, array $related = [], string $keyFrom, string $tableTo, string $keyTo)
+    public function __construct(string $keyFrom, string $tableTo, string $keyTo)
     {
         $this->keyFrom = $keyFrom;
         $this->tableTo = $tableTo;
         $this->keyTo   = $keyTo;
-        $this->related = array_filter(
-            $related,
-            function (EntityInterface $entity) {
-                return true;
-            }
-        );
-        $this->field   = $field;
     }
 
     public function keyFrom(): string
@@ -89,5 +80,18 @@ class HasMany implements RelationInterface, HasRelationFromToSchema
         }
 
         return true;
+    }
+
+    public function setRelatedData(array $relatedEntities = []): void
+    {
+        if (empty($relatedEntities)) {
+            return;
+        }
+        $this->related = array_filter(
+            $relatedEntities,
+            function (EntityInterface $entity) {
+                return true;
+            }
+        );;
     }
 }
