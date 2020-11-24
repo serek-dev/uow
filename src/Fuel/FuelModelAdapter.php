@@ -12,6 +12,7 @@ use Stwarog\Uow\EntityInterface;
 use Stwarog\Uow\IdGenerationStrategyInterface;
 use Stwarog\Uow\RelationBag;
 use Stwarog\Uow\Relations\BelongsTo;
+use Stwarog\Uow\Relations\HasMany;
 use Stwarog\Uow\Relations\HasOne;
 use Stwarog\Uow\Utils\ReflectionHelper;
 
@@ -45,25 +46,44 @@ class FuelModelAdapter implements EntityInterface
 
             foreach ($relation as $field => $meta) {
 
-                $entity = !empty($mergedData[$field]) ? new FuelModelAdapter($mergedData[$field]) : null;
-
                 switch ($relationTypePropName) {
+
                     case FuelRelationType::BELONGS_TO:
+
+                        $entity = !empty($mergedData[$field]) ? new FuelModelAdapter($mergedData[$field]) : null;
+
                         $bag = new BelongsTo(
                             $field, $entity, $meta['key_from'], $meta['model_to'], $meta['key_to']
                         );
+
                         $this->relations->add($field, $bag);
                         break;
 
                     case FuelRelationType::HAS_ONE:
+
+                        $entity = !empty($mergedData[$field]) ? new FuelModelAdapter($mergedData[$field]) : null;
+
                         $bag = new HasOne(
                             $field, $entity, $meta['key_from'], $meta['model_to'], $meta['key_to']
                         );
+
                         $this->relations->add($field, $bag);
                         break;
 
                     case FuelRelationType::HAS_MANY:
 
+                        $entities = !empty($mergedData[$field]) ? array_map(
+                            function (Model $model) {
+                                return new FuelModelAdapter($model);
+                            },
+                            $mergedData[$field]
+                        ) : [];
+
+                        $bag = new HasMany(
+                            $field, $entities, $meta['key_from'], $meta['model_to'], $meta['key_to']
+                        );
+
+                        $this->relations->add($field, $bag);
                         break;
 
                     default:

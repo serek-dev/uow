@@ -6,7 +6,7 @@ namespace Stwarog\Uow\Relations;
 
 use Stwarog\Uow\EntityInterface;
 
-abstract class AbstractRelation implements InteractWithEntityManager
+abstract class AbstractRelation implements RelationInterface
 {
     /** @var string */
     private $keyFrom;
@@ -15,16 +15,16 @@ abstract class AbstractRelation implements InteractWithEntityManager
     /** @var string */
     private $keyTo;
     /** @var EntityInterface */
-    private $object;
+    private $entity;
     /** @var string */
     private $field;
 
-    public function __construct(string $field, ?EntityInterface $object = null, string $keyFrom, string $tableTo, string $keyTo)
+    public function __construct(string $field, ?EntityInterface $entity = null, string $keyFrom, string $tableTo, string $keyTo)
     {
         $this->keyFrom = $keyFrom;
         $this->tableTo = $tableTo;
         $this->keyTo   = $keyTo;
-        $this->object  = $object;
+        $this->entity  = $entity;
         $this->field   = $field;
     }
 
@@ -45,16 +45,32 @@ abstract class AbstractRelation implements InteractWithEntityManager
 
     public function toArray(): array
     {
-        return [$this->keyFrom, $this->tableTo, $this->keyTo];
-    }
-
-    public function getObject(): ?EntityInterface
-    {
-        return $this->object ?? null;
+        return [$this->entity];
     }
 
     public function field(): string
     {
         return $this->field;
+    }
+
+    public function isEmpty(): bool
+    {
+        return empty($this->entity);
+    }
+
+    public function isDirty(): bool
+    {
+        if ($this->isEmpty()) {
+            return false;
+        }
+        return $this->entity->isDirty();
+    }
+
+    public function isNew(): bool
+    {
+        if ($this->isEmpty()) {
+            return false;
+        }
+        return $this->entity->isNew();
     }
 }

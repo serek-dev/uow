@@ -5,8 +5,7 @@ namespace Stwarog\Uow;
 
 
 use InvalidArgumentException;
-use Stwarog\Uow\Relations\AbstractRelation;
-use Stwarog\Uow\Relations\InteractWithEntityManager;
+use Stwarog\Uow\Relations\RelationInterface;
 
 class RelationBag
 {
@@ -14,20 +13,20 @@ class RelationBag
 
     private $isDirty = false;
 
-    public function add(string $field, AbstractRelation $relation): void
+    public function add(string $field, RelationInterface $relation): void
     {
         $this->data[$field] = $relation;
 
-        if (empty($relation->getObject())) {
+        if ($relation->isEmpty()) {
             return;
         }
 
-        if ($relation->getObject()->isDirty() || $relation->getObject()->isNew()) {
+        if ($relation->isDirty() || $relation->isNew()) {
             $this->isDirty = true;
         }
     }
 
-    public function get(string $field): AbstractRelation
+    public function get(string $field): RelationInterface
     {
         if (isset($this->data[$field]) === false) {
             throw new InvalidArgumentException(sprintf('Unable to find field %s in relation bag.', $field));
@@ -37,7 +36,7 @@ class RelationBag
     }
 
     /**
-     * @return array|InteractWithEntityManager[]
+     * @return array|RelationInterface[]
      */
     public function toArray(): array
     {

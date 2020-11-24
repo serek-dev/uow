@@ -12,7 +12,10 @@ class HasOne extends AbstractRelation implements InteractWithEntityManager, HasR
 {
     public function handleRelations(EntityManagerInterface $entityManager, EntityInterface $entity): void
     {
-        $relatedEntity = $this->getObject();
+        if ($this->isEmpty()) {
+            return;
+        }
+        $relatedEntity = $this->toArray()[0];
 
         # todo: refactor! it doesn't have to be a valid related object
 
