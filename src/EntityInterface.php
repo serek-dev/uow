@@ -4,14 +4,8 @@
 namespace Stwarog\Uow;
 
 
-interface EntityInterface
+interface EntityInterface extends TouchAble, HasIdStrategy
 {
-    public function isNew(): bool;
-
-    public function table(): string;
-
-    public function isDirty(): bool;
-
     /**
      * @return array|string[]
      */
@@ -28,8 +22,6 @@ interface EntityInterface
     public function idValue(): ?string;
 
     public function idKey(): ?string;
-
-    public function idValueGenerationStrategy(): IdGenerationStrategyInterface;
 
     /**
      * Generate ID by provided strategy and assign it to it self.

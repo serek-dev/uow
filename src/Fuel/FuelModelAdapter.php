@@ -9,9 +9,11 @@ use Orm\Model;
 use Stwarog\Uow\AutoIncrementIdStrategy;
 use Stwarog\Uow\DBConnectionInterface;
 use Stwarog\Uow\EntityInterface;
+use Stwarog\Uow\HasIdStrategy;
 use Stwarog\Uow\IdGenerationStrategyInterface;
 use Stwarog\Uow\RelationBag;
 use Stwarog\Uow\Relations\BelongsTo;
+use Stwarog\Uow\Relations\HasMany;
 use Stwarog\Uow\Relations\HasOne;
 use Stwarog\Uow\Utils\ReflectionHelper;
 
@@ -45,25 +47,45 @@ class FuelModelAdapter implements EntityInterface
 
             foreach ($relation as $field => $meta) {
 
-                $entity = !empty($mergedData[$field]) ? new FuelModelAdapter($mergedData[$field]) : null;
-
                 switch ($relationTypePropName) {
+
                     case FuelRelationType::BELONGS_TO:
+
+                        $entity = !empty($mergedData[$field]) ? new FuelModelAdapter($mergedData[$field]) : null;
+
                         $bag = new BelongsTo(
                             $field, $entity, $meta['key_from'], $meta['model_to'], $meta['key_to']
                         );
+
                         $this->relations->add($field, $bag);
                         break;
 
                     case FuelRelationType::HAS_ONE:
+
+                        $entity = !empty($mergedData[$field]) ? new FuelModelAdapter($mergedData[$field]) : null;
+
                         $bag = new HasOne(
                             $field, $entity, $meta['key_from'], $meta['model_to'], $meta['key_to']
                         );
+
                         $this->relations->add($field, $bag);
                         break;
 
                     case FuelRelationType::HAS_MANY:
 
+                        $entities = !empty($mergedData[$field]) ? array_map(
+                            function (Model $model) {
+                                return new FuelModelAdapter($model);
+                            },
+                            $mergedData[$field]
+                        ) : [];
+                        $entities = array_values($entities); # normalization, due fuels maps indexes as PK
+
+                        $bag = new HasMany(
+                            $field, $entities, $meta['key_from'], $meta['model_to'], $meta['key_to']
+                        );
+
+                        $this->relations->add($field, $bag);
                         break;
 
                     default:
@@ -76,7 +98,7 @@ class FuelModelAdapter implements EntityInterface
 
     public function isDirty(): bool
     {
-        return !empty($this->getDifferences()) || !$this->relations->isDirty();
+        return !empty($this->getDifferences());
     }
 
     private function getDifferences(): array
@@ -152,6 +174,9 @@ class FuelModelAdapter implements EntityInterface
 
     public function idValueGenerationStrategy(): IdGenerationStrategyInterface
     {
+        if ($this->model instanceof HasIdStrategy) {
+            return $this->model->idValueGenerationStrategy();
+        }
         return new AutoIncrementIdStrategy();
     }
 
@@ -168,5 +193,15 @@ class FuelModelAdapter implements EntityInterface
     public function set(string $field, $value)
     {
         $this->model[$field] = $value;
+    }
+
+    public function isEmpty(): bool
+    {
+        return empty($this->toArray());
+    }
+
+    public function toArray(): array
+    {
+        $this->model->to_array();
     }
 }
