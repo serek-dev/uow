@@ -5,17 +5,20 @@ namespace Stwarog\Uow\Core;
 
 
 use Stwarog\Uow\ActionType;
-use Stwarog\Uow\ChangesBag;
 use Stwarog\Uow\DBConnectionInterface;
+use Stwarog\Uow\UnitOfWork;
 use const PHP_EOL;
 
 abstract class AbstractDBAdapter implements DBConnectionInterface
 {
     protected $sql = '';
+    protected $startTimestamp;
+    protected $stopTimestamp;
 
     public function debug(): array
     {
-        $debug['sql'] = $this->sql;
+        $debug['sql']  = $this->sql;
+        $debug['time'] = round($this->stopTimestamp - $this->startTimestamp, 4);
 
         foreach (ActionType::keys() as $type) {
             $debug[$type] = substr_count($this->sql, $type);
@@ -28,6 +31,7 @@ abstract class AbstractDBAdapter implements DBConnectionInterface
     {
         $this->sql = '';
         $this->log('START TRANSACTION');
+        $this->startTimestamp = microtime(true);
     }
 
     protected function log(string $sql): void
@@ -43,14 +47,15 @@ abstract class AbstractDBAdapter implements DBConnectionInterface
     public function commitTransaction(): void
     {
         $this->log('COMMIT');
+        $this->stopTimestamp = microtime(true);
     }
 
-    public function query(string $sql): void
+    public function query(string $sql)
     {
         $this->log($sql);
     }
 
-    public function handleChanges(ChangesBag $bag): void
+    public function handleChanges(UnitOfWork $bag): void
     {
         if ($bag->isEmpty()) {
             return;

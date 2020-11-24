@@ -4,6 +4,7 @@
 namespace Stwarog\Uow\Fuel;
 
 
+use Exception;
 use Fuel\Core\DB;
 use Orm\Model;
 use Stwarog\Uow\EntityManager;
@@ -16,9 +17,18 @@ class FuelEntityManager extends EntityManager implements EntityManagerInterface
         return new self(new FuelDBAdapter($db));
     }
 
-    public function save(Model $orm): void
+    /**
+     * @param Model $orm
+     * @param bool  $flush
+     *
+     * @throws Exception
+     */
+    public function save(Model $orm, bool $flush = false): void
     {
         $this->persist(new FuelModelAdapter($orm));
+        if ($flush) {
+            $this->flush();
+        }
     }
 
     public function delete(Model $orm): void

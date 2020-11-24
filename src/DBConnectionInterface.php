@@ -29,14 +29,23 @@ interface DBConnectionInterface extends DebugAble
 
     public function delete(string $tableName, array $where): void;
 
-    public function query(string $sql): void;
+    /**
+     * @param string $sql
+     *
+     * @return  object   Database_Result for SELECT queries
+     * @return  mixed    the insert id for INSERT queries
+     * @return  integer  number of affected rows for all other queries
+     */
+    public function query(string $sql);
 
     /**
      * Parses all stored changes in Bag and transform them to DB queries.
      *
-     * @param ChangesBag $bag
+     * @param UnitOfWork $bag
      *
      * @return mixed
      */
-    public function handleChanges(ChangesBag $bag): void;
+    public function handleChanges(UnitOfWork $bag): void;
+
+    public function nextAutoIncrementNo(string $table, string $idKey = 'id'): string;
 }

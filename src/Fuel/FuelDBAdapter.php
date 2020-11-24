@@ -7,6 +7,7 @@ namespace Stwarog\Uow\Fuel;
 use Fuel\Core\Database_Query_Builder_Delete;
 use Fuel\Core\Database_Query_Builder_Update;
 use Fuel\Core\Database_Query_Builder_Where;
+use Fuel\Core\Database_Result;
 use Fuel\Core\DB;
 use Stwarog\Uow\Core\AbstractDBAdapter;
 use Stwarog\Uow\DBConnectionInterface;
@@ -15,6 +16,8 @@ class FuelDBAdapter extends AbstractDBAdapter implements DBConnectionInterface
 {
     /** @var DB */
     private $db;
+
+    private $cachedTableIds = [];
 
     public function __construct(DB $db)
     {
@@ -47,10 +50,11 @@ class FuelDBAdapter extends AbstractDBAdapter implements DBConnectionInterface
         $this->query($statement->compile());
     }
 
-    public function query(string $sql): void
+    public function query(string $sql)
     {
-        $this->db::query($sql)->execute();
         parent::log($sql);
+
+        return $this->db::query($sql)->execute();
     }
 
     public function update(string $tableName, array $where, array $columns, array $values): void
@@ -68,5 +72,22 @@ class FuelDBAdapter extends AbstractDBAdapter implements DBConnectionInterface
         $statement = $this->db::delete($tableName);
         $statement->where($where);
         $this->query($statement->compile());
+    }
+
+    public function nextAutoIncrementNo(string $table, string $idKey = 'id'): string
+    {
+        if (isset($this->cachedTableIds[$table])) {
+            $this->cachedTableIds[$table][$idKey]++;
+
+            return (string) $this->cachedTableIds[$table][$idKey];
+        }
+
+        /** @var Database_Result $result */
+        $result = $this->db::select($this->db::expr('MAX('.$idKey.') as count'))->from($table)->execute();
+        parent::log($this->db::last_query());
+
+        $this->cachedTableIds[$table][$idKey] = (int) $result->get('count') + 1;
+
+        return (string) $this->cachedTableIds[$table][$idKey];
     }
 }

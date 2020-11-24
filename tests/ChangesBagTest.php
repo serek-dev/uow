@@ -2,7 +2,7 @@
 
 use PHPUnit\Framework\TestCase;
 use Stwarog\Uow\ActionType;
-use Stwarog\Uow\ChangesBag;
+use Stwarog\Uow\UnitOfWork;
 
 class ChangesBagTest extends TestCase
 {
@@ -21,7 +21,7 @@ class ChangesBagTest extends TestCase
         $columns3 = ['col12', 'col12'];
         $values3 = ['hello', 'asd'];
 
-        $bag = new ChangesBag();
+        $bag = new UnitOfWork();
 
         $bag->insert($table1, $columns1, $values1);
         $bag->insert($table1, $columns1, $values1);
@@ -52,7 +52,7 @@ class ChangesBagTest extends TestCase
         $table2 = 'table_name2';
         $ids2 = 2;
 
-        $bag = new ChangesBag();
+        $bag = new UnitOfWork();
         foreach ($ids1 as $id) {
             $bag->delete($table1, 'id', $id);
         }
@@ -74,7 +74,7 @@ class ChangesBagTest extends TestCase
         $id2 = rand(6, 8);
         $values2 = [12, 'asd'];
 
-        $bag = new ChangesBag();
+        $bag = new UnitOfWork();
 
         $bag->update($table1, $id1, $columns1, $values1);
         $bag->update($table1, $id2, $columns1, $values2);
