@@ -14,7 +14,8 @@
         "symfony/var-dumper": "^5.1"
     },
     "autoload": {
-        "psr-4": {"Stwarog\\Uow\\": "src/"}
+        "psr-4": {"Stwarog\\Uow\\": "src/"},
+        "files": ["src/Utils/functions.php"]
     },
     "autoload-dev": {
         "classmap": [{

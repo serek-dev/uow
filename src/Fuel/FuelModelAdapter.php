@@ -16,7 +16,6 @@ use Stwarog\Uow\Relations\BelongsTo;
 use Stwarog\Uow\Relations\HasMany;
 use Stwarog\Uow\Relations\HasOne;
 use Stwarog\Uow\Relations\ManyToMany;
-use Stwarog\Uow\Utils\ReflectionHelper;
 
 class FuelModelAdapter implements EntityInterface
 {
@@ -34,13 +33,13 @@ class FuelModelAdapter implements EntityInterface
 
     private function extractRelations()
     {
-        $dataRelations = ReflectionHelper::getValue($this->model, '_data_relations');
-        $customData    = ReflectionHelper::getValue($this->model, '_custom_data');
+        $dataRelations = _get($this->model, '_data_relations');
+        $customData    = _get($this->model, '_custom_data');
 
         $mergedData = array_merge($dataRelations, $customData);
 
         foreach (FuelRelationType::toArray() as $relationTypePropName) {
-            $relation = ReflectionHelper::getValue($this->model, $relationTypePropName);
+            $relation = _get($this->model, $relationTypePropName);
 
             if (empty($relation)) {
                 continue;
@@ -109,21 +108,21 @@ class FuelModelAdapter implements EntityInterface
 
     private function getDifferences(): array
     {
-        $data     = ReflectionHelper::getValue($this->model, '_data');
-        $original = ReflectionHelper::getValue($this->model, '_original');
+        $data     = _get($this->model, '_data');
+        $original = _get($this->model, '_original');
 
         return array_diff($data, $original);
     }
 
     public function table(): string
     {
-        return ReflectionHelper::getValue($this->model, '_table_name');
+        return _get($this->model, '_table_name');
     }
 
     public function columns(): array
     {
         if ($this->isNew()) {
-            $data = ReflectionHelper::getValue($this->model, '_data');
+            $data = _get($this->model, '_data');
 
             return array_keys($data);
         }
@@ -139,7 +138,7 @@ class FuelModelAdapter implements EntityInterface
     public function values(): array
     {
         if ($this->isNew()) {
-            $data = ReflectionHelper::getValue($this->model, '_data');
+            $data = _get($this->model, '_data');
 
             return array_values($data);
         }
