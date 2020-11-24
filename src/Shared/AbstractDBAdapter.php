@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Stwarog\Uow\Core;
+namespace Stwarog\Uow\Shared;
 
 
 use Stwarog\Uow\ActionType;

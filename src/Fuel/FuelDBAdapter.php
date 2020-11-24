@@ -9,7 +9,7 @@ use Fuel\Core\Database_Query_Builder_Update;
 use Fuel\Core\Database_Query_Builder_Where;
 use Fuel\Core\Database_Result;
 use Fuel\Core\DB;
-use Stwarog\Uow\Core\AbstractDBAdapter;
+use Stwarog\Uow\Shared\AbstractDBAdapter;
 use Stwarog\Uow\DBConnectionInterface;
 
 class FuelDBAdapter extends AbstractDBAdapter implements DBConnectionInterface
