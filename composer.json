@@ -31,6 +31,9 @@
     "extra": {
         "installer-paths": {
             "vendor/{$name}/": ["type:fuel-package"]
+        },
+        "branch-alias": {
+            "dev-master": "master"
         }
     },
     "minimum-stability": "stable"
