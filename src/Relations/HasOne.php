@@ -8,7 +8,7 @@ use InvalidArgumentException;
 use Stwarog\Uow\EntityInterface;
 use Stwarog\Uow\EntityManagerInterface;
 
-class HasOne extends AbstractRelation implements InteractWithEntityManager, HasRelationFromToSchema
+class HasOne extends AbstractOneToOneRelation implements InteractWithEntityManager, HasRelationFromToSchema
 {
     public function handleRelations(EntityManagerInterface $entityManager, EntityInterface $entity): void
     {

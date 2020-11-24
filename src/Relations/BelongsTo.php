@@ -7,7 +7,7 @@ namespace Stwarog\Uow\Relations;
 use Stwarog\Uow\EntityInterface;
 use Stwarog\Uow\EntityManagerInterface;
 
-class BelongsTo extends AbstractRelation implements RelationInterface, HasRelationFromToSchema
+class BelongsTo extends AbstractOneToOneRelation implements RelationInterface, HasRelationFromToSchema
 {
     public function handleRelations(EntityManagerInterface $entityManager, EntityInterface $entity): void
     {
