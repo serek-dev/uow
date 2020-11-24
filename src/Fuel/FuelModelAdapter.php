@@ -91,7 +91,7 @@ class FuelModelAdapter implements EntityInterface
                             $meta['key_from'], $meta['key_through_from'], $meta['table_through'], $meta['key_through_to'], $meta['model_to'], $meta['key_to']
                         );
                         $bag->setRelatedData($entities);
-//                        $this->relations->add($field, $bag);
+                        $this->relations->add($field, $bag);
                         break;
 
                     default:

@@ -37,12 +37,15 @@ class ManyToMany implements RelationInterface
 
     public function handleRelations(EntityManagerInterface $entityManager, EntityInterface $entity): void
     {
-        $virtualEntity = new VirtualEntity(
-            ['keyFrom', 'keyTo', '', '', ''],
-            ['']
-        );
-        dd($this);
-        dd($this->related);
+        foreach ($this->related as $relatedEntity) {
+            $entityManager->persist($relatedEntity);
+            $virtualEntity = new VirtualEntity(
+                $this->tableThrough,
+                [$this->keyThroughFrom, $this->keyThroughTo],
+                [$entity->get($this->keyFrom), $relatedEntity->get($this->keyTo)]
+            );
+            $entityManager->persist($virtualEntity);
+        }
     }
 
     public function toArray(): array

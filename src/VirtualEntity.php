@@ -4,7 +4,7 @@
 namespace Stwarog\Uow;
 
 
-class VirtualEntity implements PersistAble
+class VirtualEntity implements EntityInterface
 {
     /** @var array */
     private $columns;
@@ -48,5 +48,55 @@ class VirtualEntity implements PersistAble
     public function originalClass(): object
     {
         return $this;
+    }
+
+    public function generateIdValue(DBConnectionInterface $db): void
+    {
+        return;
+    }
+
+    public function relations(): RelationBag
+    {
+        return new RelationBag();
+    }
+
+    public function setId(string $id): void
+    {
+        return;
+    }
+
+    public function get(string $field)
+    {
+        return null;
+    }
+
+    public function set(string $field, $value)
+    {
+        return;
+    }
+
+    public function idValueGenerationStrategy(): IdGenerationStrategyInterface
+    {
+        return new NoIncrementIdStrategy();
+    }
+
+    public function toArray(): array
+    {
+        return array_combine($this->columns, $this->values);
+    }
+
+    public function isEmpty(): bool
+    {
+        return empty($this->values);
+    }
+
+    public function isDirty(): bool
+    {
+        return false;
+    }
+
+    public function isNew(): bool
+    {
+        return true;
     }
 }
