@@ -25,77 +25,51 @@
 namespace Stwarog\Uow\UnitOfWork;
 
 
-use InvalidArgumentException;
-
 class UnitOfWork
 {
+    /**
+     * Unified and compiled (expected) set of values for DbConnection
+     *
+     * @var array
+     */
     private $data = [];
-    private $persistedHashes = [];
+
+    # all of these 3 below, has to be unique (index = unique id)
+
+    /** @var PersistAble[] */
+    private $insert = [];
+    /** @var PersistAble[] */
+    private $update = [];
+    /** @var PersistAble[] */
+    private $delete = [];
 
     public function insert(PersistAble $entity): void
     {
-        $this->mark($entity);
-
-        $table   = $entity->table();
-        $columns = $entity->columns();
-        $values  = $entity->values();
-
-        $hash = $this->hash($columns);
-
-        $valuesAggregate   = $this->data[ActionType::INSERT][$table][$hash]['values'] ?? [];
-        $valuesAggregate[] = $values;
-
-        $this->data[ActionType::INSERT][$table][$hash] = [
-            'columns' => $columns,
-            'values'  => $valuesAggregate,
-        ];
+        (new WasNotDeletedSpecification($this))->isSatisfiedBy($entity);
+        $this->insert[$this->idOf($entity)] = $entity;
     }
 
-    private function mark(PersistAble $entity): void
-    {
-        $this->persistedHashes[] = $this->objectHash($entity);
-    }
-
-    private function objectHash(PersistAble $entity): string
+    private function idOf(PersistAble $entity): string
     {
         return _id($entity);
     }
 
-    private function hash(array $array): string
-    {
-        return serialize($array);
-    }
-
     public function update(PersistAble $entity): void
     {
-        $this->mark($entity);
+        (new HasPrimaryKeySpecification())->isSatisfiedBy($entity);
+        (new WasNotDeletedSpecification($this))->isSatisfiedBy($entity);
+        $this->update[$this->idOf($entity)] = $entity;
+    }
 
-        if (empty($entity->idValue())) {
-            throw new InvalidArgumentException('Cant update entity when no idKey specified.');
-        }
-
-        $table   = $entity->table();
-        $columns = $entity->columns();
-        $values  = $entity->values();
-        $id      = $entity->idValue();
-        $idKey   = $entity->idKey();
-
-        $hash = $this->hash(array_combine($columns, $values));
-
-        $idsAggregate   = $this->data[ActionType::UPDATE][$table][$hash]['where'][0][2] ?? [];
-        $idsAggregate[] = $id;
-
-        $this->data[ActionType::UPDATE][$table][$hash] = [
-            'where'   => [
-                [$idKey, 'IN', $idsAggregate],
-            ],
-            'columns' => $columns,
-            'values'  => $values,
-        ];
+    public function has(ActionType $type, PersistAble $entity): bool
+    {
+        return isset($this->$type[$this->idOf($entity)]);
     }
 
     public function getData(ActionType $type): array
     {
+        $this->compile($type);
+
         if (empty($this->data[(string) $type])) {
             return [];
         }
@@ -103,40 +77,93 @@ class UnitOfWork
         return $this->data[(string) $type];
     }
 
+    private function compile(ActionType $type)
+    {
+        if ($type->equals(ActionType::INSERT())) {
+            foreach ($this->insert as $id => $entity) {
+                $table   = $entity->table();
+                $columns = $entity->columns();
+                $values  = $entity->values();
+
+                $hash = $this->hash($columns);
+
+                $valuesAggregate   = $this->data[ActionType::INSERT][$table][$hash]['values'] ?? [];
+                $valuesAggregate[] = $values;
+
+                $this->data[ActionType::INSERT][$table][$hash] = [
+                    'columns' => $columns,
+                    'values'  => $valuesAggregate,
+                ];
+            }
+        }
+
+        if ($type->equals(ActionType::UPDATE())) {
+            foreach ($this->update as $id => $entity) {
+                $table   = $entity->table();
+                $columns = $entity->columns();
+                $values  = $entity->values();
+                $id      = $entity->idValue();
+                $idKey   = $entity->idKey();
+
+                $hash = $this->hash(array_combine($columns, $values));
+
+                $idsAggregate   = $this->data[ActionType::UPDATE][$table][$hash]['where'][0][2] ?? [];
+                $idsAggregate[] = $id;
+
+                $this->data[ActionType::UPDATE][$table][$hash] = [
+                    'where'   => [
+                        [$idKey, 'IN', $idsAggregate],
+                    ],
+                    'columns' => $columns,
+                    'values'  => $values,
+                ];
+            }
+        }
+
+        if ($type->equals(ActionType::DELETE())) {
+            foreach ($this->delete as $id => $entity) {
+                $table   = $entity->table();
+                $idName  = $entity->idKey();
+                $idValue = $entity->idValue();
+                $idKey   = $entity->idKey();
+
+                $hash = $this->hash([$idName]);
+
+                $idsAggregate   = $this->data[ActionType::DELETE][$table][$hash]['where'][0][2] ?? [];
+                $idsAggregate[] = $idValue;
+
+                $this->data[ActionType::DELETE][$table][$hash] = [
+                    'where' => [
+                        [$idKey, 'IN', $idsAggregate],
+                    ],
+                ];
+            }
+        }
+    }
+
+    private function hash(array $array): string
+    {
+        return serialize($array);
+    }
+
     public function delete(PersistAble $entity)
     {
-        $this->mark($entity);
-
-        $table   = $entity->table();
-        $idName  = $entity->idKey();
-        $idValue = $entity->idValue();
-        $idKey   = $entity->idKey();
-
-        $hash = $this->hash([$idName]);
-
-        $idsAggregate   = $this->data[ActionType::DELETE][$table][$hash]['where'][0][2] ?? [];
-        $idsAggregate[] = $idValue;
-
-        $this->data[ActionType::DELETE][$table][$hash] = [
-            'where' => [
-                [$idKey, 'IN', $idsAggregate],
-            ],
-        ];
+        (new HasPrimaryKeySpecification())->isSatisfiedBy($entity);
+        $this->delete[$this->idOf($entity)] = $entity;
     }
 
     public function wasPersisted(PersistAble $entity): bool
     {
-        return in_array($this->objectHash($entity), $this->persistedHashes);
+        return in_array($this->idOf($entity), array_merge($this->insert, $this->update));
     }
 
     public function isEmpty(): bool
     {
-        return empty($this->data);
+        return empty(array_merge($this->insert, $this->update, $this->delete));
     }
 
     public function reset(): void
     {
-        $this->data            = [];
-        $this->persistedHashes = [];
+        $this->insert = $this->update = $this->delete = $this->data = [];
     }
 }
