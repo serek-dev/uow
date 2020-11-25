@@ -47,4 +47,9 @@ class ReflectionHelper
 
         return $p->getValue($object);
     }
+
+    public static function getObjectId(object $object): string
+    {
+        return spl_object_hash($object);
+    }
 }

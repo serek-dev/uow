@@ -58,7 +58,7 @@ class UnitOfWork
 
     private function objectHash(PersistAble $entity): string
     {
-        return spl_object_hash($entity->originalClass());
+        return _id($entity);
     }
 
     private function hash(array $array): string
