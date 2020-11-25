@@ -174,7 +174,7 @@ class FuelModelAdapter implements EntityInterface
 
     public function idValue(): ?string
     {
-        return (string)$this->model[$this->idKey()] ?? null;
+        return (string) $this->model[$this->idKey()] ?? null;
     }
 
     public function idKey(): ?string

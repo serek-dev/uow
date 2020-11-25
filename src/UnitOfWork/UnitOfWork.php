@@ -79,6 +79,8 @@ class UnitOfWork
 
     private function compile(ActionType $type)
     {
+        $this->data[(string) $type] = [];
+
         if ($type->equals(ActionType::INSERT())) {
             foreach ($this->insert as $id => $entity) {
                 $table   = $entity->table();
@@ -95,6 +97,8 @@ class UnitOfWork
                     'values'  => $valuesAggregate,
                 ];
             }
+
+            return;
         }
 
         if ($type->equals(ActionType::UPDATE())) {
@@ -118,26 +122,27 @@ class UnitOfWork
                     'values'  => $values,
                 ];
             }
+
+            return;
         }
 
-        if ($type->equals(ActionType::DELETE())) {
-            foreach ($this->delete as $id => $entity) {
-                $table   = $entity->table();
-                $idName  = $entity->idKey();
-                $idValue = $entity->idValue();
-                $idKey   = $entity->idKey();
+        # nothing left, so it is DELETE
+        foreach ($this->delete as $id => $entity) {
+            $table   = $entity->table();
+            $idName  = $entity->idKey();
+            $idValue = $entity->idValue();
+            $idKey   = $entity->idKey();
 
-                $hash = $this->hash([$idName]);
+            $hash = $this->hash([$idName]);
 
-                $idsAggregate   = $this->data[ActionType::DELETE][$table][$hash]['where'][0][2] ?? [];
-                $idsAggregate[] = $idValue;
+            $idsAggregate   = $this->data[ActionType::DELETE][$table][$hash]['where'][0][2] ?? [];
+            $idsAggregate[] = $idValue;
 
-                $this->data[ActionType::DELETE][$table][$hash] = [
-                    'where' => [
-                        [$idKey, 'IN', $idsAggregate],
-                    ],
-                ];
-            }
+            $this->data[ActionType::DELETE][$table][$hash] = [
+                'where' => [
+                    [$idKey, 'IN', $idsAggregate],
+                ],
+            ];
         }
     }
 

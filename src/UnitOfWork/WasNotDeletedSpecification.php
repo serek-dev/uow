@@ -49,8 +49,10 @@ class WasNotDeletedSpecification implements UnitOfWorkSpecificationInterface
     {
         if ($this->unitOfWork->has(ActionType::DELETE(), $entity)) {
             throw new UnitOfWorkException(
-                'Attempted to persist entity <%s>, but it was already marked as deleted.',
-                get_class($entity->originalClass())
+                sprintf(
+                    'Attempted to persist entity <%s>, but it was already marked as deleted.',
+                    get_class($entity->originalClass())
+                )
             );
         }
 

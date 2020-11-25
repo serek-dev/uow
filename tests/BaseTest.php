@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php
 /*
     Copyright (c) 2020 Sebastian Twaróg <contact@stwarog.com>
 
@@ -22,39 +22,10 @@
     WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-namespace Stwarog\Uow\UnitOfWork;
 
+use PHPUnit\Framework\TestCase;
 
-use Stwarog\Uow\Exceptions\UnitOfWorkException;
-
-class HasPrimaryKeySpecification implements UnitOfWorkSpecificationInterface
+class BaseTest extends TestCase
 {
-    /**
-     * @param PersistAble $entity
-     *
-     * @return bool
-     * @throws UnitOfWorkException
-     */
-    public function isSatisfiedBy(PersistAble $entity): bool
-    {
-        if (empty($entity->idKey())) {
-            throw new UnitOfWorkException(
-                sprintf(
-                    'Attempted to update entity <%s>, but it has no primary key name specified.',
-                    get_class($entity->originalClass())
-                )
-            );
-        }
 
-        if (empty($entity->idValue())) {
-            throw new UnitOfWorkException(
-                sprintf(
-                    'Attempted to update entity <%s>, but it has no primary key value specified.',
-                    get_class($entity->originalClass())
-                )
-            );
-        }
-
-        return true;
-    }
 }
