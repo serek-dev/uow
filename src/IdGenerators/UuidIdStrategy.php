@@ -22,17 +22,20 @@
     WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-namespace Stwarog\Uow;
+namespace Stwarog\Uow\IdGenerators;
 
 
-interface DebugAble
+use Ramsey\Uuid\Uuid;
+use Stwarog\Uow\DBConnectionInterface;
+use Stwarog\Uow\EntityInterface;
+
+class UuidIdStrategy implements IdGenerationStrategyInterface
 {
-    /**
-     * Dumps MySql query details.
-     * @return array
-     *         [
-     *              'sql' => (string) with all queries in Transaction
-     *         ]
-     */
-    public function debug(): array;
+    public function handle(EntityInterface $entity, DBConnectionInterface $db): void
+    {
+        if ($entity->idKey() === null) {
+            return;
+        }
+        $entity->setId(Uuid::uuid4());
+    }
 }

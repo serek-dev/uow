@@ -22,17 +22,10 @@
     WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-namespace Stwarog\Uow;
+namespace Stwarog\Uow\IdGenerators;
 
 
-interface DebugAble
+interface HasIdStrategy
 {
-    /**
-     * Dumps MySql query details.
-     * @return array
-     *         [
-     *              'sql' => (string) with all queries in Transaction
-     *         ]
-     */
-    public function debug(): array;
+    public function idValueGenerationStrategy(): IdGenerationStrategyInterface;
 }

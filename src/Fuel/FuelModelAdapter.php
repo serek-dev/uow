@@ -1,16 +1,37 @@
 <?php
+/*
+    Copyright (c) 2020 Sebastian Twaróg <contact@stwarog.com>
 
+    Permission is hereby granted, free of charge, to any person obtaining
+    a copy of this software and associated documentation files (the
+    "Software"), to deal in the Software without restriction, including
+    without limitation the rights to use, copy, modify, merge, publish,
+    distribute, sublicense, and/or sell copies of the Software, and to
+    permit persons to whom the Software is furnished to do so, subject to
+    the following conditions:
+
+    The above copyright notice and this permission notice shall be
+    included in all copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+    EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+    MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+    NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+    LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+    OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/
 
 namespace Stwarog\Uow\Fuel;
 
 
 use InvalidArgumentException;
 use Orm\Model;
-use Stwarog\Uow\AutoIncrementIdStrategy;
 use Stwarog\Uow\DBConnectionInterface;
 use Stwarog\Uow\EntityInterface;
-use Stwarog\Uow\HasIdStrategy;
-use Stwarog\Uow\IdGenerationStrategyInterface;
+use Stwarog\Uow\IdGenerators\AutoIncrementIdStrategy;
+use Stwarog\Uow\IdGenerators\HasIdStrategy;
+use Stwarog\Uow\IdGenerators\IdGenerationStrategyInterface;
 use Stwarog\Uow\RelationBag;
 use Stwarog\Uow\Relations\BelongsTo;
 use Stwarog\Uow\Relations\HasMany;
@@ -51,14 +72,14 @@ class FuelModelAdapter implements EntityInterface
 
                     case FuelRelationType::BELONGS_TO:
                         $entity = !empty($mergedData[$field]) ? new FuelModelAdapter($mergedData[$field]) : [];
-                        $bag = new BelongsTo($meta['key_from'], $meta['model_to'], $meta['key_to']);
+                        $bag    = new BelongsTo($meta['key_from'], $meta['model_to'], $meta['key_to']);
                         $bag->setRelatedData([$entity]);
                         $this->relations->add($field, $bag);
                         break;
 
                     case FuelRelationType::HAS_ONE:
                         $entity = !empty($mergedData[$field]) ? new FuelModelAdapter($mergedData[$field]) : [];
-                        $bag = new HasOne($meta['key_from'], $meta['model_to'], $meta['key_to']);
+                        $bag    = new HasOne($meta['key_from'], $meta['model_to'], $meta['key_to']);
                         $bag->setRelatedData([$entity]);
                         $this->relations->add($field, $bag);
                         break;
@@ -72,7 +93,7 @@ class FuelModelAdapter implements EntityInterface
                         ) : [];
 
                         $entities = array_values($entities); # normalization, due fuels maps indexes as PK
-                        $bag = new HasMany($meta['key_from'], $meta['model_to'], $meta['key_to']);
+                        $bag      = new HasMany($meta['key_from'], $meta['model_to'], $meta['key_to']);
                         $bag->setRelatedData($entities);
                         $this->relations->add($field, $bag);
                         break;
@@ -86,8 +107,13 @@ class FuelModelAdapter implements EntityInterface
                         ) : [];
 
                         $entities = array_values($entities); # normalization, due fuels maps indexes as PK
-                        $bag = new ManyToMany(
-                            $meta['key_from'], $meta['key_through_from'], $meta['table_through'], $meta['key_through_to'], $meta['model_to'], $meta['key_to']
+                        $bag      = new ManyToMany(
+                            $meta['key_from'],
+                            $meta['key_through_from'],
+                            $meta['table_through'],
+                            $meta['key_through_to'],
+                            $meta['model_to'],
+                            $meta['key_to']
                         );
                         $bag->setRelatedData($entities);
                         $this->relations->add($field, $bag);

@@ -22,17 +22,20 @@
     WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-namespace Stwarog\Uow;
+namespace Stwarog\Uow\UnitOfWork;
 
+use MyCLabs\Enum\Enum;
 
-interface DebugAble
+/**
+ * @method static ActionType SELECT()
+ * @method static ActionType INSERT()
+ * @method static ActionType UPDATE()
+ * @method static ActionType DELETE()
+ */
+class ActionType extends Enum
 {
-    /**
-     * Dumps MySql query details.
-     * @return array
-     *         [
-     *              'sql' => (string) with all queries in Transaction
-     *         ]
-     */
-    public function debug(): array;
+    public const SELECT = 'select';
+    public const INSERT = 'insert';
+    public const UPDATE = 'update';
+    public const DELETE = 'delete';
 }

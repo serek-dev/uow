@@ -22,17 +22,29 @@
     WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-namespace Stwarog\Uow;
+namespace Stwarog\Uow\UnitOfWork;
 
 
-interface DebugAble
+interface PersistAble
 {
     /**
-     * Dumps MySql query details.
-     * @return array
-     *         [
-     *              'sql' => (string) with all queries in Transaction
-     *         ]
+     * @return array|string[]
      */
-    public function debug(): array;
+    public function columns(): array;
+
+    public function table(): string;
+
+    /**
+     * If isNew() then all fields are returned.
+     * If isDirty() then only changed values.
+     *
+     * @return array
+     */
+    public function values(): array;
+
+    public function idValue(): ?string;
+
+    public function idKey(): ?string;
+
+    public function originalClass(): object;
 }
