@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
     Copyright (c) 2020 Sebastian Twaróg <contact@stwarog.com>
 
@@ -174,7 +174,7 @@ class FuelModelAdapter implements EntityInterface
 
     public function idValue(): ?string
     {
-        return $this->model[$this->idKey()] ?? null;
+        return (string)$this->model[$this->idKey()] ?? null;
     }
 
     public function idKey(): ?string

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
     Copyright (c) 2020 Sebastian Twaróg <contact@stwarog.com>
 
@@ -36,6 +36,6 @@ class UuidIdStrategy implements IdGenerationStrategyInterface
         if ($entity->idKey() === null) {
             return;
         }
-        $entity->setId(Uuid::uuid4());
+        $entity->setId(Uuid::uuid4()->toString());
     }
 }
