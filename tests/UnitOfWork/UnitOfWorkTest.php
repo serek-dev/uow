@@ -45,6 +45,7 @@ class UnitOfWorkTest extends TestCase
         $mock = PersistAbleStub::create($this)->stub;
 
         $uow = new UnitOfWork();
+        $this->assertFalse($uow->wasPersisted($mock));
         $uow->insert($mock);
         $uow->insert($mock);
         $uow->insert($mock);
@@ -52,7 +53,7 @@ class UnitOfWorkTest extends TestCase
         $this->assertTrue($uow->has(ActionType::INSERT(), $mock));
         $this->assertFalse($uow->has(ActionType::UPDATE(), $mock));
         $this->assertFalse($uow->has(ActionType::DELETE(), $mock));
-        $uow->wasPersisted($mock);
+        $this->assertTrue($uow->wasPersisted($mock));
         $this->assertSame(1, count($uow->getData(ActionType::INSERT())));
     }
 

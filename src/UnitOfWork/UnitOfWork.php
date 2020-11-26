@@ -159,7 +159,8 @@ class UnitOfWork
 
     public function wasPersisted(PersistAble $entity): bool
     {
-        return in_array($this->idOf($entity), array_merge($this->insert, $this->update));
+        $ids = array_keys(array_merge($this->insert, $this->update));
+        return in_array($this->idOf($entity), $ids);
     }
 
     public function isEmpty(): bool

@@ -43,24 +43,22 @@ class EntityManager implements EntityManagerInterface
     public function persist(EntityInterface $entity): void
     {
         if ($this->uow->wasPersisted($entity)) {
-            dump('is new ' . get_class($entity->originalClass()) . $entity->get('name'));
             return;
         }
 
         if ($entity->isNew()) {
-            dump('is new fetching id ' . get_class($entity->originalClass()) . $entity->get('name'));
 
             $this->requestIdFor($entity);
 
+            $this->uow->insert($entity);
 
             $this->handleRelationsOf($entity);
 
-            dump('insert ' . get_class($entity->originalClass()) . $entity->get('name'));
-
-
-            $this->uow->insert($entity);
-
             return;
+        }
+
+        if ($entity->isDirty()) {
+            $this->uow->update($entity);
         }
 
         $this->handleRelationsOf($entity);
@@ -84,7 +82,6 @@ class EntityManager implements EntityManagerInterface
         if ($entity->relations()->isDirty() === false) {
             return;
         }
-        dump('relation' . get_class($entity->originalClass()) . $entity->get('name'));
 
         foreach ($entity->relations() as $field => $relation) {
             $relation->handleRelations($this, $entity);
