@@ -36,8 +36,7 @@ class BelongsTo extends AbstractOneToOneRelation implements RelationInterface, H
         if ($this->isEmpty()) {
             return;
         }
-        $relatedEntity = $this->relatedEntity;
-        $entityManager->persist($relatedEntity);
-        $entity->set($this->keyFrom(), $relatedEntity->get($this->keyTo()));
+        $entityManager->persist($this->relatedEntity);
+        $entity->set($this->keyFrom(), $this->relatedEntity->get($this->keyTo()));
     }
 }
