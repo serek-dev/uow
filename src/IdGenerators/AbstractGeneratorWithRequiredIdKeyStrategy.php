@@ -29,11 +29,17 @@ use Stwarog\Uow\DBConnectionInterface;
 use Stwarog\Uow\EntityInterface;
 use Stwarog\Uow\Exceptions\MissingIdKeyUOWException;
 
-class AutoIncrementIdStrategy extends AbstractGeneratorWithRequiredIdKeyStrategy implements IdGenerationStrategyInterface
+abstract class AbstractGeneratorWithRequiredIdKeyStrategy implements IdGenerationStrategyInterface
 {
-    public function handle(EntityInterface $entity, DBConnectionInterface $db): void
+    protected function verifyHasIdKey(EntityInterface $entity): void
     {
-        $this->verifyHasIdKey($entity);
-        $entity->setId($db->nextAutoIncrementNo($entity->table(), $entity->idKey()));
+        if (empty($entity->idKey())) {
+            throw new MissingIdKeyUOWException(
+                sprintf(
+                    'Attempted to generate primary key for model %s, using %s, but no idKey (name) found.',
+                    get_class($entity->originalClass()), get_called_class()
+                )
+            );
+        }
     }
 }

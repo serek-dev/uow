@@ -25,13 +25,13 @@
 namespace Stwarog\Uow;
 
 
-use InvalidArgumentException;
+use Iterator;
+use Stwarog\Uow\Exceptions\OutOfRangeUOWException;
 use Stwarog\Uow\Relations\RelationInterface;
 
-class RelationBag
+class RelationBag implements Iterator
 {
     private $data = [];
-
     private $isDirty = false;
 
     public function add(string $field, RelationInterface $relation): void
@@ -50,7 +50,7 @@ class RelationBag
     public function get(string $field): RelationInterface
     {
         if (isset($this->data[$field]) === false) {
-            throw new InvalidArgumentException(sprintf('Unable to find field %s in relation bag.', $field));
+            throw new OutOfRangeUOWException(sprintf('Unable to find field %s in relation bag.', $field));
         }
 
         return $this->data[$field];
@@ -72,5 +72,30 @@ class RelationBag
     public function isDirty(): bool
     {
         return $this->isDirty;
+    }
+
+    public function current()
+    {
+        return current($this->data);
+    }
+
+    public function next()
+    {
+        next($this->data);
+    }
+
+    public function key()
+    {
+        return key($this->data);
+    }
+
+    public function valid()
+    {
+        return key($this->data) !== null;
+    }
+
+    public function rewind()
+    {
+        reset($this->data);
     }
 }

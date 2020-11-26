@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php
 /*
     Copyright (c) 2020 Sebastian Twaróg <contact@stwarog.com>
 
@@ -22,18 +22,28 @@
     WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-namespace Stwarog\Uow\IdGenerators;
+
+namespace Stubs;
 
 
-use Stwarog\Uow\DBConnectionInterface;
-use Stwarog\Uow\EntityInterface;
-use Stwarog\Uow\Exceptions\MissingIdKeyUOWException;
+use PHPUnit\Framework\MockObject\MockBuilder;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
+use Stwarog\Uow\Relations\RelationInterface;
 
-class AutoIncrementIdStrategy extends AbstractGeneratorWithRequiredIdKeyStrategy implements IdGenerationStrategyInterface
+class RelationStub
 {
-    public function handle(EntityInterface $entity, DBConnectionInterface $db): void
+    /** @var MockObject|RelationInterface */
+    public $stub;
+
+    public function __construct(TestCase $case, string $table = 'table_name')
     {
-        $this->verifyHasIdKey($entity);
-        $entity->setId($db->nextAutoIncrementNo($entity->table(), $entity->idKey()));
+        $builder    = new MockBuilder($case, RelationInterface::class);
+        $this->stub = $builder->getMock();
+    }
+
+    public static function create(TestCase $case): self
+    {
+        return new self($case);
     }
 }

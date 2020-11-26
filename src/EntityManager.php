@@ -79,7 +79,7 @@ class EntityManager implements EntityManagerInterface
             return;
         }
 
-        foreach ($entity->relations()->toArray() as $field => $relation) {
+        foreach ($entity->relations() as $field => $relation) {
             $relation->handleRelations($this, $entity);
         }
     }

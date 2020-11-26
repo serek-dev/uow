@@ -29,13 +29,11 @@ use Ramsey\Uuid\Uuid;
 use Stwarog\Uow\DBConnectionInterface;
 use Stwarog\Uow\EntityInterface;
 
-class UuidIdStrategy implements IdGenerationStrategyInterface
+class UuidIdStrategy extends AbstractGeneratorWithRequiredIdKeyStrategy implements IdGenerationStrategyInterface
 {
     public function handle(EntityInterface $entity, DBConnectionInterface $db): void
     {
-        if ($entity->idKey() === null) {
-            return;
-        }
+        $this->verifyHasIdKey($entity);
         $entity->setId(Uuid::uuid4()->toString());
     }
 }

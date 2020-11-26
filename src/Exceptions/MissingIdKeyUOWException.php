@@ -22,18 +22,12 @@
     WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-namespace Stwarog\Uow\IdGenerators;
+namespace Stwarog\Uow\Exceptions;
 
 
-use Stwarog\Uow\DBConnectionInterface;
-use Stwarog\Uow\EntityInterface;
-use Stwarog\Uow\Exceptions\MissingIdKeyUOWException;
+use InvalidArgumentException;
 
-class AutoIncrementIdStrategy extends AbstractGeneratorWithRequiredIdKeyStrategy implements IdGenerationStrategyInterface
+class MissingIdKeyUOWException extends InvalidArgumentException
 {
-    public function handle(EntityInterface $entity, DBConnectionInterface $db): void
-    {
-        $this->verifyHasIdKey($entity);
-        $entity->setId($db->nextAutoIncrementNo($entity->table(), $entity->idKey()));
-    }
+
 }

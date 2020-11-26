@@ -23,7 +23,7 @@
 */
 
 
-namespace UnitOfWork;
+namespace Stubs;
 
 
 use PHPUnit\Framework\MockObject\MockBuilder;

@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php
 /*
     Copyright (c) 2020 Sebastian Twaróg <contact@stwarog.com>
 
@@ -22,18 +22,29 @@
     WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-namespace Stwarog\Uow\IdGenerators;
+
+namespace IdGenerators;
 
 
+use BaseTest;
 use Stwarog\Uow\DBConnectionInterface;
 use Stwarog\Uow\EntityInterface;
 use Stwarog\Uow\Exceptions\MissingIdKeyUOWException;
+use Stwarog\Uow\IdGenerators\AutoIncrementIdStrategy;
+use Stwarog\Uow\IdGenerators\NoIncrementIdStrategy;
 
-class AutoIncrementIdStrategy extends AbstractGeneratorWithRequiredIdKeyStrategy implements IdGenerationStrategyInterface
+class NoIncrementIdStrategyTest extends BaseTest
 {
-    public function handle(EntityInterface $entity, DBConnectionInterface $db): void
+    /** @test */
+    public function handle(): void
     {
-        $this->verifyHasIdKey($entity);
-        $entity->setId($db->nextAutoIncrementNo($entity->table(), $entity->idKey()));
+        $entity = $this->createMock(EntityInterface::class);
+        $entity->expects($this->never())->method('setId');
+        $entity->expects($this->never())->method('idKey');
+
+        $db = $this->createStub(DBConnectionInterface::class);
+
+        $strategy = new NoIncrementIdStrategy();
+        $strategy->handle($entity, $db);
     }
 }

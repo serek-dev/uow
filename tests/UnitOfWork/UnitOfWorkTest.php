@@ -28,6 +28,7 @@ namespace UnitOfWork;
 
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
+use Stubs\PersistAbleStub;
 use Stwarog\Uow\Exceptions\UnitOfWorkException;
 use Stwarog\Uow\UnitOfWork\ActionType;
 use Stwarog\Uow\UnitOfWork\PersistAble;
