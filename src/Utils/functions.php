@@ -36,6 +36,6 @@ if (!function_exists('_get')) {
 if (!function_exists('_id')) {
     function _id(object $object)
     {
-        return ReflectionHelper::getObjectId($object instanceof PersistAble ? $object->originalClass() : $object);
+        return ReflectionHelper::getObjectId($object);
     }
 }
