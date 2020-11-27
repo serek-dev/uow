@@ -48,7 +48,7 @@ class FuelModelAdapter implements EntityInterface
 
     public function __construct(Model $model)
     {
-        $this->model     = clone $model;
+        $this->model     = $model;
         $this->relations = new RelationBag();
         $this->extractRelations();
         ReflectionHelper::deleteValue($this->model, '_data_relations');
