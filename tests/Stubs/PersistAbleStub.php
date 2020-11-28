@@ -42,6 +42,7 @@ class PersistAbleStub
         $this->stub = $builder->getMock();
         $this->stub->method('originalClass')->willReturnSelf();
         $this->stub->method('table')->willReturn($table);
+        $this->stub->method('objectHash')->willReturn(spl_object_hash($this));
     }
 
     public static function create(TestCase $case, string $table = 'table_name'): self

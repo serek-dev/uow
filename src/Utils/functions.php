@@ -23,19 +23,11 @@
     WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-use Stwarog\Uow\UnitOfWork\PersistAble;
 use Stwarog\Uow\Utils\ReflectionHelper;
 
 if (!function_exists('_get')) {
     function _get(object $object, string $property)
     {
         return ReflectionHelper::getValue($object, $property);
-    }
-}
-
-if (!function_exists('_id')) {
-    function _id(object $object)
-    {
-        return ReflectionHelper::getObjectId($object instanceof PersistAble ? $object->originalClass() : $object);
     }
 }
