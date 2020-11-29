@@ -44,11 +44,16 @@ class FuelModelAdapter implements EntityInterface
     private $model;
     /** @var RelationBag */
     private $relations;
+    private $objectHash;
+    private $idKey = '';
 
     public function __construct(Model $model)
     {
         $this->model     = $model;
         $this->relations = new RelationBag();
+        $this->objectHash = spl_object_hash($model);
+        $assoc = array_keys($this->model->get_pk_assoc());
+        $this->idKey = reset($assoc);
         $this->extractRelations();
     }
 
@@ -179,9 +184,7 @@ class FuelModelAdapter implements EntityInterface
 
     public function idKey(): ?string
     {
-        $assoc = array_keys($this->model->get_pk_assoc());
-
-        return reset($assoc);
+        return $this->idKey;
     }
 
     public function relations(): RelationBag
@@ -239,6 +242,6 @@ class FuelModelAdapter implements EntityInterface
 
     public function objectHash(): string
     {
-        return spl_object_hash($this->originalClass());
+        return $this->objectHash;
     }
 }
