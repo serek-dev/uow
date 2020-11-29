@@ -37,7 +37,6 @@ use Stwarog\Uow\Relations\BelongsTo;
 use Stwarog\Uow\Relations\HasMany;
 use Stwarog\Uow\Relations\HasOne;
 use Stwarog\Uow\Relations\ManyToMany;
-use Stwarog\Uow\Utils\ReflectionHelper;
 
 class FuelModelAdapter implements EntityInterface
 {
@@ -51,8 +50,6 @@ class FuelModelAdapter implements EntityInterface
         $this->model     = $model;
         $this->relations = new RelationBag();
         $this->extractRelations();
-        ReflectionHelper::deleteValue($this->model, '_data_relations');
-        ReflectionHelper::deleteValue($this->model, '_custom_data');
     }
 
     private function extractRelations()
