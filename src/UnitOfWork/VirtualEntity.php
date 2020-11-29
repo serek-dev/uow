@@ -39,12 +39,14 @@ class VirtualEntity implements EntityInterface
     private $values;
     /** @var string */
     private $table;
+    private $objectHash;
 
     public function __construct(string $table, array $columns, array $values)
     {
-        $this->columns = $columns;
-        $this->values  = $values;
-        $this->table   = $table;
+        $this->columns    = $columns;
+        $this->values     = $values;
+        $this->table      = $table;
+        $this->objectHash = spl_object_hash($this);
     }
 
     public function columns(): array
@@ -125,5 +127,10 @@ class VirtualEntity implements EntityInterface
     public function isNew(): bool
     {
         return true;
+    }
+
+    public function objectHash(): string
+    {
+        return $this->objectHash;
     }
 }

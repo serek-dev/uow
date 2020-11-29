@@ -239,4 +239,9 @@ class FuelModelAdapter implements EntityInterface
     {
         return $this->model->to_array();
     }
+
+    public function objectHash(): string
+    {
+        return spl_object_hash($this->originalClass());
+    }
 }

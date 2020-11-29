@@ -47,21 +47,4 @@ class ReflectionHelper
 
         return $p->getValue($object);
     }
-
-    public static function deleteValue($object, string $property)
-    {
-        $reflection = new ReflectionClass($object);
-        if ($reflection->hasProperty($property) === false) {
-            return null;
-        }
-
-        $p = $reflection->getProperty($property);
-        $p->setAccessible(true);
-        unset($object->$property);
-    }
-
-    public static function getObjectId(object $object): string
-    {
-        return spl_object_hash($object);
-    }
 }

@@ -29,6 +29,7 @@ namespace Stubs;
 use PHPUnit\Framework\MockObject\MockBuilder;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Ramsey\Uuid\Uuid;
 use Stwarog\Uow\UnitOfWork\PersistAble;
 
 class PersistAbleStub
@@ -42,6 +43,7 @@ class PersistAbleStub
         $this->stub = $builder->getMock();
         $this->stub->method('originalClass')->willReturnSelf();
         $this->stub->method('table')->willReturn($table);
+        $this->stub->method('objectHash')->willReturn(Uuid::uuid4()->toString());
     }
 
     public static function create(TestCase $case, string $table = 'table_name'): self

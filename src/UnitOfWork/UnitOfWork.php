@@ -46,24 +46,19 @@ class UnitOfWork
     public function insert(PersistAble $entity): void
     {
         (new WasNotDeletedSpecification($this))->isSatisfiedBy($entity);
-        $this->insert[$this->idOf($entity)] = $entity;
-    }
-
-    private function idOf(PersistAble $entity): string
-    {
-        return _id($entity);
+        $this->insert[$entity->objectHash()] = $entity;
     }
 
     public function update(PersistAble $entity): void
     {
         (new HasPrimaryKeySpecification())->isSatisfiedBy($entity);
         (new WasNotDeletedSpecification($this))->isSatisfiedBy($entity);
-        $this->update[$this->idOf($entity)] = $entity;
+        $this->update[$entity->objectHash()] = $entity;
     }
 
     public function has(ActionType $type, PersistAble $entity): bool
     {
-        return isset($this->$type[$this->idOf($entity)]);
+        return isset($this->$type[$entity->objectHash()]);
     }
 
     public function getData(ActionType $type): array
@@ -154,13 +149,14 @@ class UnitOfWork
     public function delete(PersistAble $entity)
     {
         (new HasPrimaryKeySpecification())->isSatisfiedBy($entity);
-        $this->delete[$this->idOf($entity)] = $entity;
+        $this->delete[$entity->objectHash()] = $entity;
     }
 
     public function wasPersisted(PersistAble $entity): bool
     {
         $ids = array_keys(array_merge($this->insert, $this->update));
-        return in_array($this->idOf($entity), $ids);
+
+        return in_array($entity->objectHash(), $ids);
     }
 
     public function isEmpty(): bool
