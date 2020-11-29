@@ -22,40 +22,13 @@
     WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-namespace Stwarog\Uow\Fuel;
+namespace Stwarog\Uow\Exceptions;
 
 
-use Exception;
-use Fuel\Core\DB;
-use Orm\Model;
-use Stwarog\Uow\EntityManager;
-use Stwarog\Uow\EntityManagerFactory;
-use Stwarog\Uow\EntityManagerInterface;
-use Stwarog\Uow\UnitOfWork\UnitOfWork;
+use OutOfRangeException;
+use RuntimeException;
 
-class FuelEntityManager extends EntityManager implements EntityManagerInterface
+class RuntimeUOWException extends RuntimeException
 {
-    public static function initialize(DB $db, array $config = []): self
-    {
-        return new self(new FuelDBAdapter($db), new UnitOfWork(), $config);
-    }
 
-    /**
-     * @param Model $orm
-     * @param bool  $flush
-     *
-     * @throws Exception
-     */
-    public function save(Model $orm, bool $flush = false): void
-    {
-        $this->persist(new FuelModelAdapter($orm));
-        if ($flush) {
-            $this->flush();
-        }
-    }
-
-    public function delete(Model $orm): void
-    {
-        $this->remove(new FuelModelAdapter($orm));
-    }
 }

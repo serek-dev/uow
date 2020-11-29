@@ -25,6 +25,7 @@
 namespace Stwarog\Uow;
 
 use Exception;
+use Stwarog\Uow\Exceptions\RuntimeUOWException;
 use Stwarog\Uow\UnitOfWork\UnitOfWork;
 
 class EntityManager implements EntityManagerInterface
@@ -33,11 +34,13 @@ class EntityManager implements EntityManagerInterface
     private $db;
     /** @var UnitOfWork */
     private $uow;
+    private $config = [];
 
-    public function __construct(DBConnectionInterface $db)
+    public function __construct(DBConnectionInterface $db, UnitOfWork $uow, array $config = [])
     {
         $this->db  = $db;
-        $this->uow = new UnitOfWork();
+        $this->uow = $uow;
+        $this->config = $config;
     }
 
     public function persist(EntityInterface $entity): void
@@ -62,12 +65,6 @@ class EntityManager implements EntityManagerInterface
         }
 
         $this->handleRelationsOf($entity);
-
-        if ($entity->isDirty() === false) {
-            return;
-        }
-
-        $this->uow->update($entity);
     }
 
     private function requestIdFor(EntityInterface $entity): void
@@ -111,6 +108,9 @@ class EntityManager implements EntityManagerInterface
 
     public function debug(): array
     {
+        if (isset($this->config['debug']) && $this->config['debug'] === false) {
+            throw new RuntimeUOWException('No debug config option enabled.');
+        }
         return $this->db->debug();
     }
 }
