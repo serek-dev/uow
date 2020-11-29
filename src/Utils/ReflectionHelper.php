@@ -26,6 +26,7 @@ namespace Stwarog\Uow\Utils;
 
 
 use ReflectionClass;
+use Stwarog\Uow\UnitOfWork\PersistAble;
 
 class ReflectionHelper
 {
@@ -46,10 +47,5 @@ class ReflectionHelper
         $p->setAccessible(true);
 
         return $p->getValue($object);
-    }
-
-    public static function getObjectId(object $object): string
-    {
-        return spl_object_hash($object);
     }
 }
