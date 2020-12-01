@@ -127,7 +127,7 @@ class EntityManagerTest extends BaseTest
 
         $relationBag->add('fake', $relationItem);
 
-        $entity->expects($this->exactly(2))->method('relations')->willReturn($relationBag);
+        $entity->expects($this->exactly(3))->method('relations')->willReturn($relationBag);
 
         $this->uow->expects($this->once())->method('wasPersisted')->willReturn(false);
         $entity->expects($this->once())->method('isNew')->willReturn(true);

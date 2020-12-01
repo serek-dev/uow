@@ -43,8 +43,9 @@ class HasOne extends AbstractOneToOneRelation implements InteractWithEntityManag
         # todo: refactor! it doesn't have to be a valid related object
 
         /** @var RelationInterface[] $matchingRelatedEntityRelations */
+        $relationData = $relatedEntity->relations()->toArray();
         $matchingRelatedEntityRelations = array_filter(
-            $relatedEntity->relations()->toArray(),
+            $relationData,
             function (RelationInterface $relatedRelation) {
                 return $relatedRelation instanceof BelongsTo;
             }

@@ -76,7 +76,7 @@ class EntityManager implements EntityManagerInterface
 
     private function handleRelationsOf(EntityInterface $entity): void
     {
-        if ($entity->relations()->isDirty() === false) {
+        if (false === $entity->relations()->isDirty() || $entity->relations()->isEmpty()) {
             return;
         }
 

@@ -50,15 +50,18 @@ class FuelModelAdapter implements EntityInterface
     public function __construct(Model $model)
     {
         $this->model     = $model;
-        $this->relations = new RelationBag();
         $this->objectHash = spl_object_hash($model);
         $assoc = array_keys($this->model->get_pk_assoc());
         $this->idKey = reset($assoc);
-        $this->extractRelations();
     }
 
-    private function extractRelations()
+    private function extractRelationsIfNotExists(): void
     {
+        if (false === empty($this->relations)) {
+            return;
+        }
+        $this->relations = new RelationBag();
+
         $dataRelations = _get($this->model, '_data_relations');
         $customData    = _get($this->model, '_custom_data');
 
@@ -189,6 +192,7 @@ class FuelModelAdapter implements EntityInterface
 
     public function relations(): RelationBag
     {
+        $this->extractRelationsIfNotExists();
         return $this->relations;
     }
 
