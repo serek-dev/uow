@@ -31,12 +31,12 @@ use Stwarog\Uow\Shared\AbstractOneToOneRelation;
 
 class BelongsTo extends AbstractOneToOneRelation implements RelationInterface, HasRelationFromToSchema
 {
-    public function handleRelations(EntityManagerInterface $entityManager, EntityInterface $entity): void
+    public function handleRelations(EntityManagerInterface $entityManager, EntityInterface $parentEntity): void
     {
         if ($this->isEmpty()) {
             return;
         }
         $entityManager->persist($this->relatedEntity);
-        $entity->set($this->keyFrom(), $this->relatedEntity->get($this->keyTo()));
+        $parentEntity->set($this->keyFrom(), $this->relatedEntity->get($this->keyTo()));
     }
 }

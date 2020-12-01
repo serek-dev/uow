@@ -30,5 +30,5 @@ use Stwarog\Uow\EntityManagerInterface;
 
 interface InteractWithEntityManager
 {
-    public function handleRelations(EntityManagerInterface $entityManager, EntityInterface $entity): void;
+    public function handleRelations(EntityManagerInterface $entityManager, EntityInterface $parentEntity): void;
 }

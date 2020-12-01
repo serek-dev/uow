@@ -33,7 +33,7 @@ use Stwarog\Uow\Shared\AbstractOneToOneRelation;
 
 class HasOne extends AbstractOneToOneRelation implements InteractWithEntityManager, HasRelationFromToSchema
 {
-    public function handleRelations(EntityManagerInterface $entityManager, EntityInterface $entity): void
+    public function handleRelations(EntityManagerInterface $entityManager, EntityInterface $parentEntity): void
     {
         if ($this->isEmpty()) {
             return;
@@ -58,7 +58,7 @@ class HasOne extends AbstractOneToOneRelation implements InteractWithEntityManag
 
         $belongsToRelation = reset($matchingRelatedEntityRelations);
 
-        $relatedEntity->set($belongsToRelation->keyFrom(), $entity->get($this->keyFrom()));
+        $relatedEntity->set($belongsToRelation->keyFrom(), $parentEntity->get($this->keyFrom()));
         $entityManager->persist($relatedEntity);
     }
 }

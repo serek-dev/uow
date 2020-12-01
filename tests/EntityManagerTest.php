@@ -217,6 +217,14 @@ class EntityManagerTest extends BaseTest
         $this->service()->flush();
     }
 
+    # config
+
+    /** @test */
+    public function foreignKeysCheck__by_default__is_false(): void
+    {
+        $this->markTestIncomplete('Missing test case');
+    }
+
     private function service(array $config = []): EntityManagerInterface
     {
         return new EntityManager($this->db, $this->uow, $config);

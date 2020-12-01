@@ -29,7 +29,6 @@ use Exception;
 use Fuel\Core\DB;
 use Orm\Model;
 use Stwarog\Uow\EntityManager;
-use Stwarog\Uow\EntityManagerFactory;
 use Stwarog\Uow\EntityManagerInterface;
 use Stwarog\Uow\UnitOfWork\UnitOfWork;
 

@@ -53,18 +53,18 @@ class EntityManager implements EntityManagerInterface
 
             $this->requestIdFor($entity);
 
-            $this->uow->insert($entity);
-
             $this->handleRelationsOf($entity);
+
+            $this->uow->insert($entity);
 
             return;
         }
 
+        $this->handleRelationsOf($entity);
+
         if ($entity->isDirty()) {
             $this->uow->update($entity);
         }
-
-        $this->handleRelationsOf($entity);
     }
 
     private function requestIdFor(EntityInterface $entity): void
@@ -97,7 +97,12 @@ class EntityManager implements EntityManagerInterface
     {
         $this->db->startTransaction();
         try {
+            # todo
+            # At this moment foreign check key disabled mode is not recommended
+            # due fact, that the order of handled entities is important.
+            $this->handleForeignKey(false);
             $this->db->handleChanges($this->uow);
+            $this->handleForeignKey(true);
         } catch (Exception $e) {
             $this->db->rollbackTransaction();
             throw $e;
@@ -112,5 +117,18 @@ class EntityManager implements EntityManagerInterface
             throw new RuntimeUOWException('No debug config option enabled.');
         }
         return $this->db->debug();
+    }
+
+    private function foreignKeysCheck(): bool
+    {
+        return false === isset($this->config['foreign_key_check']) || false === $this->config['foreign_key_check'];
+    }
+
+    private function handleForeignKey(bool $check): void
+    {
+        if (false == $this->foreignKeysCheck()) {
+            return;
+        }
+        $this->db->query(sprintf('SET FOREIGN_KEY_CHECKS=%d;', $check));
     }
 }
