@@ -27,7 +27,6 @@ namespace Stwarog\Uow\IdGenerators;
 
 use Stwarog\Uow\DBConnectionInterface;
 use Stwarog\Uow\EntityInterface;
-use Stwarog\Uow\Exceptions\MissingIdKeyUOWException;
 
 class AutoIncrementIdStrategy extends AbstractGeneratorWithRequiredIdKeyStrategy implements IdGenerationStrategyInterface
 {

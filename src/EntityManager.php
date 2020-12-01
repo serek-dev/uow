@@ -38,8 +38,8 @@ class EntityManager implements EntityManagerInterface
 
     public function __construct(DBConnectionInterface $db, UnitOfWork $uow, array $config = [])
     {
-        $this->db  = $db;
-        $this->uow = $uow;
+        $this->db     = $db;
+        $this->uow    = $uow;
         $this->config = $config;
     }
 
@@ -111,12 +111,12 @@ class EntityManager implements EntityManagerInterface
         $this->uow->reset();
     }
 
-    public function debug(): array
+    private function handleForeignKey(bool $check): void
     {
-        if (isset($this->config['debug']) && $this->config['debug'] === false) {
-            throw new RuntimeUOWException('No debug config option enabled.');
+        if (false == $this->foreignKeysCheck()) {
+            return;
         }
-        return $this->db->debug();
+        $this->db->query(sprintf('SET FOREIGN_KEY_CHECKS=%d;', $check));
     }
 
     private function foreignKeysCheck(): bool
@@ -124,11 +124,12 @@ class EntityManager implements EntityManagerInterface
         return false === isset($this->config['foreign_key_check']) || false === $this->config['foreign_key_check'];
     }
 
-    private function handleForeignKey(bool $check): void
+    public function debug(): array
     {
-        if (false == $this->foreignKeysCheck()) {
-            return;
+        if (isset($this->config['debug']) && $this->config['debug'] === false) {
+            throw new RuntimeUOWException('No debug config option enabled.');
         }
-        $this->db->query(sprintf('SET FOREIGN_KEY_CHECKS=%d;', $check));
+
+        return $this->db->debug();
     }
 }

@@ -25,7 +25,6 @@
 namespace Stwarog\Uow\Exceptions;
 
 
-use OutOfRangeException;
 use RuntimeException;
 
 class RuntimeUOWException extends RuntimeException

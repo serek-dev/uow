@@ -49,10 +49,72 @@ class FuelModelAdapter implements EntityInterface
 
     public function __construct(Model $model)
     {
-        $this->model     = $model;
+        $this->model      = $model;
         $this->objectHash = spl_object_hash($model);
-        $assoc = array_keys($this->model->get_pk_assoc());
-        $this->idKey = reset($assoc);
+        $assoc            = array_keys($this->model->get_pk_assoc());
+        $this->idKey      = reset($assoc);
+    }
+
+    public function isDirty(): bool
+    {
+        return !empty($this->getDifferences());
+    }
+
+    private function getDifferences(): array
+    {
+        $data     = _get($this->model, '_data');
+        $original = _get($this->model, '_original');
+
+        return array_diff($data, $original);
+    }
+
+    public function table(): string
+    {
+        return _get($this->model, '_table_name');
+    }
+
+    public function columns(): array
+    {
+        if ($this->isNew()) {
+            $data = _get($this->model, '_data');
+
+            return array_keys($data);
+        }
+
+        return array_keys($this->getDifferences());
+    }
+
+    public function isNew(): bool
+    {
+        return $this->model->is_new();
+    }
+
+    public function values(): array
+    {
+        if ($this->isNew()) {
+            $data = _get($this->model, '_data');
+
+            return array_values($data);
+        }
+
+        return array_values($this->getDifferences());
+    }
+
+    public function idValue(): ?string
+    {
+        return (string) $this->model[$this->idKey()] ?? null;
+    }
+
+    public function idKey(): ?string
+    {
+        return $this->idKey;
+    }
+
+    public function relations(): RelationBag
+    {
+        $this->extractRelationsIfNotExists();
+
+        return $this->relations;
     }
 
     private function extractRelationsIfNotExists(): void
@@ -133,67 +195,6 @@ class FuelModelAdapter implements EntityInterface
             }
 
         }
-    }
-
-    public function isDirty(): bool
-    {
-        return !empty($this->getDifferences());
-    }
-
-    private function getDifferences(): array
-    {
-        $data     = _get($this->model, '_data');
-        $original = _get($this->model, '_original');
-
-        return array_diff($data, $original);
-    }
-
-    public function table(): string
-    {
-        return _get($this->model, '_table_name');
-    }
-
-    public function columns(): array
-    {
-        if ($this->isNew()) {
-            $data = _get($this->model, '_data');
-
-            return array_keys($data);
-        }
-
-        return array_keys($this->getDifferences());
-    }
-
-    public function isNew(): bool
-    {
-        return $this->model->is_new();
-    }
-
-    public function values(): array
-    {
-        if ($this->isNew()) {
-            $data = _get($this->model, '_data');
-
-            return array_values($data);
-        }
-
-        return array_values($this->getDifferences());
-    }
-
-    public function idValue(): ?string
-    {
-        return (string) $this->model[$this->idKey()] ?? null;
-    }
-
-    public function idKey(): ?string
-    {
-        return $this->idKey;
-    }
-
-    public function relations(): RelationBag
-    {
-        $this->extractRelationsIfNotExists();
-        return $this->relations;
     }
 
     public function setId(string $id): void

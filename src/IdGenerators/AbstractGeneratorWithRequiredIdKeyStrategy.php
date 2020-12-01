@@ -25,7 +25,6 @@
 namespace Stwarog\Uow\IdGenerators;
 
 
-use Stwarog\Uow\DBConnectionInterface;
 use Stwarog\Uow\EntityInterface;
 use Stwarog\Uow\Exceptions\MissingIdKeyUOWException;
 
@@ -37,7 +36,8 @@ abstract class AbstractGeneratorWithRequiredIdKeyStrategy implements IdGeneratio
             throw new MissingIdKeyUOWException(
                 sprintf(
                     'Attempted to generate primary key for model %s, using %s, but no idKey (name) found.',
-                    get_class($entity->originalClass()), get_called_class()
+                    get_class($entity->originalClass()),
+                    get_called_class()
                 )
             );
         }
