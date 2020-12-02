@@ -24,12 +24,10 @@
 
 
 use PHPUnit\Framework\MockObject\MockObject;
-use Stubs\PersistAbleStub;
 use Stwarog\Uow\DBConnectionInterface;
 use Stwarog\Uow\EntityInterface;
 use Stwarog\Uow\EntityManager;
 use Stwarog\Uow\EntityManagerInterface;
-use Stwarog\Uow\Exceptions\OutOfRangeUOWException;
 use Stwarog\Uow\Exceptions\RuntimeUOWException;
 use Stwarog\Uow\RelationBag;
 use Stwarog\Uow\Relations\RelationInterface;
@@ -82,6 +80,7 @@ class EntityManagerTest extends BaseTest
         $entity->expects($this->once())->method('isNew')->willReturn(true);
         $entity->expects($this->once())->method('idValue')->willReturn('some_id');
         $entity->expects($this->never())->method('generateIdValue');
+        $entity->expects($this->once())->method('getPostPersistClosures');
         $this->uow->expects($this->once())->method('insert')->with($entity);
 
         $s = $this->service();
@@ -118,7 +117,7 @@ class EntityManagerTest extends BaseTest
         $s = $this->service();
 
         $relationBag = new RelationBag();
-        $entity = $this->createMock(EntityInterface::class);
+        $entity      = $this->createMock(EntityInterface::class);
 
         $relationItem = $this->createMock(RelationInterface::class);
         $relationItem->expects($this->once())->method('handleRelations')
@@ -213,16 +212,34 @@ class EntityManagerTest extends BaseTest
             ->with($this->uow)->willThrowException(new Exception());
         $this->db->expects($this->never())->method('commitTransaction');
         $this->db->expects($this->once())->method('rollbackTransaction');
-        $this->uow->expects($this->never())->method('reset');
+        $this->uow->expects($this->once())->method('reset');
         $this->service()->flush();
     }
 
     # config
 
     /** @test */
-    public function foreignKeysCheck__by_default__is_false(): void
+    public function foreignKeysCheck__by_default__is_true(): void
     {
-        $this->markTestIncomplete('Missing test case');
+        $this->db->expects($this->never())->method('query');
+        $this->service()->flush();
+    }
+
+    /** @test */
+    public function foreignKeysCheck__config_true_runs_queries_to_disable_it(): void
+    {
+        $this->db->expects($this->exactly(2))->method('query')
+            ->withConsecutive(['SET FOREIGN_KEY_CHECKS=0;'], ['SET FOREIGN_KEY_CHECKS=1;']);
+        $this->service(['foreign_key_check' => false])->flush();
+    }
+
+    /** @test */
+    public function flush__nothing_persisted__throws_exception(): void
+    {
+        $this->expectException(RuntimeUOWException::class);
+        $this->expectExceptionMessage('Attempted to flush when nothing was persisted!');
+        $this->uow->expects($this->once())->method('isEmpty')->willReturn(true);
+        $this->service()->flush();
     }
 
     private function service(array $config = []): EntityManagerInterface

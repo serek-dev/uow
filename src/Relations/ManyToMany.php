@@ -59,15 +59,17 @@ class ManyToMany implements RelationInterface
     public function handleRelations(EntityManagerInterface $entityManager, EntityInterface $parentEntity): void
     {
         foreach ($this->related as $relatedEntity) {
-            $parentEntity->addPostPersist(function(EntityInterface $parentEntity) use ($entityManager, $relatedEntity) {
-                $entityManager->persist($relatedEntity);
-                $virtualEntity = new VirtualEntity(
-                    $this->tableThrough,
-                    [$this->keyThroughFrom, $this->keyThroughTo],
-                    [$parentEntity->get($this->keyFrom), $relatedEntity->get($this->keyTo)]
-                );
-                $entityManager->persist($virtualEntity);
-            });
+            $parentEntity->addPostPersist(
+                function (EntityInterface $parentEntity) use ($entityManager, $relatedEntity) {
+                    $entityManager->persist($relatedEntity);
+                    $virtualEntity = new VirtualEntity(
+                        $this->tableThrough,
+                        [$this->keyThroughFrom, $this->keyThroughTo],
+                        [$parentEntity->get($this->keyFrom), $relatedEntity->get($this->keyTo)]
+                    );
+                    $entityManager->persist($virtualEntity);
+                }
+            );
         }
     }
 

@@ -232,7 +232,7 @@ class FuelModelAdapter implements EntityInterface
         return $this->model[$field];
     }
 
-    public function set(string $field, $value)
+    public function set(string $field, $value): void
     {
         $this->model[$field] = $value;
     }

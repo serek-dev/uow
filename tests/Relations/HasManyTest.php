@@ -48,6 +48,7 @@ class HasManyTest extends BaseTest
     /** @test */
     public function handleRelations__related_no_key_to_value__set_from_itself(): void
     {
+        $this->markTestSkipped();
         $from = 'from_id';
         $table = 'table';
         $to = 'to_id';

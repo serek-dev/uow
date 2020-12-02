@@ -126,7 +126,7 @@ class UnitOfWorkTest extends TestCase
     public function insert__changed_entity_after_pushing_it__it_reflects_changes(): void
     {
         $mock = new VirtualEntity('table', ['a'], ['2']);
-        $mock->setId('1');
+        $mock->set('a', '1');
 
         $uow = new UnitOfWork();
         $uow->insert($mock);

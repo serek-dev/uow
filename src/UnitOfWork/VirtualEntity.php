@@ -28,10 +28,12 @@ namespace Stwarog\Uow\UnitOfWork;
 use Closure;
 use Stwarog\Uow\DBConnectionInterface;
 use Stwarog\Uow\EntityInterface;
+use Stwarog\Uow\Exceptions\RuntimeUOWException;
 use Stwarog\Uow\IdGenerators\IdGenerationStrategyInterface;
 use Stwarog\Uow\IdGenerators\NoIncrementIdStrategy;
 use Stwarog\Uow\RelationBag;
 
+# todo: this class contains some bad designs & needs test
 class VirtualEntity implements EntityInterface
 {
     /** @var array */
@@ -41,6 +43,10 @@ class VirtualEntity implements EntityInterface
     /** @var string */
     private $table;
     private $objectHash;
+    /**
+     * @var array
+     */
+    private $closures = [];
 
     public function __construct(string $table, array $columns, array $values)
     {
@@ -82,7 +88,7 @@ class VirtualEntity implements EntityInterface
 
     public function generateIdValue(DBConnectionInterface $db): void
     {
-        return;
+        throw new RuntimeUOWException(sprintf('Method %s should not be used in VirtualEntity.', __METHOD__));
     }
 
     public function relations(): RelationBag
@@ -92,17 +98,22 @@ class VirtualEntity implements EntityInterface
 
     public function setId(string $id): void
     {
-        return;
+        throw new RuntimeUOWException(sprintf('Method %s should not be used in VirtualEntity.', __METHOD__));
     }
 
     public function get(string $field)
     {
-        return null;
+        $results = $this->toArray();
+
+        return $results[$field];
     }
 
-    public function set(string $field, $value)
+    public function set(string $field, $value): void
     {
-        return;
+        $results         = $this->toArray();
+        $results[$field] = $value;
+        $this->columns   = array_keys($results);
+        $this->values    = array_values($results);
     }
 
     public function idValueGenerationStrategy(): IdGenerationStrategyInterface
@@ -137,11 +148,11 @@ class VirtualEntity implements EntityInterface
 
     public function addPostPersist(Closure $closure): void
     {
-
+        $this->closures[] = $closure;
     }
 
     public function getPostPersistClosures(): array
     {
-        return [];
+        return $this->closures;
     }
 }

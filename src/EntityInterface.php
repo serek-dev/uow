@@ -42,5 +42,5 @@ interface EntityInterface extends TouchAble, HasIdStrategy, PersistAble, HasPost
 
     public function get(string $field);
 
-    public function set(string $field, $value);
+    public function set(string $field, $value): void;
 }

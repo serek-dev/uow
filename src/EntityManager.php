@@ -99,11 +99,12 @@ class EntityManager implements EntityManagerInterface
      */
     public function flush(): void
     {
+        if ($this->uow->isEmpty()) {
+            throw new RuntimeUOWException('Attempted to flush when nothing was persisted!');
+        }
+
         $this->db->startTransaction();
         try {
-            # todo
-            # At this moment foreign check key disabled mode is not recommended
-            # due fact, that the order of handled entities is important.
             $this->handleForeignKey(false);
             $this->db->handleChanges($this->uow);
             $this->handleForeignKey(true);
@@ -111,13 +112,15 @@ class EntityManager implements EntityManagerInterface
             $this->db->rollbackTransaction();
             throw $e;
         }
+        finally {
+            $this->uow->reset();
+        }
         $this->db->commitTransaction();
-        $this->uow->reset();
     }
 
     private function handleForeignKey(bool $check): void
     {
-        if (false == $this->foreignKeysCheck()) {
+        if (true === $this->foreignKeysCheck()) {
             return;
         }
         $this->db->query(sprintf('SET FOREIGN_KEY_CHECKS=%d;', $check));
@@ -125,7 +128,11 @@ class EntityManager implements EntityManagerInterface
 
     private function foreignKeysCheck(): bool
     {
-        return false === isset($this->config['foreign_key_check']) || false === $this->config['foreign_key_check'];
+        if (false === isset($this->config['foreign_key_check'])) {
+            return true;
+        }
+
+        return $this->config['foreign_key_check'];
     }
 
     public function debug(): array
@@ -133,16 +140,11 @@ class EntityManager implements EntityManagerInterface
         if (isset($this->config['debug']) && $this->config['debug'] === false) {
             throw new RuntimeUOWException('No debug config option enabled.');
         }
-
         return $this->db->debug();
     }
 
     private function handlePostPersistClosures(EntityInterface $entity): void
     {
-        if (!$entity instanceof HasPostActions) {
-            return;
-        }
-
         foreach ($entity->getPostPersistClosures() as $closure) {
             call_user_func($closure, $entity);
         }
