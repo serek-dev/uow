@@ -1,12 +1,10 @@
 {
   "name": "stwarog/uow",
-  "description": "Generic Unit of Work pattern implementation, usefull to limit DB queries.",
+  "description": "Generic Unit of Work pattern implementation for Active Records ORM's. Allows to split technical implementation from domain logic.",
   "type": "library",
   "require": {
     "webmozart/assert": "1.9.1",
     "myclabs/php-enum": "1.7.7",
-    "fuel/orm": "^1.8",
-    "fuel/core": "^1.8",
     "ramsey/uuid": "^4.1"
   },
   "require-dev": {
@@ -36,11 +34,6 @@
     }
   ],
   "extra": {
-    "installer-paths": {
-      "vendor/{$name}/": [
-        "type:fuel-package"
-      ]
-    },
     "branch-alias": {
       "dev-master": "master"
     }
