@@ -25,6 +25,7 @@
 namespace Stwarog\Uow\UnitOfWork;
 
 
+use Closure;
 use Stwarog\Uow\DBConnectionInterface;
 use Stwarog\Uow\EntityInterface;
 use Stwarog\Uow\IdGenerators\IdGenerationStrategyInterface;
@@ -132,5 +133,15 @@ class VirtualEntity implements EntityInterface
     public function objectHash(): string
     {
         return $this->objectHash;
+    }
+
+    public function addPostPersist(Closure $closure): void
+    {
+
+    }
+
+    public function getPostPersistClosures(): array
+    {
+        return [];
     }
 }

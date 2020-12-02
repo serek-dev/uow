@@ -25,6 +25,7 @@
 namespace Stwarog\Uow\UnitOfWork;
 
 
+
 interface PersistAble
 {
     /**

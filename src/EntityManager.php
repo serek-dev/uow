@@ -57,6 +57,8 @@ class EntityManager implements EntityManagerInterface
 
             $this->uow->insert($entity);
 
+            $this->handlePostPersistClosures($entity);
+
             return;
         }
 
@@ -65,6 +67,8 @@ class EntityManager implements EntityManagerInterface
         if ($entity->isDirty()) {
             $this->uow->update($entity);
         }
+
+        $this->handlePostPersistClosures($entity);
     }
 
     private function requestIdFor(EntityInterface $entity): void
@@ -131,5 +135,16 @@ class EntityManager implements EntityManagerInterface
         }
 
         return $this->db->debug();
+    }
+
+    private function handlePostPersistClosures(EntityInterface $entity): void
+    {
+        if (!$entity instanceof HasPostActions) {
+            return;
+        }
+
+        foreach ($entity->getPostPersistClosures() as $closure) {
+            call_user_func($closure, $entity);
+        }
     }
 }

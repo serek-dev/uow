@@ -25,6 +25,7 @@
 namespace Stwarog\Uow\Fuel;
 
 
+use Closure;
 use InvalidArgumentException;
 use Orm\Model;
 use Stwarog\Uow\DBConnectionInterface;
@@ -46,6 +47,7 @@ class FuelModelAdapter implements EntityInterface
     private $relations;
     private $objectHash;
     private $idKey = '';
+    private $closures = [];
 
     public function __construct(Model $model)
     {
@@ -248,5 +250,15 @@ class FuelModelAdapter implements EntityInterface
     public function objectHash(): string
     {
         return $this->objectHash;
+    }
+
+    public function addPostPersist(Closure $closure): void
+    {
+        $this->closures[] = $closure;
+    }
+
+    public function getPostPersistClosures(): array
+    {
+        return $this->closures;
     }
 }

@@ -38,28 +38,32 @@ class HasOne extends AbstractOneToOneRelation implements InteractWithEntityManag
         if ($this->isEmpty()) {
             return;
         }
-        $relatedEntity = $this->relatedEntity;
 
-        # todo: refactor! it doesn't have to be a valid related object
+        $parentEntity->addPostPersist(
+            function (EntityInterface $parentEntity) use ($entityManager) {
+                $relatedEntity = $this->relatedEntity;
+                # todo: refactor! it doesn't have to be a valid related object
 
-        /** @var RelationInterface[] $matchingRelatedEntityRelations */
-        $relationData                   = $relatedEntity->relations()->toArray();
-        $matchingRelatedEntityRelations = array_filter(
-            $relationData,
-            function (RelationInterface $relatedRelation) {
-                return $relatedRelation instanceof BelongsTo;
+                /** @var BelongsTo[] $matchingRelatedEntityRelations */
+                $relationData                   = $relatedEntity->relations()->toArray();
+                $matchingRelatedEntityRelations = array_filter(
+                    $relationData,
+                    function (RelationInterface $relatedRelation) {
+                        return $relatedRelation instanceof BelongsTo;
+                    }
+                );
+
+                if (empty($matchingRelatedEntityRelations)) {
+                    throw new InvalidArgumentException(
+                        sprintf('No BelongsTo inversion of HasOne has been found in %s.', get_class($relatedEntity->originalClass()))
+                    );
+                }
+
+                $belongsToRelation = reset($matchingRelatedEntityRelations);
+
+                $relatedEntity->set($belongsToRelation->keyFrom(), $parentEntity->get($this->keyFrom()));
+                $entityManager->persist($relatedEntity);
             }
         );
-
-        if (empty($matchingRelatedEntityRelations)) {
-            throw new InvalidArgumentException(
-                sprintf('No BelongsTo inversion of HasOne has been found in %s.', get_class($relatedEntity->originalClass()))
-            );
-        }
-
-        $belongsToRelation = reset($matchingRelatedEntityRelations);
-
-        $relatedEntity->set($belongsToRelation->keyFrom(), $parentEntity->get($this->keyFrom()));
-        $entityManager->persist($relatedEntity);
     }
 }

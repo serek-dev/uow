@@ -27,7 +27,7 @@ namespace Stwarog\Uow;
 use Stwarog\Uow\IdGenerators\HasIdStrategy;
 use Stwarog\Uow\UnitOfWork\PersistAble;
 
-interface EntityInterface extends TouchAble, HasIdStrategy, PersistAble
+interface EntityInterface extends TouchAble, HasIdStrategy, PersistAble, HasPostActions
 {
     /**
      * Generate ID by provided strategy and assign it to it self.
