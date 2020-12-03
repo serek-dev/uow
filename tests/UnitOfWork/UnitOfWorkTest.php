@@ -26,7 +26,7 @@
 namespace UnitOfWork;
 
 
-use PHPUnit\Framework\TestCase;
+use BaseTest;
 use ReflectionClass;
 use Stubs\PersistAbleStub;
 use Stwarog\Uow\Exceptions\UnitOfWorkException;
@@ -35,7 +35,7 @@ use Stwarog\Uow\UnitOfWork\PersistAble;
 use Stwarog\Uow\UnitOfWork\UnitOfWork;
 use Stwarog\Uow\UnitOfWork\VirtualEntity;
 
-class UnitOfWorkTest extends TestCase
+class UnitOfWorkTest extends BaseTest
 {
     # insert
 

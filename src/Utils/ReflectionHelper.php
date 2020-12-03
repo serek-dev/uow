@@ -26,6 +26,7 @@ namespace Stwarog\Uow\Utils;
 
 
 use ReflectionClass;
+use ReflectionException;
 
 class ReflectionHelper
 {
@@ -34,6 +35,7 @@ class ReflectionHelper
      * @param string $property
      *
      * @return mixed
+     * @throws ReflectionException
      */
     public static function getValue($object, string $property)
     {

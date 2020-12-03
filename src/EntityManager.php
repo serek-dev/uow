@@ -89,6 +89,13 @@ class EntityManager implements EntityManagerInterface
         }
     }
 
+    private function handlePostPersistClosures(EntityInterface $entity): void
+    {
+        foreach ($entity->getPostPersistClosures() as $closure) {
+            call_user_func($closure, $entity);
+        }
+    }
+
     public function remove(EntityInterface $entity): void
     {
         $this->uow->delete($entity);
@@ -140,13 +147,7 @@ class EntityManager implements EntityManagerInterface
         if (isset($this->config['debug']) && $this->config['debug'] === false) {
             throw new RuntimeUOWException('No debug config option enabled.');
         }
-        return $this->db->debug();
-    }
 
-    private function handlePostPersistClosures(EntityInterface $entity): void
-    {
-        foreach ($entity->getPostPersistClosures() as $closure) {
-            call_user_func($closure, $entity);
-        }
+        return $this->db->debug();
     }
 }

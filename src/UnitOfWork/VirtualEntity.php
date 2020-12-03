@@ -108,6 +108,11 @@ class VirtualEntity implements EntityInterface
         return $results[$field];
     }
 
+    public function toArray(): array
+    {
+        return array_combine($this->columns, $this->values);
+    }
+
     public function set(string $field, $value): void
     {
         $results         = $this->toArray();
@@ -119,11 +124,6 @@ class VirtualEntity implements EntityInterface
     public function idValueGenerationStrategy(): IdGenerationStrategyInterface
     {
         return new NoIncrementIdStrategy();
-    }
-
-    public function toArray(): array
-    {
-        return array_combine($this->columns, $this->values);
     }
 
     public function isEmpty(): bool

@@ -46,7 +46,7 @@ interface PersistAble
 
     public function idKey(): ?string;
 
-    public function originalClass(): object;
+    public function originalClass();
 
     public function objectHash(): string;
 }

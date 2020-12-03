@@ -3,12 +3,13 @@
   "description": "Generic Unit of Work pattern implementation for Active Records ORM's. Allows to split technical implementation from domain logic.",
   "type": "library",
   "require": {
+    "php": ">=7.1",
     "webmozart/assert": "^1.9.1",
     "myclabs/php-enum": "^1.7.7",
-    "ramsey/uuid": "^4.1"
+    "ramsey/uuid": "3.*",
+    "phpunit/phpunit": "7.1.3"
   },
   "require-dev": {
-    "phpunit/phpunit": "^9.5@dev",
     "symfony/var-dumper": "^5.1"
   },
   "autoload": {
