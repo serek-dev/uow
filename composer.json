@@ -3,8 +3,8 @@
   "description": "Generic Unit of Work pattern implementation for Active Records ORM's. Allows to split technical implementation from domain logic.",
   "type": "library",
   "require": {
-    "webmozart/assert": "1.9.1",
-    "myclabs/php-enum": "1.7.7",
+    "webmozart/assert": "^1.9.1",
+    "myclabs/php-enum": "^1.7.7",
     "ramsey/uuid": "^4.1"
   },
   "require-dev": {
@@ -35,7 +35,7 @@
   ],
   "extra": {
     "branch-alias": {
-      "dev-master": "1.0.1-stable-dev"
+      "dev-master": "1.0.1-dev"
     }
   },
   "minimum-stability": "stable"
