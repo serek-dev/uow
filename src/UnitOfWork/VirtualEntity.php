@@ -28,7 +28,6 @@ namespace Stwarog\Uow\UnitOfWork;
 use Closure;
 use Stwarog\Uow\DBConnectionInterface;
 use Stwarog\Uow\EntityInterface;
-use Stwarog\Uow\Exceptions\RuntimeUOWException;
 use Stwarog\Uow\IdGenerators\IdGenerationStrategyInterface;
 use Stwarog\Uow\IdGenerators\NoIncrementIdStrategy;
 use Stwarog\Uow\RelationBag;
@@ -81,14 +80,13 @@ class VirtualEntity implements EntityInterface
         return null;
     }
 
-    public function originalClass(): object
+    public function originalClass()
     {
         return $this;
     }
 
     public function generateIdValue(DBConnectionInterface $db): void
     {
-        throw new RuntimeUOWException(sprintf('Method %s should not be used in VirtualEntity.', __METHOD__));
     }
 
     public function relations(): RelationBag
@@ -98,7 +96,6 @@ class VirtualEntity implements EntityInterface
 
     public function setId(string $id): void
     {
-        throw new RuntimeUOWException(sprintf('Method %s should not be used in VirtualEntity.', __METHOD__));
     }
 
     public function get(string $field)
