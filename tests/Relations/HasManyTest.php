@@ -38,7 +38,11 @@ class HasManyTest extends BaseTest
     {
         // Given
         $em = $this->createMock(EntityManagerInterface::class);
-        $em->expects($this->never())->method('persist');
+
+        $em
+            ->expects($this->never())
+            ->method('persist');
+
         $relation = new HasMany('asd', 'asd', 'dsa');
 
         // When

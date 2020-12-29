@@ -311,7 +311,10 @@ class EntityManagerTest extends BaseTest
     {
         // Given
         $config = ['debug' => true];
-        $this->db->expects($this->once())->method('debug')->willReturn(['debug']);
+        $this->db
+            ->expects($this->once())
+            ->method('debug')
+            ->willReturn(['debug']);
 
         // When
         $output = $this->service($config)->debug();
