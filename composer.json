@@ -4,7 +4,6 @@
   "type": "library",
   "require": {
     "php": ">=7.1",
-    "webmozart/assert": "^1.9.1",
     "myclabs/php-enum": "^1.7.7",
     "ramsey/uuid": "3.*"
   },
