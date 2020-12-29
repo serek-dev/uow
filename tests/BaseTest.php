@@ -23,7 +23,6 @@
 */
 
 
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 abstract class BaseTest extends TestCase
@@ -31,18 +30,5 @@ abstract class BaseTest extends TestCase
     protected function expectExceptionMessageMatches(string $string): void
     {
         # todo: write some assertion or copy from further php unit version
-    }
-
-    /**
-     * Small hack to use php 7.1 (php unit from this version is not supportings stubs).
-     *
-     * @param string $class
-     *
-     * @return MockObject
-     * @throws ReflectionException
-     */
-    protected function createStub(string $class): MockObject
-    {
-        return $this->createMock($class);
     }
 }

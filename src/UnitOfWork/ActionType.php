@@ -27,6 +27,8 @@ namespace Stwarog\Uow\UnitOfWork;
 use MyCLabs\Enum\Enum;
 
 /**
+ * @codeCoverageIgnore
+ *
  * @method static ActionType SELECT()
  * @method static ActionType INSERT()
  * @method static ActionType UPDATE()

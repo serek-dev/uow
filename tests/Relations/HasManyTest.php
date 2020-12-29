@@ -27,10 +27,8 @@ namespace Relations;
 
 
 use BaseTest;
-use PHPUnit\Framework\MockObject\MockObject;
 use Stwarog\Uow\EntityInterface;
 use Stwarog\Uow\EntityManagerInterface;
-use Stwarog\Uow\Relations\BelongsTo;
 use Stwarog\Uow\Relations\HasMany;
 
 class HasManyTest extends BaseTest
@@ -38,11 +36,13 @@ class HasManyTest extends BaseTest
     /** @test */
     public function handleRelations_no_related_entities_skips(): void
     {
+        // Given
         $em = $this->createMock(EntityManagerInterface::class);
         $em->expects($this->never())->method('persist');
-
         $relation = new HasMany('asd', 'asd', 'dsa');
-        $relation->handleRelations($em, $this->createStub(EntityInterface::class));
+
+        // When
+        $relation->handleRelations($em, $this->createMock(EntityInterface::class));
     }
 
     /** @test */

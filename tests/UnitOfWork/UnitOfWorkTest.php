@@ -39,17 +39,23 @@ class UnitOfWorkTest extends BaseTest
 {
     # insert
 
-    /** @test */
+    /**
+     * 0
+     * @test
+     */
     public function insert__few_times_same_object__will_insert_once(): void
     {
+        // Given
         $mock = PersistAbleStub::create($this)->stub;
 
+        // When
         $uow = new UnitOfWork();
         $this->assertFalse($uow->wasPersisted($mock));
         $uow->insert($mock);
         $uow->insert($mock);
         $uow->insert($mock);
 
+        // Then
         $this->assertTrue($uow->has(ActionType::INSERT(), $mock));
         $this->assertFalse($uow->has(ActionType::UPDATE(), $mock));
         $this->assertFalse($uow->has(ActionType::DELETE(), $mock));
@@ -66,12 +72,13 @@ class UnitOfWorkTest extends BaseTest
      */
     public function insert__same_data_set__will_make_one_entry(array $mocks, int $expectedCount): void
     {
+        // When
         $uow = new UnitOfWork();
-
         foreach ($mocks as $mock) {
             $uow->insert($mock);
         }
 
+        // Then
         $this->assertSame($expectedCount, count($uow->getData(ActionType::INSERT())));
     }
 
@@ -111,11 +118,13 @@ class UnitOfWorkTest extends BaseTest
     /** @test */
     public function insert__deleted_entity__throws_exception(): void
     {
+        // Excepts
         $this->expectException(UnitOfWorkException::class);
         $this->expectExceptionMessageMatches('~but it was already marked as deleted.~');
 
         $mock = PersistAbleStub::create($this)->keys()->stub;
 
+        // When
         $uow = new UnitOfWork();
         $uow->delete($mock);
         $uow->insert($mock);
@@ -125,9 +134,11 @@ class UnitOfWorkTest extends BaseTest
     /** @test */
     public function insert__changed_entity_after_pushing_it__it_reflects_changes(): void
     {
+        // Given
         $mock = new VirtualEntity('table', ['a'], ['2']);
         $mock->set('a', '1');
 
+        // When
         $uow = new UnitOfWork();
         $uow->insert($mock);
 
@@ -140,6 +151,7 @@ class UnitOfWorkTest extends BaseTest
 
         $after = $uow->getData(ActionType::INSERT());
 
+        // Then
         $this->assertNotSame($before, $after);
         $this->assertSame(1, count($uow->getData(ActionType::INSERT())));
     }
@@ -149,11 +161,14 @@ class UnitOfWorkTest extends BaseTest
     /** @test */
     public function update__has_no_id_key__throws_exception(): void
     {
+        // Excepts
         $this->expectException(UnitOfWorkException::class);
         $this->expectExceptionMessageMatches('~but it has no primary key name specified.~');
 
+        // Given
         $mock = PersistAbleStub::create($this)->stub;
 
+        // When
         $uow = new UnitOfWork();
         $uow->update($mock);
     }
@@ -161,11 +176,14 @@ class UnitOfWorkTest extends BaseTest
     /** @test */
     public function update__has_id_key_but_no_value__throws_exception(): void
     {
+        // Excepts
         $this->expectException(UnitOfWorkException::class);
         $this->expectExceptionMessageMatches('~but it has no primary key value specified.~');
 
+        // Given
         $mock = PersistAbleStub::create($this)->keys('id', null)->stub;
 
+        // When
         $uow = new UnitOfWork();
         $uow->update($mock);
     }
@@ -174,11 +192,14 @@ class UnitOfWorkTest extends BaseTest
     /** @test */
     public function update__deleted_entity__throw_exception(): void
     {
+        // Excepts
         $this->expectException(UnitOfWorkException::class);
         $this->expectExceptionMessageMatches('~but it was already marked as deleted.~');
 
+        // Given
         $mock = PersistAbleStub::create($this)->keys()->stub;
 
+        // When
         $uow = new UnitOfWork();
         $uow->delete($mock);
         $uow->update($mock);
@@ -187,12 +208,15 @@ class UnitOfWorkTest extends BaseTest
     /** @test */
     public function update__entity__ok(): void
     {
+        // Given
         $mock = PersistAbleStub::create($this)->keys()
             ->columnValues(['a', 'b', 'c'], ['1', '2', '3'])->stub;
 
+        // When
         $uow = new UnitOfWork();
         $uow->update($mock);
 
+        // Then
         $this->assertFalse($uow->has(ActionType::INSERT(), $mock));
         $this->assertTrue($uow->has(ActionType::UPDATE(), $mock));
         $this->assertFalse($uow->has(ActionType::DELETE(), $mock));
@@ -204,11 +228,14 @@ class UnitOfWorkTest extends BaseTest
     /** @test */
     public function delete__has_no_id_key__throws_exception(): void
     {
+        // Excepts
         $this->expectException(UnitOfWorkException::class);
         $this->expectExceptionMessageMatches('~but it has no primary key name specified.~');
 
+        // Given
         $mock = PersistAbleStub::create($this)->stub;
 
+        // When
         $uow = new UnitOfWork();
         $uow->delete($mock);
     }
@@ -216,11 +243,14 @@ class UnitOfWorkTest extends BaseTest
     /** @test */
     public function delete__has_id_key_but_no_value__throws_exception(): void
     {
+        // Excepts
         $this->expectException(UnitOfWorkException::class);
         $this->expectExceptionMessageMatches('~but it has no primary key value specified.~');
 
+        // Given
         $mock = PersistAbleStub::create($this)->keys('id', null)->stub;
 
+        // When
         $uow = new UnitOfWork();
         $uow->delete($mock);
     }
@@ -228,15 +258,18 @@ class UnitOfWorkTest extends BaseTest
     /** @test */
     public function delete__many_entities_at_once__ok(): void
     {
+        // Given
         $mock1 = PersistAbleStub::create($this)->keys()->stub;
         $mock2 = PersistAbleStub::create($this)->keys()->stub;
         $mock3 = PersistAbleStub::create($this)->keys()->stub;
 
+        // When
         $uow = new UnitOfWork();
         $uow->delete($mock1);
         $uow->delete($mock2);
         $uow->delete($mock3);
 
+        // Then
         $this->assertTrue($uow->has(ActionType::DELETE(), $mock1));
         $this->assertTrue($uow->has(ActionType::DELETE(), $mock2));
         $this->assertTrue($uow->has(ActionType::DELETE(), $mock3));
@@ -245,18 +278,27 @@ class UnitOfWorkTest extends BaseTest
 
     # isEmpty
 
-    /** @test */
+    /**
+     * 0
+     * @test
+     */
     public function isEmpty__nothing_was_persisted__true(): void
     {
+        // When
         $uow = new UnitOfWork();
+
+        // Then
         $this->assertTrue($uow->isEmpty());
     }
 
     /** @test */
     public function isEmpty__was_persisted__false(): void
     {
+        // When
         $uow = new UnitOfWork();
         $uow->insert(PersistAbleStub::create($this)->stub);
+
+        // Then
         $this->assertFalse($uow->isEmpty());
     }
 
@@ -265,15 +307,18 @@ class UnitOfWorkTest extends BaseTest
     /** @test */
     public function reset__has_data__ok(): void
     {
+        // Given
         $mock1 = PersistAbleStub::create($this)->keys()->stub;
         $mock2 = PersistAbleStub::create($this)->keys()->columnValues(['a'], ['1'])->stub;
         $mock3 = PersistAbleStub::create($this)->keys()->stub;
 
+        // When
         $uow = new UnitOfWork();
         $uow->insert($mock1);
         $uow->update($mock2);
         $uow->delete($mock3);
 
+        // Then
         $this->assertFalse($uow->isEmpty());
         $uow->reset();
         $this->assertTrue($uow->isEmpty());
@@ -284,7 +329,10 @@ class UnitOfWorkTest extends BaseTest
     /** @test */
     public function getData__nothing_persisted__empty_array(): void
     {
+        // When
         $uow = new UnitOfWork();
+
+        // Then
         $this->assertEmpty($uow->getData(ActionType::DELETE()));
     }
 }

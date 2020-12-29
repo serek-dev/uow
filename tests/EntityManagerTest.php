@@ -50,10 +50,18 @@ class EntityManagerTest extends BaseTest
     /** @test */
     public function persist__already_persisted__skips(): void
     {
+        // Given
         $entity = $this->createMock(EntityInterface::class);
-        $this->uow->expects($this->once())->method('wasPersisted')->willReturn(true);
-        $entity->expects($this->never())->method('isNew');
+        $this->uow
+            ->expects($this->once())
+            ->method('wasPersisted')
+            ->willReturn(true);
 
+        $entity
+            ->expects($this->never())
+            ->method('isNew');
+
+        // When
         $s = $this->service();
         $s->persist($entity);
     }
@@ -61,13 +69,34 @@ class EntityManagerTest extends BaseTest
     /** @test */
     public function persist__new_without_id__generates_id(): void
     {
+        // Given
         $entity = $this->createMock(EntityInterface::class);
-        $this->uow->expects($this->once())->method('wasPersisted')->willReturn(false);
-        $entity->expects($this->once())->method('isNew')->willReturn(true);
-        $entity->expects($this->once())->method('idValue')->willReturn(null);
-        $entity->expects($this->once())->method('generateIdValue')->with($this->db);
-        $this->uow->expects($this->once())->method('insert')->with($entity);
 
+        $this->uow
+            ->expects($this->once())
+            ->method('wasPersisted')
+            ->willReturn(false);
+
+        $entity
+            ->expects($this->once())
+            ->method('isNew')
+            ->willReturn(true);
+
+        $entity
+            ->expects($this->once())
+            ->method('idValue')
+            ->willReturn(null);
+
+        $entity
+            ->expects($this->once())
+            ->method('generateIdValue')
+            ->with($this->db);
+        $this->uow
+            ->expects($this->once())
+            ->method('insert')
+            ->with($entity);
+
+        // When
         $s = $this->service();
         $s->persist($entity);
     }
@@ -75,14 +104,38 @@ class EntityManagerTest extends BaseTest
     /** @test */
     public function persist__new_with_id__skip_generate_id(): void
     {
+        // Given
         $entity = $this->createMock(EntityInterface::class);
-        $this->uow->expects($this->once())->method('wasPersisted')->willReturn(false);
-        $entity->expects($this->once())->method('isNew')->willReturn(true);
-        $entity->expects($this->once())->method('idValue')->willReturn('some_id');
-        $entity->expects($this->never())->method('generateIdValue');
-        $entity->expects($this->once())->method('getPostPersistClosures');
-        $this->uow->expects($this->once())->method('insert')->with($entity);
 
+        $this->uow
+            ->expects($this->once())
+            ->method('wasPersisted')
+            ->willReturn(false);
+
+        $entity
+            ->expects($this->once())
+            ->method('isNew')
+            ->willReturn(true);
+
+        $entity
+            ->expects($this->once())
+            ->method('idValue')
+            ->willReturn('some_id');
+
+        $entity
+            ->expects($this->never())
+            ->method('generateIdValue');
+
+        $entity
+            ->expects($this->once())
+            ->method('getPostPersistClosures');
+
+        $this->uow
+            ->expects($this->once())
+            ->method('insert')
+            ->with($entity);
+
+        // When
         $s = $this->service();
         $s->persist($entity);
     }
@@ -90,23 +143,43 @@ class EntityManagerTest extends BaseTest
     /** @test */
     public function persist__new_with_not_dirty_relations__skips(): void
     {
+        // Given
         $relations = $this->createMock(RelationBag::class);
-        $relations->expects($this->once())->method('isDirty')->willReturn(false);
+        $relations
+            ->expects($this->once())
+            ->method('isDirty')
+            ->willReturn(false);
 
         $relationItem = $this->createMock(RelationInterface::class);
-        $relationItem->expects($this->never())->method('handleRelations')->withAnyParameters();
+        $relationItem
+            ->expects($this->never())
+            ->method('handleRelations')
+            ->withAnyParameters();
 
         $relations->add('fake', $relationItem);
 
         $entity = $this->createMock(EntityInterface::class);
-        $entity->expects($this->once())->method('relations')->willReturn($relations);
+        $entity
+            ->expects($this->once())
+            ->method('relations')
+            ->willReturn($relations);
 
-        $this->uow->expects($this->once())->method('wasPersisted')->willReturn(false);
+        $this->uow
+            ->expects($this->once())
+            ->method('wasPersisted')
+            ->willReturn(false);
 
-        $entity->expects($this->once())->method('isNew')->willReturn(true);
+        $entity
+            ->expects($this->once())
+            ->method('isNew')
+            ->willReturn(true);
 
-        $this->uow->expects($this->once())->method('insert')->with($entity);
+        $this->uow
+            ->expects($this->once())
+            ->method('insert')
+            ->with($entity);
 
+        // When
         $s = $this->service();
         $s->persist($entity);
     }
@@ -114,24 +187,46 @@ class EntityManagerTest extends BaseTest
     /** @test */
     public function persist__new_with_dirty_relations__handles(): void
     {
+        // Given
         $s = $this->service();
 
         $relationBag = new RelationBag();
         $entity      = $this->createMock(EntityInterface::class);
 
         $relationItem = $this->createMock(RelationInterface::class);
-        $relationItem->expects($this->once())->method('handleRelations')
+        $relationItem
+            ->expects($this->once())
+            ->method('handleRelations')
             ->with($s, $entity);
-        $relationItem->expects($this->once())->method('isDirty')->willReturn(true);
+
+        $relationItem
+            ->expects($this->once())
+            ->method('isDirty')
+            ->willReturn(true);
 
         $relationBag->add('fake', $relationItem);
 
-        $entity->expects($this->exactly(3))->method('relations')->willReturn($relationBag);
+        $entity
+            ->expects($this->exactly(3))
+            ->method('relations')
+            ->willReturn($relationBag);
 
-        $this->uow->expects($this->once())->method('wasPersisted')->willReturn(false);
-        $entity->expects($this->once())->method('isNew')->willReturn(true);
-        $this->uow->expects($this->once())->method('insert')->with($entity);
+        $this->uow
+            ->expects($this->once())
+            ->method('wasPersisted')
+            ->willReturn(false);
 
+        $entity
+            ->expects($this->once())
+            ->method('isNew')
+            ->willReturn(true);
+
+        $this->uow
+            ->expects($this->once())
+            ->method('insert')
+            ->with($entity);
+
+        // When
         $s->persist($entity);
     }
 
@@ -140,14 +235,26 @@ class EntityManagerTest extends BaseTest
     /** @test */
     public function persist__not_new_dirty__updates(): void
     {
-        $this->uow->method('wasPersisted')->willReturn(false);
-        $entity = $this->createStub(EntityInterface::class);
-        $entity->method('isNew')->willReturn(false);
-        $entity->method('isDirty')->willReturn(true);
+        // Given
+        $this->uow
+            ->method('wasPersisted')
+            ->willReturn(false);
 
-        $this->uow->expects($this->once())->method('update')
+        $entity = $this->createMock(EntityInterface::class);
+        $entity
+            ->method('isNew')
+            ->willReturn(false);
+
+        $entity
+            ->method('isDirty')
+            ->willReturn(true);
+
+        $this->uow
+            ->expects($this->once())
+            ->method('update')
             ->with($entity);
 
+        // When
         $s = $this->service();
         $s->persist($entity);
     }
@@ -157,10 +264,14 @@ class EntityManagerTest extends BaseTest
     /** @test */
     public function remove__entity(): void
     {
-        $entity = $this->createStub(EntityInterface::class);
-        $this->uow->expects($this->once())
-            ->method('delete')->with($entity);
+        // Given
+        $entity = $this->createMock(EntityInterface::class);
+        $this->uow
+            ->expects($this->once())
+            ->method('delete')
+            ->with($entity);
 
+        // When
         $this->service()->remove($entity);
     }
 
@@ -169,24 +280,43 @@ class EntityManagerTest extends BaseTest
     /** @test */
     public function debug__no_option_given__shows_output(): void
     {
-        $this->db->expects($this->once())->method('debug')->willReturn(['debug']);
-        $output = $this->service(['debug' => true])->debug();
+        // Given
+        $config = ['debug' => true];
+        $this->db
+            ->expects($this->once())
+            ->method('debug')
+            ->willReturn(['debug']);
+
+        // Then
+        $output = $this->service($config)->debug();
         $this->assertNotEmpty($output);
     }
 
     /** @test */
     public function debug__option_as_false__throws_exception(): void
     {
+        // Excepts
         $this->expectException(RuntimeUOWException::class);
         $this->expectExceptionMessage('No debug config option enabled.');
-        $this->service(['debug' => false])->debug();
+
+        // Given
+        $config = ['debug' => false];
+
+        // When
+        $this->service($config)->debug();
     }
 
     /** @test */
     public function debug__option_given__shows_output(): void
     {
+        // Given
+        $config = ['debug' => true];
         $this->db->expects($this->once())->method('debug')->willReturn(['debug']);
-        $output = $this->service(['debug' => true])->debug();
+
+        // When
+        $output = $this->service($config)->debug();
+
+        // Then
         $this->assertNotEmpty($output);
     }
 
@@ -195,24 +325,58 @@ class EntityManagerTest extends BaseTest
     /** @test */
     public function flush__no_error__success(): void
     {
-        $this->db->expects($this->once())->method('startTransaction');
-        $this->db->expects($this->once())->method('handleChanges')
+        // Given
+        $this->db
+            ->expects($this->once())
+            ->method('startTransaction');
+
+        $this->db
+            ->expects($this->once())
+            ->method('handleChanges')
             ->with($this->uow);
-        $this->db->expects($this->once())->method('commitTransaction');
-        $this->uow->expects($this->once())->method('reset');
+
+        $this->db
+            ->expects($this->once())
+            ->method('commitTransaction');
+
+        $this->uow
+            ->expects($this->once())
+            ->method('reset');
+
+        // When
         $this->service()->flush();
     }
 
     /** @test */
     public function flush__exception_occurs__rethrow_it_and_rollbacks(): void
     {
+        // Excepts
         $this->expectException(Exception::class);
-        $this->db->expects($this->once())->method('startTransaction');
-        $this->db->expects($this->once())->method('handleChanges')
-            ->with($this->uow)->willThrowException(new Exception());
-        $this->db->expects($this->never())->method('commitTransaction');
-        $this->db->expects($this->once())->method('rollbackTransaction');
-        $this->uow->expects($this->once())->method('reset');
+
+        // Given
+        $this->db
+            ->expects($this->once())
+            ->method('startTransaction');
+
+        $this->db
+            ->expects($this->once())
+            ->method('handleChanges')
+            ->with($this->uow)
+            ->willThrowException(new Exception());
+
+        $this->db
+            ->expects($this->never())
+            ->method('commitTransaction');
+
+        $this->db
+            ->expects($this->once())
+            ->method('rollbackTransaction');
+
+        $this->uow
+            ->expects($this->once())
+            ->method('reset');
+
+        // When
         $this->service()->flush();
     }
 
@@ -221,24 +385,43 @@ class EntityManagerTest extends BaseTest
     /** @test */
     public function foreignKeysCheck__by_default__is_true(): void
     {
-        $this->db->expects($this->never())->method('query');
+        // Given
+        $this->db
+            ->expects($this->never())
+            ->method('query');
+
+        // When
         $this->service()->flush();
     }
 
     /** @test */
     public function foreignKeysCheck__config_true_runs_queries_to_disable_it(): void
     {
-        $this->db->expects($this->exactly(2))->method('query')
+        // Given
+        $config = ['foreign_key_check' => false];
+        $this->db
+            ->expects($this->exactly(2))
+            ->method('query')
             ->withConsecutive(['SET FOREIGN_KEY_CHECKS=0;'], ['SET FOREIGN_KEY_CHECKS=1;']);
-        $this->service(['foreign_key_check' => false])->flush();
+
+        // When
+        $this->service($config)->flush();
     }
 
     /** @test */
     public function flush__nothing_persisted__throws_exception(): void
     {
+        // Excepts
         $this->expectException(RuntimeUOWException::class);
         $this->expectExceptionMessage('Attempted to flush when nothing was persisted!');
-        $this->uow->expects($this->once())->method('isEmpty')->willReturn(true);
+
+        // Given
+        $this->uow
+            ->expects($this->once())
+            ->method('isEmpty')
+            ->willReturn(true);
+
+        // When
         $this->service()->flush();
     }
 
