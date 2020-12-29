@@ -154,14 +154,14 @@ class UnitOfWork
 
     public function wasPersisted(PersistAble $entity): bool
     {
-        $ids = array_keys(array_merge($this->insert, $this->update));
+        $hash = $entity->objectHash();
 
-        return in_array($entity->objectHash(), $ids);
+        return isset($this->insert[$hash]) || isset($this->update[$hash]);
     }
 
     public function isEmpty(): bool
     {
-        return empty(array_merge($this->insert, $this->update, $this->delete));
+        return empty($this->insert) && empty ($this->update && empty($this->delete));
     }
 
     public function reset(): void
