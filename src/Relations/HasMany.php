@@ -33,7 +33,7 @@ class HasMany extends AbstractHasManyRelation implements RelationInterface, HasR
 {
     public function handleRelations(EntityManagerInterface $entityManager, EntityInterface $parentEntity): void
     {
-        foreach ($this->toArray() as $relatedEntity) {
+        foreach ($this as $relatedEntity) {
             $parentEntity->addPostPersist(
                 function (EntityInterface $parentEntity) use ($relatedEntity, $entityManager) {
                     if (empty($relatedEntity->get($this->keyTo))) {

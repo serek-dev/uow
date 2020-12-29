@@ -25,12 +25,13 @@
 namespace Stwarog\Uow\Shared;
 
 
+use Iterator;
 use Stwarog\Uow\EntityInterface;
 use Stwarog\Uow\EntityManagerInterface;
 use Stwarog\Uow\Relations\HasRelationFromToSchema;
 use Stwarog\Uow\Relations\RelationInterface;
 
-class AbstractHasManyRelation implements RelationInterface, HasRelationFromToSchema
+class AbstractHasManyRelation implements RelationInterface, HasRelationFromToSchema, Iterator
 {
     /** @var string */
     protected $keyFrom;
@@ -65,7 +66,7 @@ class AbstractHasManyRelation implements RelationInterface, HasRelationFromToSch
 
     public function handleRelations(EntityManagerInterface $entityManager, EntityInterface $parentEntity): void
     {
-        foreach ($this->toArray() as $relatedEntity) {
+        foreach ($this as $relatedEntity) {
             if (empty($relatedEntity->get($this->keyTo))) {
                 $relatedEntity->set($this->keyTo, $parentEntity->get($this->keyFrom));
             }
@@ -85,7 +86,7 @@ class AbstractHasManyRelation implements RelationInterface, HasRelationFromToSch
 
     public function isDirty(): bool
     {
-        foreach ($this->related as $entity) {
+        foreach ($this as $entity) {
             if ($entity->isDirty() || $entity->isNew()) {
                 return true;
             }
@@ -96,7 +97,7 @@ class AbstractHasManyRelation implements RelationInterface, HasRelationFromToSch
 
     public function isNew(): bool
     {
-        foreach ($this->related as $entity) {
+        foreach ($this as $entity) {
             if ($entity->isDirty()) {
                 return false;
             }
@@ -107,14 +108,31 @@ class AbstractHasManyRelation implements RelationInterface, HasRelationFromToSch
 
     public function setRelatedData(array $relatedEntities = []): void
     {
-        if (empty($relatedEntities)) {
-            return;
-        }
-        $this->related = array_filter(
-            $relatedEntities,
-            function (EntityInterface $entity) {
-                return true;
-            }
-        );
+        $this->related = $relatedEntities;
+    }
+
+    public function current()
+    {
+        return current($this->related);
+    }
+
+    public function next()
+    {
+        next($this->related);
+    }
+
+    public function key()
+    {
+        return key($this->related);
+    }
+
+    public function valid()
+    {
+        return key($this->related) !== null;
+    }
+
+    public function rewind()
+    {
+        reset($this->related);
     }
 }

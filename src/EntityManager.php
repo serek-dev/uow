@@ -148,6 +148,9 @@ class EntityManager implements EntityManagerInterface
             throw new RuntimeUOWException('No debug config option enabled.');
         }
 
-        return $this->db->debug();
+        return array_merge(
+            $this->db->debug(),
+            ['config' => $this->config]
+        );
     }
 }

@@ -14,3 +14,8 @@ Just keep in mind that you are working on objects!
 Name | Type | Default | Description
 --- | --- | --- | --- 
 foreign_key_check | boolean | true | Allows to globally disable foreign check (not recommended) 
+
+### Change Log
+
+##### 1.0.4 (2020-12-28)
+* *978f8db0* fixed bug with performance in entity manager

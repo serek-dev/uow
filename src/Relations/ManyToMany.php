@@ -25,11 +25,12 @@
 namespace Stwarog\Uow\Relations;
 
 
+use Iterator;
 use Stwarog\Uow\EntityInterface;
 use Stwarog\Uow\EntityManagerInterface;
 use Stwarog\Uow\UnitOfWork\VirtualEntity;
 
-class ManyToMany implements RelationInterface
+class ManyToMany implements RelationInterface, Iterator
 {
     /** @var string */
     private $keyFrom;
@@ -58,7 +59,7 @@ class ManyToMany implements RelationInterface
 
     public function handleRelations(EntityManagerInterface $entityManager, EntityInterface $parentEntity): void
     {
-        foreach ($this->related as $relatedEntity) {
+        foreach ($this as $relatedEntity) {
             $parentEntity->addPostPersist(
                 function (EntityInterface $parentEntity) use ($entityManager, $relatedEntity) {
                     $entityManager->persist($relatedEntity);
@@ -80,7 +81,7 @@ class ManyToMany implements RelationInterface
 
     public function isDirty(): bool
     {
-        foreach ($this->related as $entity) {
+        foreach ($this as $entity) {
             if ($entity->isDirty() || $entity->isNew()) {
                 return true;
             }
@@ -91,7 +92,7 @@ class ManyToMany implements RelationInterface
 
     public function isNew(): bool
     {
-        foreach ($this->related as $entity) {
+        foreach ($this as $entity) {
             if ($entity->isDirty()) {
                 return false;
             }
@@ -102,19 +103,36 @@ class ManyToMany implements RelationInterface
 
     public function setRelatedData(array $relatedEntities = []): void
     {
-        if (empty($relatedEntities)) {
-            return;
-        }
-        $this->related = array_filter(
-            $relatedEntities,
-            function (EntityInterface $entity) {
-                return true;
-            }
-        );
+        $this->related = $relatedEntities;
     }
 
     public function isEmpty(): bool
     {
         return empty($this->related);
+    }
+
+    public function current()
+    {
+        return current($this->related);
+    }
+
+    public function next()
+    {
+        next($this->related);
+    }
+
+    public function key()
+    {
+        return key($this->related);
+    }
+
+    public function valid()
+    {
+        return key($this->related) !== null;
+    }
+
+    public function rewind()
+    {
+        reset($this->related);
     }
 }
