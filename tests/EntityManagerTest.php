@@ -412,17 +412,17 @@ class EntityManagerTest extends BaseTest
     }
 
     /** @test */
-    public function flush__nothing_persisted__throws_exception(): void
+    public function flush__nothing_persisted__skips(): void
     {
-        // Excepts
-        $this->expectException(RuntimeUOWException::class);
-        $this->expectExceptionMessage('Attempted to flush when nothing was persisted!');
-
         // Given
         $this->uow
             ->expects($this->once())
             ->method('isEmpty')
             ->willReturn(true);
+
+        $this->db
+            ->expects($this->never())
+            ->method('startTransaction');
 
         // When
         $this->service()->flush();

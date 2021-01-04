@@ -107,7 +107,7 @@ class EntityManager implements EntityManagerInterface
     public function flush(): void
     {
         if ($this->uow->isEmpty()) {
-            throw new RuntimeUOWException('Attempted to flush when nothing was persisted!');
+            return;
         }
 
         $this->db->startTransaction();
