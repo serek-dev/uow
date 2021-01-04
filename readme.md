@@ -17,6 +17,9 @@ foreign_key_check | boolean | true | Allows to globally disable foreign check (n
 
 ### Change Log
 
+##### 1.0.6 (2020-01-04)
+* *0abc29e8* removed exception throws on empty uow on flush
+
 ##### 1.0.4 (2020-12-28)
 * *978f8db0* fixed bug with performance in entity manager
 * *1ebbf704* removed webmozart/assert
