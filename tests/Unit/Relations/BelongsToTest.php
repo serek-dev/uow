@@ -23,58 +23,61 @@
 */
 
 
-namespace Relations;
+namespace Unit\Relations;
 
 
 use BaseTest;
 use Stwarog\Uow\EntityInterface;
 use Stwarog\Uow\EntityManagerInterface;
-use Stwarog\Uow\Relations\HasMany;
+use Stwarog\Uow\Relations\BelongsTo;
 
-class HasManyTest extends BaseTest
+class BelongsToTest extends BaseTest
 {
     /** @test */
-    public function handleRelations_no_related_entities_skips(): void
+    public function isEmpty__entity__skip(): void
     {
         // Given
-        $em = $this->createMock(EntityManagerInterface::class);
-
-        $em
-            ->expects($this->never())
-            ->method('persist');
-
-        $relation = new HasMany('asd', 'asd', 'dsa');
+        $relation      = new BelongsTo('from_id', 'table', 'to_id');
+        $em            = $this->createMock(EntityManagerInterface::class);
+        $relatedEntity = $this->createMock(EntityInterface::class);
+        $em->expects($this->never())->method('persist');
 
         // When
-        $relation->handleRelations($em, $this->createMock(EntityInterface::class));
+        $relation->handleRelations($em, $relatedEntity);
     }
 
     /** @test */
-    public function handleRelations__related_no_key_to_value__set_from_itself(): void
+    public function handleRelations__has_data__persist(): void
     {
-        $this->markTestSkipped();
-        $from = 'from_id';
+        // Given
+        $from  = 'from_id';
         $table = 'table';
-        $to = 'to_id';
+        $to    = 'to_id';
 
-        #                                                   here
-        # $relatedEntity->set($this->keyTo, $parentEntity->get($this->keyFrom));
+        $entity = $this->createMock(EntityInterface::class);
 
-        $parentEntityFrom = 1;
-
-        $parentEntity = $this->createMock(EntityInterface::class);
-        $parentEntity->expects($this->once())->method('get')
-            ->with($from)->willReturn($parentEntityFrom);
-
-        $relation = new HasMany($from, $table, $to);
         $relatedEntity = $this->createMock(EntityInterface::class);
-        $relatedEntity->expects($this->once())->method('set')->with($to, $parentEntityFrom);
+        $relatedEntity
+            ->expects($this->exactly(2))
+            ->method('get')
+            ->with($to)
+            ->willReturn(1);
+
+        $relation = new BelongsTo($from, $table, $to);
+
+        $entity
+            ->expects($this->once())
+            ->method('set')
+            ->with($relation->keyFrom(), $relatedEntity->get($relation->keyTo()));
+
         $relation->setRelatedData([$relatedEntity]);
 
         $em = $this->createMock(EntityManagerInterface::class);
-        $em->expects($this->once())->method('persist');
+        $em->expects($this->once())
+            ->method('persist')
+            ->with($relatedEntity);
 
-        $relation->setRelatedData([$relatedEntity]);
-        $relation->handleRelations($em, $parentEntity);
+        // When
+        $relation->handleRelations($em, $entity);
     }
 }

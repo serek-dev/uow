@@ -22,7 +22,9 @@
     WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+namespace Unit;
 
+use BaseTest;
 use Stwarog\Uow\Exceptions\OutOfRangeUOWException;
 use Stwarog\Uow\RelationBag;
 use Stwarog\Uow\Relations\RelationInterface;

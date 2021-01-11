@@ -23,7 +23,7 @@
 */
 
 
-namespace UnitOfWork;
+namespace Unit\UnitOfWork;
 
 
 use BaseTest;

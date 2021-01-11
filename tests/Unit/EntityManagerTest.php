@@ -22,7 +22,10 @@
     WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+namespace Unit;
 
+use BaseTest;
+use Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use Stwarog\Uow\DBConnectionInterface;
 use Stwarog\Uow\EntityInterface;
@@ -39,13 +42,6 @@ class EntityManagerTest extends BaseTest
     private $db;
     /** @var MockObject|UnitOfWork */
     private $uow;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->db  = $this->createMock(DBConnectionInterface::class);
-        $this->uow = $this->createMock(UnitOfWork::class);
-    }
 
     /** @test */
     public function persist__already_persisted__skips(): void
@@ -64,6 +60,11 @@ class EntityManagerTest extends BaseTest
         // When
         $s = $this->service();
         $s->persist($entity);
+    }
+
+    private function service(array $config = []): EntityManagerInterface
+    {
+        return new EntityManager($this->db, $this->uow, $config);
     }
 
     /** @test */
@@ -428,8 +429,10 @@ class EntityManagerTest extends BaseTest
         $this->service()->flush();
     }
 
-    private function service(array $config = []): EntityManagerInterface
+    protected function setUp(): void
     {
-        return new EntityManager($this->db, $this->uow, $config);
+        parent::setUp();
+        $this->db  = $this->createMock(DBConnectionInterface::class);
+        $this->uow = $this->createMock(UnitOfWork::class);
     }
 }

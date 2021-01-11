@@ -23,7 +23,7 @@
 */
 
 
-namespace IdGenerators;
+namespace Unit\IdGenerators;
 
 
 use BaseTest;
