@@ -1,26 +1,6 @@
-<?php declare(strict_types=1);
-/*
-    Copyright (c) 2020 Sebastian Twaróg <contact@stwarog.com>
+<?php
+declare(strict_types=1);
 
-    Permission is hereby granted, free of charge, to any person obtaining
-    a copy of this software and associated documentation files (the
-    "Software"), to deal in the Software without restriction, including
-    without limitation the rights to use, copy, modify, merge, publish,
-    distribute, sublicense, and/or sell copies of the Software, and to
-    permit persons to whom the Software is furnished to do so, subject to
-    the following conditions:
-
-    The above copyright notice and this permission notice shall be
-    included in all copies or substantial portions of the Software.
-
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-    EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-    MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-    NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-    LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-    OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*/
 
 namespace Stwarog\Uow\UnitOfWork;
 
@@ -65,31 +45,31 @@ class UnitOfWork
     {
         $this->compile($type);
 
-        if (empty($this->data[(string) $type])) {
+        if (empty($this->data[(string)$type])) {
             return [];
         }
 
-        return $this->data[(string) $type];
+        return $this->data[(string)$type];
     }
 
     private function compile(ActionType $type)
     {
-        $this->data[(string) $type] = [];
+        $this->data[(string)$type] = [];
 
         if ($type->equals(ActionType::INSERT())) {
             foreach ($this->insert as $id => $entity) {
-                $table   = $entity->table();
+                $table = $entity->table();
                 $columns = $entity->columns();
-                $values  = $entity->values();
+                $values = $entity->values();
 
                 $hash = $this->hash($columns);
 
-                $valuesAggregate   = $this->data[ActionType::INSERT][$table][$hash]['values'] ?? [];
+                $valuesAggregate = $this->data[ActionType::INSERT][$table][$hash]['values'] ?? [];
                 $valuesAggregate[] = $values;
 
                 $this->data[ActionType::INSERT][$table][$hash] = [
                     'columns' => $columns,
-                    'values'  => $valuesAggregate,
+                    'values' => $valuesAggregate,
                 ];
             }
 
@@ -98,23 +78,23 @@ class UnitOfWork
 
         if ($type->equals(ActionType::UPDATE())) {
             foreach ($this->update as $id => $entity) {
-                $table   = $entity->table();
+                $table = $entity->table();
                 $columns = $entity->columns();
-                $values  = $entity->values();
-                $id      = $entity->idValue();
-                $idKey   = $entity->idKey();
+                $values = $entity->values();
+                $id = $entity->idValue();
+                $idKey = $entity->idKey();
 
                 $hash = $this->hash(array_combine($columns, $values));
 
-                $idsAggregate   = $this->data[ActionType::UPDATE][$table][$hash]['where'][0][2] ?? [];
+                $idsAggregate = $this->data[ActionType::UPDATE][$table][$hash]['where'][0][2] ?? [];
                 $idsAggregate[] = $id;
 
                 $this->data[ActionType::UPDATE][$table][$hash] = [
-                    'where'   => [
+                    'where' => [
                         [$idKey, 'IN', $idsAggregate],
                     ],
                     'columns' => $columns,
-                    'values'  => $values,
+                    'values' => $values,
                 ];
             }
 
@@ -123,14 +103,14 @@ class UnitOfWork
 
         # nothing left, so it is DELETE
         foreach ($this->delete as $id => $entity) {
-            $table   = $entity->table();
-            $idName  = $entity->idKey();
+            $table = $entity->table();
+            $idName = $entity->idKey();
             $idValue = $entity->idValue();
-            $idKey   = $entity->idKey();
+            $idKey = $entity->idKey();
 
             $hash = $this->hash([$idName]);
 
-            $idsAggregate   = $this->data[ActionType::DELETE][$table][$hash]['where'][0][2] ?? [];
+            $idsAggregate = $this->data[ActionType::DELETE][$table][$hash]['where'][0][2] ?? [];
             $idsAggregate[] = $idValue;
 
             $this->data[ActionType::DELETE][$table][$hash] = [
