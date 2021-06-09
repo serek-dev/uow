@@ -1,9 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
-
 namespace Stwarog\Uow\Shared;
-
 
 use Stwarog\Uow\EntityInterface;
 use Stwarog\Uow\Relations\RelationInterface;

@@ -10,8 +10,8 @@ stan:
 
 cs:
 	docker-compose run --rm composer phpcs
-cs_fix:
-	docker-compose run --rm composer phpfix
+csfix:
+	docker-compose run --rm composer phpcbf
 
 build:
 	docker-compose pull

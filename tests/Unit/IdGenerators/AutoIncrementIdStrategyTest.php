@@ -1,9 +1,6 @@
 <?php
 
-
-
 namespace Unit\IdGenerators;
-
 
 use BaseTest;
 use Stwarog\Uow\DBConnectionInterface;

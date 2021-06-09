@@ -1,9 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
-
 namespace Stwarog\Uow\Utils;
-
 
 use ReflectionClass;
 use ReflectionException;

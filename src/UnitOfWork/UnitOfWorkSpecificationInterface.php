@@ -1,9 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
-
 namespace Stwarog\Uow\UnitOfWork;
-
 
 use Stwarog\Uow\Exceptions\UnitOfWorkException;
 

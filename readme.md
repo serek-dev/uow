@@ -9,6 +9,19 @@ as manipulating on relations, saving, detaching etc.
 
 Just keep in mind that you are working on objects!
 
+### Development
+This package supports PSR-12 standard. Before each push, run this quality tools command:
+```bash 
+make check
+
+# or
+
+docker-compose run --rm composer phpcs
+docker-compose run --rm composer phpstan
+docker-compose run --rm composer unit
+```
+It will execute Code Sniffer and PhpStan validation rules.
+
 ### Config
 
 Name | Type | Default | Description
@@ -16,6 +29,12 @@ Name | Type | Default | Description
 foreign_key_check | boolean | true | Allows to globally disable foreign check (not recommended) 
 
 ### Change Log
+
+##### 1.2.0 (2021-06-09)
+* Dockerized tests for php v7.1
+* Make file for easier development
+* Static analytics tools: PHPCS and PHPSTAN for ./src directory
+* Reformatted code for PSR-12
 
 ##### 1.1.1 (2020-01-04)
 * *0abc29e8* removed exception throws on empty uow on flush

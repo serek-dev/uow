@@ -1,9 +1,6 @@
 <?php
 
-
-
 namespace Unit\Relations;
-
 
 use BaseTest;
 use Stwarog\Uow\EntityInterface;

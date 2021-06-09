@@ -1,9 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
-
 namespace Stwarog\Uow\Shared;
-
 
 use Stwarog\Uow\DBConnectionInterface;
 use Stwarog\Uow\UnitOfWork\ActionType;

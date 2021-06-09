@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Unit;
 
 use BaseTest;
@@ -161,7 +160,7 @@ class RelationBagTest extends BaseTest
         // When
         for ($c = 0; $c !== 5; $c++) {
             $mock = $this->createMock(RelationInterface::class);
-            $bag->add('field'.$c, $mock);
+            $bag->add('field' . $c, $mock);
         }
 
         /** @var RelationInterface $item */
@@ -181,7 +180,7 @@ class RelationBagTest extends BaseTest
 
         for ($c = 0; $c !== 5; $c++) {
             $mock = $this->createMock(RelationInterface::class);
-            $bag->add('field'.$c, $mock);
+            $bag->add('field' . $c, $mock);
         }
 
         // When

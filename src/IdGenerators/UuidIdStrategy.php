@@ -1,9 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
-
 namespace Stwarog\Uow\IdGenerators;
-
 
 use Ramsey\Uuid\Uuid;
 use Stwarog\Uow\DBConnectionInterface;

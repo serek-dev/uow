@@ -38,11 +38,11 @@
     "unit": "./vendor/bin/phpunit --testdox -c tests/unit.xml",
     "phpstan": "php -d memory_limit=400M vendor/bin/phpstan analyse -c phpstan.neon --level=max",
     "phpcs": "./vendor/bin/phpcs --report=full --standard=PSR12 ./src",
-    "phpfix": "./vendor/bin/phpcbf --standard=PSR12 ./src",
+    "phpcbf": "./vendor/bin/phpcbf --standard=PSR12 ./src",
     "check": [
       "@phpcs",
       "@phpstan",
-      "@tests:unit"
+      "@unit"
     ]
   },
   "minimum-stability": "stable"

@@ -1,9 +1,6 @@
 <?php
 
-
-
 namespace Stubs;
-
 
 use PHPUnit\Framework\MockObject\MockBuilder;
 use PHPUnit\Framework\MockObject\MockObject;
