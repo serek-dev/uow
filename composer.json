@@ -37,7 +37,7 @@
   ],
   "scripts": {
     "unit": "./vendor/bin/phpunit --testdox -c tests/unit.xml",
-    "phpstan": "php -d memory_limit=400M vendor/bin/phpstan analyse src tests --level=min",
+    "phpstan": "php -d memory_limit=400M vendor/bin/phpstan analyse -c phpstan.neon",
     "phpcs": "./vendor/bin/phpcs --report=full --standard=PSR12 ./src",
     "phpcbf": "./vendor/bin/phpcbf --standard=PSR12 ./src",
     "check": [
