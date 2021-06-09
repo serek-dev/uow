@@ -1,4 +1,4 @@
-start: stop build tests
+start: stop build check
 
 check: cs stan unit
 
