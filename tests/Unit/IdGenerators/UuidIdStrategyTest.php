@@ -3,6 +3,7 @@
 namespace Unit\IdGenerators;
 
 use BaseTest;
+use PHPUnit\Framework\MockObject\MockObject;
 use Stwarog\Uow\DBConnectionInterface;
 use Stwarog\Uow\EntityInterface;
 use Stwarog\Uow\Exceptions\MissingIdKeyUOWException;
@@ -18,10 +19,12 @@ class UuidIdStrategyTest extends BaseTest
         $this->expectExceptionMessageMatches('~Attempted to generate primary key for model~');
 
         // Given
+        /** @var EntityInterface|MockObject $entity */
         $entity = $this->createMock(EntityInterface::class);
         $entity->expects($this->never())->method('setId');
         $entity->expects($this->once())->method('idKey')->willReturn('');
 
+        /** @var DBConnectionInterface|MockObject $db */
         $db = $this->createMock(DBConnectionInterface::class);
 
         $strategy = new UuidIdStrategy();
@@ -36,11 +39,13 @@ class UuidIdStrategyTest extends BaseTest
         // Given
         $idKey = 'main_id';
 
+        /** @var EntityInterface|MockObject $entity */
         $entity = $this->createMock(EntityInterface::class);
         $entity->expects($this->once())->method('idKey')->willReturn($idKey);
         $entity->expects($this->once())->method('setId')->withAnyParameters();
         $entity->expects($this->never())->method('table');
 
+        /** @var DBConnectionInterface|MockObject $db */
         $db = $this->createMock(DBConnectionInterface::class);
 
         $strategy = new UuidIdStrategy();
