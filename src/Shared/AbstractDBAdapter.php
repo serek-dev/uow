@@ -51,7 +51,7 @@ abstract class AbstractDBAdapter implements DBConnectionInterface
         $this->stopTimestamp = microtime(true);
     }
 
-    public function query(string $sql)
+    public function query(string $sql): void
     {
         $this->log($sql);
     }

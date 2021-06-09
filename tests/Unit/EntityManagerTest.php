@@ -123,6 +123,7 @@ class EntityManagerTest extends BaseTest
     public function persist__new_with_not_dirty_relations__skips(): void
     {
         // Given
+        /** @var RelationBag|MockObject $relations */
         $relations = $this->createMock(RelationBag::class);
         $relations
             ->expects($this->once())

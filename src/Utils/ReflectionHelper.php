@@ -10,11 +10,10 @@ use ReflectionException;
 class ReflectionHelper
 {
     /**
-     * @param        $object
+     * @param object $object
      * @param string $property
      *
      * @return mixed
-     * @throws ReflectionException
      */
     public static function getValue($object, string $property)
     {

@@ -3,6 +3,7 @@
 namespace Unit\Relations;
 
 use BaseTest;
+use PHPUnit\Framework\MockObject\MockObject;
 use Stwarog\Uow\EntityInterface;
 use Stwarog\Uow\EntityManagerInterface;
 use Stwarog\Uow\Relations\BelongsTo;
@@ -32,6 +33,7 @@ class BelongsToTest extends BaseTest
 
         $entity = $this->createMock(EntityInterface::class);
 
+        /** @var EntityInterface|MockObject $relatedEntity */
         $relatedEntity = $this->createMock(EntityInterface::class);
         $relatedEntity
             ->expects($this->exactly(2))
