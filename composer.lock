@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "d4782e929cf9e580ec040b8c468c1e0e",
-    "content-hash": "1d87e12a29e22708d690c54767718c96",
+    "hash": "25078d09b5b3f380936f0736e0d9580e",
+    "content-hash": "af73c28d305bcbb7418770fa9e7783b6",
     "packages": [
         {
             "name": "myclabs/php-enum",
@@ -658,6 +658,48 @@
                 "stub"
             ],
             "time": "2020-03-05 15:02:03"
+        },
+        {
+            "name": "phpstan/phpstan",
+            "version": "0.12.89",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phpstan/phpstan.git",
+                "reference": "54c0f5a6c30511b77128d58b6369f718df250542"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/54c0f5a6c30511b77128d58b6369f718df250542",
+                "reference": "54c0f5a6c30511b77128d58b6369f718df250542",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1|^8.0"
+            },
+            "conflict": {
+                "phpstan/phpstan-shim": "*"
+            },
+            "bin": [
+                "phpstan",
+                "phpstan.phar"
+            ],
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.12-dev"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "bootstrap.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "PHPStan - PHP Static Analysis Tool",
+            "time": "2021-06-09 20:23:49"
         },
         {
             "name": "phpunit/php-code-coverage",

@@ -3,6 +3,7 @@
 namespace Unit\Relations;
 
 use BaseTest;
+use PHPUnit\Framework\MockObject\MockObject;
 use Stwarog\Uow\EntityInterface;
 use Stwarog\Uow\EntityManagerInterface;
 use Stwarog\Uow\Relations\BelongsTo;
@@ -14,7 +15,9 @@ class BelongsToTest extends BaseTest
     {
         // Given
         $relation      = new BelongsTo('from_id', 'table', 'to_id');
+        /** @var EntityManagerInterface|MockObject $em */
         $em            = $this->createMock(EntityManagerInterface::class);
+        /** @var EntityInterface|MockObject $relatedEntity */
         $relatedEntity = $this->createMock(EntityInterface::class);
         $em->expects($this->never())->method('persist');
 
@@ -30,8 +33,10 @@ class BelongsToTest extends BaseTest
         $table = 'table';
         $to    = 'to_id';
 
+        /** @var EntityInterface|MockObject $entity */
         $entity = $this->createMock(EntityInterface::class);
 
+        /** @var EntityInterface|MockObject $relatedEntity */
         $relatedEntity = $this->createMock(EntityInterface::class);
         $relatedEntity
             ->expects($this->exactly(2))
@@ -48,6 +53,7 @@ class BelongsToTest extends BaseTest
 
         $relation->setRelatedData([$relatedEntity]);
 
+        /** @var EntityManagerInterface|MockObject $em */
         $em = $this->createMock(EntityManagerInterface::class);
         $em->expects($this->once())
             ->method('persist')

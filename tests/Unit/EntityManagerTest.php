@@ -25,6 +25,7 @@ class EntityManagerTest extends BaseTest
     public function persist__already_persisted__skips(): void
     {
         // Given
+        /** @var EntityInterface|MockObject $entity */
         $entity = $this->createMock(EntityInterface::class);
         $this->uow
             ->expects($this->once())
@@ -49,6 +50,7 @@ class EntityManagerTest extends BaseTest
     public function persist__new_without_id__generates_id(): void
     {
         // Given
+        /** @var EntityInterface|MockObject $entity */
         $entity = $this->createMock(EntityInterface::class);
 
         $this->uow
@@ -84,6 +86,7 @@ class EntityManagerTest extends BaseTest
     public function persist__new_with_id__skip_generate_id(): void
     {
         // Given
+        /** @var EntityInterface|MockObject $entity */
         $entity = $this->createMock(EntityInterface::class);
 
         $this->uow
@@ -123,12 +126,14 @@ class EntityManagerTest extends BaseTest
     public function persist__new_with_not_dirty_relations__skips(): void
     {
         // Given
+        /** @var RelationBag|MockObject $relations */
         $relations = $this->createMock(RelationBag::class);
         $relations
             ->expects($this->once())
             ->method('isDirty')
             ->willReturn(false);
 
+        /** @var RelationInterface|MockObject $relationItem */
         $relationItem = $this->createMock(RelationInterface::class);
         $relationItem
             ->expects($this->never())
@@ -137,6 +142,7 @@ class EntityManagerTest extends BaseTest
 
         $relations->add('fake', $relationItem);
 
+        /** @var EntityInterface|MockObject $entity */
         $entity = $this->createMock(EntityInterface::class);
         $entity
             ->expects($this->once())
@@ -170,8 +176,10 @@ class EntityManagerTest extends BaseTest
         $s = $this->service();
 
         $relationBag = new RelationBag();
+        /** @var EntityInterface|MockObject $entity */
         $entity      = $this->createMock(EntityInterface::class);
 
+        /** @var RelationInterface|MockObject $relationItem */
         $relationItem = $this->createMock(RelationInterface::class);
         $relationItem
             ->expects($this->once())
@@ -219,6 +227,7 @@ class EntityManagerTest extends BaseTest
             ->method('wasPersisted')
             ->willReturn(false);
 
+        /** @var EntityInterface|MockObject $entity */
         $entity = $this->createMock(EntityInterface::class);
         $entity
             ->method('isNew')
@@ -244,6 +253,7 @@ class EntityManagerTest extends BaseTest
     public function remove__entity(): void
     {
         // Given
+        /** @var EntityInterface|MockObject $entity */
         $entity = $this->createMock(EntityInterface::class);
         $this->uow
             ->expects($this->once())

@@ -36,6 +36,7 @@ foreign_key_check | boolean | true | Allows to globally disable foreign check (n
 * Static analytics tools: PHPCS and PHPSTAN for ./src directory
 * Reformatted code for PSR-12
 * Removed MIT license note in every file
+* BUG: Added return type in ManyToMany.php
 
 ##### 1.1.1 (2020-01-04)
 * *0abc29e8* removed exception throws on empty uow on flush

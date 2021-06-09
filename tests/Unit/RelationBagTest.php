@@ -3,6 +3,7 @@
 namespace Unit;
 
 use BaseTest;
+use PHPUnit\Framework\MockObject\MockObject;
 use Stwarog\Uow\Exceptions\OutOfRangeUOWException;
 use Stwarog\Uow\RelationBag;
 use Stwarog\Uow\Relations\RelationInterface;
@@ -30,6 +31,7 @@ class RelationBagTest extends BaseTest
     {
         // Given
         $field = 'field';
+        /** @var RelationInterface|MockObject $mock */
         $mock  = $this->createMock(RelationInterface::class);
 
         $mock
@@ -61,6 +63,7 @@ class RelationBagTest extends BaseTest
     {
         // Given
         $field = 'field';
+        /** @var RelationInterface|MockObject $mock */
         $mock  = $this->createMock(RelationInterface::class);
 
         $mock
@@ -93,6 +96,7 @@ class RelationBagTest extends BaseTest
     {
         // Given
         $field = 'field';
+        /** @var RelationInterface|MockObject $mock */
         $mock  = $this->createMock(RelationInterface::class);
 
         $mock
@@ -124,6 +128,7 @@ class RelationBagTest extends BaseTest
     {
         // Given
         $field = 'field';
+        /** @var RelationInterface|MockObject $mock */
         $mock  = $this->createMock(RelationInterface::class);
 
         // When
@@ -159,6 +164,7 @@ class RelationBagTest extends BaseTest
 
         // When
         for ($c = 0; $c !== 5; $c++) {
+            /** @var RelationInterface|MockObject $mock */
             $mock = $this->createMock(RelationInterface::class);
             $bag->add('field' . $c, $mock);
         }
@@ -179,6 +185,7 @@ class RelationBagTest extends BaseTest
         $bag = new RelationBag();
 
         for ($c = 0; $c !== 5; $c++) {
+            /** @var RelationInterface|MockObject $mock */
             $mock = $this->createMock(RelationInterface::class);
             $bag->add('field' . $c, $mock);
         }
