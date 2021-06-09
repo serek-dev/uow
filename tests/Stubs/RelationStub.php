@@ -12,6 +12,12 @@ class RelationStub
     /** @var MockObject|RelationInterface */
     public $stub;
 
+    /**
+     * RelationStub constructor.
+     * @param TestCase $case
+     * @param string $table
+     * @phpstan-ignore-next-line
+     */
     public function __construct(TestCase $case, string $table = 'table_name')
     {
         $builder    = new MockBuilder($case, RelationInterface::class);
