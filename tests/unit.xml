@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd" bootstrap="../vendor/autoload.php" executionOrder="depends,random" forceCoversAnnotation="true" beStrictAboutCoversAnnotation="false" beStrictAboutOutputDuringTests="true" beStrictAboutTodoAnnotatedTests="true" convertErrorsToExceptions="true" convertNoticesToExceptions="true" convertWarningsToExceptions="true" colors="true" verbose="true">
+  <coverage>
+    <include>
+      <directory suffix=".php">../src</directory>
+    </include>
+    <report>
+      <html outputDirectory="../output/coverage/unit/html"/>
+    </report>
+  </coverage>
+  <testsuite name="tests/Unit">
+    <directory suffix="Test.php">../tests/Unit</directory>
+  </testsuite>
+  <logging/>
+</phpunit>
