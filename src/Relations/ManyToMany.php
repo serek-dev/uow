@@ -61,7 +61,7 @@ class ManyToMany implements RelationInterface, Iterator
 
     public function toArray(): array
     {
-        $this->related;
+        return $this->related;
     }
 
     public function isDirty(): bool
