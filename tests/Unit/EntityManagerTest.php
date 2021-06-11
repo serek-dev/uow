@@ -41,6 +41,10 @@ class EntityManagerTest extends BaseTest
         $s->persist($entity);
     }
 
+    /**
+     * @param array<string, mixed> $config
+     * @return EntityManagerInterface
+     */
     private function service(array $config = []): EntityManagerInterface
     {
         return new EntityManager($this->db, $this->uow, $config);
@@ -126,12 +130,7 @@ class EntityManagerTest extends BaseTest
     public function persist__new_with_not_dirty_relations__skips(): void
     {
         // Given
-        /** @var RelationBag|MockObject $relations */
-        $relations = $this->createMock(RelationBag::class);
-        $relations
-            ->expects($this->once())
-            ->method('isDirty')
-            ->willReturn(false);
+        $relations = new RelationBag();
 
         /** @var RelationInterface|MockObject $relationItem */
         $relationItem = $this->createMock(RelationInterface::class);

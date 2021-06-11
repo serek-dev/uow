@@ -7,7 +7,7 @@ namespace Stwarog\Uow\UnitOfWork;
 interface PersistAble
 {
     /**
-     * @return array|string[]
+     * @return array<string>
      */
     public function columns(): array;
 
@@ -17,7 +17,7 @@ interface PersistAble
      * If isNew() then all fields are returned.
      * If isDirty() then only changed values.
      *
-     * @return array
+     * @return array<int, mixed>
      */
     public function values(): array;
 
@@ -25,6 +25,9 @@ interface PersistAble
 
     public function idKey(): ?string;
 
+    /**
+     * @return object
+     */
     public function originalClass();
 
     public function objectHash(): string;

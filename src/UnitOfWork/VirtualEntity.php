@@ -10,22 +10,28 @@ use Stwarog\Uow\EntityInterface;
 use Stwarog\Uow\IdGenerators\IdGenerationStrategyInterface;
 use Stwarog\Uow\IdGenerators\NoIncrementIdStrategy;
 use Stwarog\Uow\RelationBag;
+use Stwarog\Uow\Relations\RelationInterface;
 
 # todo: this class contains some bad designs & needs test
 class VirtualEntity implements EntityInterface
 {
-    /** @var array */
+    /** @var array<string> */
     private $columns;
-    /** @var array */
+    /** @var array<int, mixed> */
     private $values;
     /** @var string */
     private $table;
+    /** @var string */
     private $objectHash;
-    /**
-     * @var array
-     */
+    /** @var array<Closure> */
     private $closures = [];
 
+    /**
+     * VirtualEntity constructor.
+     * @param string $table
+     * @param array<string> $columns
+     * @param array<int, string> $values
+     */
     public function __construct(string $table, array $columns, array $values)
     {
         $this->columns = $columns;
@@ -34,11 +40,17 @@ class VirtualEntity implements EntityInterface
         $this->objectHash = spl_object_hash($this);
     }
 
+    /**
+     * @return array<string>
+     */
     public function columns(): array
     {
         return $this->columns;
     }
 
+    /**
+     * @return array<int, mixed>
+     */
     public function values(): array
     {
         return $this->values;
@@ -59,6 +71,9 @@ class VirtualEntity implements EntityInterface
         return null;
     }
 
+    /**
+     * @return $this|object
+     */
     public function originalClass()
     {
         return $this;
@@ -68,6 +83,9 @@ class VirtualEntity implements EntityInterface
     {
     }
 
+    /**
+     * @return RelationBag
+     */
     public function relations(): RelationBag
     {
         return new RelationBag();
@@ -77,6 +95,10 @@ class VirtualEntity implements EntityInterface
     {
     }
 
+    /**
+     * @param string $field
+     * @return mixed
+     */
     public function get(string $field)
     {
         $results = $this->toArray();
@@ -84,11 +106,18 @@ class VirtualEntity implements EntityInterface
         return $results[$field];
     }
 
+    /**
+     * @return array<array<string, mixed>>
+     */
     public function toArray(): array
     {
         return array_combine($this->columns, $this->values);
     }
 
+    /**
+     * @param string $field
+     * @param mixed $value
+     */
     public function set(string $field, $value): void
     {
         $results = $this->toArray();
@@ -127,6 +156,9 @@ class VirtualEntity implements EntityInterface
         $this->closures[] = $closure;
     }
 
+    /**
+     * @return array<Closure>
+     */
     public function getPostPersistClosures(): array
     {
         return $this->closures;

@@ -14,8 +14,15 @@ class EntityManager implements EntityManagerInterface
     private $db;
     /** @var UnitOfWork */
     private $uow;
+    /** @var array<string, mixed> */
     private $config = [];
 
+    /**
+     * EntityManager constructor.
+     * @param DBConnectionInterface $db
+     * @param UnitOfWork $uow
+     * @param array<string, mixed> $config
+     */
     public function __construct(DBConnectionInterface $db, UnitOfWork $uow, array $config = [])
     {
         $this->db = $db;
@@ -120,6 +127,9 @@ class EntityManager implements EntityManagerInterface
         return $this->config['foreign_key_check'];
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function debug(): array
     {
         if (isset($this->config['debug']) && $this->config['debug'] === false) {

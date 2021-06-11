@@ -40,6 +40,7 @@ abstract class AbstractOneToOneRelation implements RelationInterface
         return $this->keyTo;
     }
 
+    /** @inheritdoc */
     public function toArray(): array
     {
         return [$this->relatedEntity];

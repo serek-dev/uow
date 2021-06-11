@@ -15,6 +15,7 @@ class PersistAbleStub
 
     public function __construct(TestCase $case, string $table = 'table_name')
     {
+        /** @var MockBuilder|PersistAble $builder */
         $builder    = new MockBuilder($case, PersistAble::class);
         $this->stub = $builder->getMock();
         $this->stub->method('originalClass')->willReturnSelf();
@@ -35,6 +36,11 @@ class PersistAbleStub
         return $this;
     }
 
+    /**
+     * @param array<string> $columns
+     * @param array<int, mixed> $values
+     * @return $this
+     */
     public function columnValues(array $columns = ['a', 'b'], array $values = ['1', 5]): self
     {
         $this->stub->method('columns')->willReturn($columns);

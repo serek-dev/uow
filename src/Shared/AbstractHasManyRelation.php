@@ -10,6 +10,9 @@ use Stwarog\Uow\EntityManagerInterface;
 use Stwarog\Uow\Relations\HasRelationFromToSchema;
 use Stwarog\Uow\Relations\RelationInterface;
 
+/**
+ * @template Tkey
+ */
 class AbstractHasManyRelation implements RelationInterface, HasRelationFromToSchema, Iterator
 {
     /** @var string */
@@ -18,7 +21,7 @@ class AbstractHasManyRelation implements RelationInterface, HasRelationFromToSch
     protected $tableTo;
     /** @var string */
     protected $keyTo;
-    /** @var EntityInterface[] */
+    /** @var array<int, EntityInterface> */
     protected $related = [];
 
     public function __construct(string $keyFrom, string $tableTo, string $keyTo)
@@ -53,6 +56,9 @@ class AbstractHasManyRelation implements RelationInterface, HasRelationFromToSch
         }
     }
 
+    /**
+     * @return array<EntityInterface>
+     */
     public function toArray(): array
     {
         return $this->related;
@@ -85,32 +91,41 @@ class AbstractHasManyRelation implements RelationInterface, HasRelationFromToSch
         return true;
     }
 
+    /**
+     * @param array<int, EntityInterface> $relatedEntities
+     */
     public function setRelatedData(array $relatedEntities = []): void
     {
         $this->related = $relatedEntities;
     }
 
+    /**
+     * @return EntityInterface|bool
+     */
     public function current()
     {
         return current($this->related);
     }
 
-    public function next()
+    public function next(): void
     {
         next($this->related);
     }
 
+    /**
+     * @return int|string|null
+     */
     public function key()
     {
         return key($this->related);
     }
 
-    public function valid()
+    public function valid(): bool
     {
         return key($this->related) !== null;
     }
 
-    public function rewind()
+    public function rewind(): void
     {
         reset($this->related);
     }

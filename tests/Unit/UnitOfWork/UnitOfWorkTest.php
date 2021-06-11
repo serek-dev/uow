@@ -58,6 +58,7 @@ class UnitOfWorkTest extends BaseTest
         $this->assertSame($expectedCount, count($uow->getData(ActionType::INSERT())));
     }
 
+    /** @phpstan-ignore-next-line */
     public function insert__same_data_setDataProvider(): array
     {
         return [

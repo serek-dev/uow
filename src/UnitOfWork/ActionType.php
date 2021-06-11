@@ -13,6 +13,8 @@ use MyCLabs\Enum\Enum;
  * @method static ActionType INSERT()
  * @method static ActionType UPDATE()
  * @method static ActionType DELETE()
+ *
+ * @template-extends Enum<ActionType>
  */
 class ActionType extends Enum
 {
