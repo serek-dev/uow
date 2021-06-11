@@ -1,9 +1,5 @@
 parameters:
-    level: 5
+    level: 6
     paths:
         - src
         - tests
-#    ignoreErrors:
-#        -
-#            message: '#Constructor of class Stubs\RelationStub has an unused parameter#'
-#            path: %currentWorkingDirectory%/tests/Stubs/RelationStub.php
