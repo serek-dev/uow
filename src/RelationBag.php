@@ -10,7 +10,9 @@ use Stwarog\Uow\Relations\RelationInterface;
 
 class RelationBag implements Iterator
 {
+    /** @var array<string, RelationInterface> */
     private $data = [];
+    /** @var bool */
     private $isDirty = false;
 
     public function add(string $field, RelationInterface $relation): void
@@ -36,7 +38,7 @@ class RelationBag implements Iterator
     }
 
     /**
-     * @return array|RelationInterface[]
+     * @return array<RelationInterface>
      */
     public function toArray(): array
     {
@@ -53,27 +55,36 @@ class RelationBag implements Iterator
         return $this->isDirty;
     }
 
+    /**
+     * @return RelationInterface|bool
+     */
     public function current()
     {
         return current($this->data);
     }
 
+    /**
+     * @return RelationInterface|bool
+     */
     public function next()
     {
-        next($this->data);
+        return next($this->data);
     }
 
+    /**
+     * @return int|string|null
+     */
     public function key()
     {
         return key($this->data);
     }
 
-    public function valid()
+    public function valid(): bool
     {
         return key($this->data) !== null;
     }
 
-    public function rewind()
+    public function rewind(): void
     {
         reset($this->data);
     }

@@ -16,19 +16,25 @@ interface DBConnectionInterface extends DebugAble
 
     /**
      * @param string $tableName
-     * @param array $columns
-     * @param array $values - array of arrays, or array
+     * @param array<string> $columns
+     * @param array<int, mixed> $values
      */
     public function insert(string $tableName, array $columns, array $values): void;
 
     /**
      * @param string $tableName
-     * @param array $where - array of [$field, $operator, $value]
-     * @param array $columns
-     * @param array $values
+     * @param array{0: string, 1: string, 2: mixed}|array<array{0: string, 1: string, 2: mixed}> $where
+     * - array of [$field, $operator, $value]
+     * @param array<string> $columns
+     * @param array<int, mixed> $values
      */
     public function update(string $tableName, array $where, array $columns, array $values): void;
 
+    /**
+     * @param string $tableName
+     * @param array{0: string, 1: string, 2: mixed}|array<array{0: string, 1: string, 2: mixed}> $where
+     * - array of [$field, $operator, $value]
+     */
     public function delete(string $tableName, array $where): void;
 
     public function query(string $sql): void;

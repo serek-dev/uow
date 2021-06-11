@@ -10,14 +10,14 @@ use Stwarog\Uow\TouchAble;
 interface RelationInterface extends InteractWithEntityManager, TouchAble
 {
     /**
-     * @return EntityInterface[]
+     * @return array<EntityInterface>
      */
     public function toArray(): array;
 
     /**
      * Should contain wrapped original Models.
      *
-     * @param EntityInterface[] $relatedEntities
+     * @param array<EntityInterface> $relatedEntities
      */
     public function setRelatedData(array $relatedEntities): void;
 }

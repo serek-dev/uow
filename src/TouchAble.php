@@ -8,7 +8,7 @@ interface TouchAble
 {
     /**
      * Returns stored data. For Entity it should return array_combine of columns & values.
-     * @return array
+     * @return array<array<string, mixed>>|array<EntityInterface> todo
      */
     public function toArray(): array;
 

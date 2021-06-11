@@ -8,18 +8,17 @@ class UnitOfWork
 {
     /**
      * Unified and compiled (expected) set of values for DbConnection
-     *
-     * @var array
+     * @var mixed
      */
     private $data = [];
 
     # all of these 3 below, has to be unique (index = unique id)
 
-    /** @var PersistAble[] */
+    /** @var array<PersistAble> */
     private $insert = [];
-    /** @var PersistAble[] */
+    /** @var array<PersistAble> */
     private $update = [];
-    /** @var PersistAble[] */
+    /** @var array<PersistAble> */
     private $delete = [];
 
     public function insert(PersistAble $entity): void
@@ -40,6 +39,11 @@ class UnitOfWork
         return isset($this->$type[$entity->objectHash()]);
     }
 
+    /**
+     * @param ActionType $type
+     * @return mixed
+     * @phpstan-ignore-next-line todo
+     */
     public function getData(ActionType $type): array
     {
         $this->compile($type);
@@ -51,7 +55,7 @@ class UnitOfWork
         return $this->data[(string)$type];
     }
 
-    private function compile(ActionType $type)
+    private function compile(ActionType $type): void
     {
         $this->data[(string)$type] = [];
 
@@ -120,12 +124,16 @@ class UnitOfWork
         }
     }
 
+    /**
+     * @param array<string> $array
+     * @return string
+     */
     private function hash(array $array): string
     {
         return serialize($array);
     }
 
-    public function delete(PersistAble $entity)
+    public function delete(PersistAble $entity): void
     {
         (new HasPrimaryKeySpecification())->isSatisfiedBy($entity);
         $this->delete[$entity->objectHash()] = $entity;

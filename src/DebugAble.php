@@ -8,10 +8,7 @@ interface DebugAble
 {
     /**
      * Dumps MySql query details.
-     * @return array
-     *         [
-     *              'sql' => (string) with all queries in Transaction
-     *         ]
+     * @return array<string, mixed>&array{sql: string}
      */
     public function debug(): array;
 }
