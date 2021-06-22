@@ -7,6 +7,8 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Stwarog\Uow\EntityInterface;
 use Stwarog\Uow\EntityManagerInterface;
 use Stwarog\Uow\Relations\HasMany;
+use Stwarog\Uow\Relations\ManyToMany;
+use Stwarog\Uow\UnitOfWork\VirtualEntity;
 
 class HasManyTest extends BaseTest
 {
@@ -32,33 +34,44 @@ class HasManyTest extends BaseTest
     /** @test */
     public function handleRelations__related_no_key_to_value__set_from_itself(): void
     {
-        $this->markTestSkipped();
-        // @phpstan-ignore-next-line
-        $from  = 'from_id';
-        $table = 'table';
-        $to    = 'to_id';
-
-        #                                                   here
-        # $relatedEntity->set($this->keyTo, $parentEntity->get($this->keyFrom));
-
-        $parentEntityFrom = 1;
-
-        /** @var EntityInterface|MockObject $parentEntity */
-        $parentEntity = $this->createMock(EntityInterface::class);
-        $parentEntity->expects($this->once())->method('get')
-            ->with($from)->willReturn($parentEntityFrom);
-
-        $relation      = new HasMany($from, $table, $to);
-        /** @var EntityInterface|MockObject $relatedEntity */
-        $relatedEntity = $this->createMock(EntityInterface::class);
-        $relatedEntity->expects($this->once())->method('set')->with($to, $parentEntityFrom);
-        $relation->setRelatedData([$relatedEntity]);
-
-        /** @var EntityManagerInterface|MockObject $em */
+        // Given entity manager
         $em = $this->createMock(EntityManagerInterface::class);
-        $em->expects($this->once())->method('persist');
 
-        $relation->setRelatedData([$relatedEntity]);
-        $relation->handleRelations($em, $parentEntity);
+        // And parent entity
+        $table = 'table';
+        $columns = ['column'];
+        $values = ['value'];
+        $parentEntity = new VirtualEntity($table, $columns, $values);
+
+        // And ManyToMany relation
+        $from = 'key_from';
+        $keyThrough = 'key_through';
+        $tableThrough = 'table_through';
+        $modelTo = 'model';
+        $keyTo = 'key_to';
+        $manyToMany = new ManyToMany($from, $keyThrough, $tableThrough, $keyThrough, $modelTo, $keyTo);
+
+        // With Related Entity
+        $relatedEntity = new VirtualEntity('$table', [], []);
+        $manyToMany->setRelatedData([$relatedEntity]);
+
+        // Then
+        $em->expects($this->at(0))
+            ->method('persist')
+            ->with($relatedEntity);
+
+        $em->expects($this->at(1))
+            ->method('persist')
+            ->willReturnCallback(function(VirtualEntity $newVirtualEntity) use (
+                $tableThrough
+            ) {
+                $this->assertSame($tableThrough, $newVirtualEntity->table());
+            });
+
+        // When
+        $manyToMany->handleRelations($em, $parentEntity);
+        foreach ($parentEntity->getPostPersistClosures() as $closure) {
+            $closure($parentEntity);
+        }
     }
 }
