@@ -7,10 +7,13 @@ namespace Stwarog\Uow\Relations;
 use Iterator;
 use Stwarog\Uow\EntityInterface;
 use Stwarog\Uow\EntityManagerInterface;
+use Stwarog\Uow\Shared\IterableTrait;
 use Stwarog\Uow\UnitOfWork\VirtualEntity;
 
 class ManyToMany implements RelationInterface, Iterator
 {
+    use IterableTrait;
+
     /** @var string */
     private $keyFrom;
     /** @var string */
@@ -24,7 +27,7 @@ class ManyToMany implements RelationInterface, Iterator
     /** @var string */
     private $keyTo;
     /** @var EntityInterface[] */
-    private $related = [];
+    private $data = [];
 
     public function __construct(
         string $keyFrom,
@@ -61,7 +64,7 @@ class ManyToMany implements RelationInterface, Iterator
 
     public function toArray(): array
     {
-        return $this->related;
+        return $this->data;
     }
 
     public function isDirty(): bool
@@ -88,36 +91,16 @@ class ManyToMany implements RelationInterface, Iterator
 
     public function setRelatedData(array $relatedEntities = []): void
     {
-        $this->related = $relatedEntities;
+        $this->data = $relatedEntities;
     }
 
     public function isEmpty(): bool
     {
-        return empty($this->related);
+        return empty($this->data);
     }
 
     public function current(): EntityInterface
     {
-        return $this->related[$this->key()];
-    }
-
-    public function next(): void
-    {
-        next($this->related);
-    }
-
-    public function key(): int
-    {
-        return key($this->related);
-    }
-
-    public function valid(): bool
-    {
-        return key($this->related) !== null;
-    }
-
-    public function rewind(): void
-    {
-        reset($this->related);
+        return $this->data[$this->key()];
     }
 }
