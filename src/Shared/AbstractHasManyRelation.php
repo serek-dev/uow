@@ -12,6 +12,8 @@ use Stwarog\Uow\Relations\RelationInterface;
 
 class AbstractHasManyRelation implements RelationInterface, HasRelationFromToSchema, Iterator
 {
+    use IterableTrait;
+
     /** @var string */
     protected $keyFrom;
     /** @var string */
@@ -19,7 +21,7 @@ class AbstractHasManyRelation implements RelationInterface, HasRelationFromToSch
     /** @var string */
     protected $keyTo;
     /** @var array<int, EntityInterface> */
-    protected $related = [];
+    protected $data = [];
 
     public function __construct(string $keyFrom, string $tableTo, string $keyTo)
     {
@@ -58,12 +60,12 @@ class AbstractHasManyRelation implements RelationInterface, HasRelationFromToSch
      */
     public function toArray(): array
     {
-        return $this->related;
+        return $this->data;
     }
 
     public function isEmpty(): bool
     {
-        return empty($this->related);
+        return empty($this->data);
     }
 
     public function isDirty(): bool
@@ -93,34 +95,11 @@ class AbstractHasManyRelation implements RelationInterface, HasRelationFromToSch
      */
     public function setRelatedData(array $relatedEntities = []): void
     {
-        $this->related = $relatedEntities;
+        $this->data = $relatedEntities;
     }
 
     public function current(): EntityInterface
     {
-        return $this->related[$this->key()];
-    }
-
-    public function next(): void
-    {
-        next($this->related);
-    }
-
-    /**
-     * @return int|string|null
-     */
-    public function key()
-    {
-        return key($this->related);
-    }
-
-    public function valid(): bool
-    {
-        return key($this->related) !== null;
-    }
-
-    public function rewind(): void
-    {
-        reset($this->related);
+        return $this->data[$this->key()];
     }
 }
