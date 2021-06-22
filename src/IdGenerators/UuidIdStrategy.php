@@ -8,7 +8,7 @@ use Ramsey\Uuid\Uuid;
 use Stwarog\Uow\DBConnectionInterface;
 use Stwarog\Uow\EntityInterface;
 
-class UuidIdStrategy extends AbstractGeneratorWithRequiredIdKeyStrategy implements IdGenerationStrategyInterface
+final class UuidIdStrategy extends AbstractGeneratorWithRequiredIdKeyStrategy implements IdGenerationStrategyInterface
 {
     public function handle(EntityInterface $entity, DBConnectionInterface $db): void
     {

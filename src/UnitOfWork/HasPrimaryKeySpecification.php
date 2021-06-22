@@ -6,7 +6,7 @@ namespace Stwarog\Uow\UnitOfWork;
 
 use Stwarog\Uow\Exceptions\UnitOfWorkException;
 
-class HasPrimaryKeySpecification implements UnitOfWorkSpecificationInterface
+final class HasPrimaryKeySpecification implements UnitOfWorkSpecificationInterface
 {
     /**
      * @param PersistAble $entity

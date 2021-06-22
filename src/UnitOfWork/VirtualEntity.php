@@ -13,7 +13,7 @@ use Stwarog\Uow\RelationBag;
 use Stwarog\Uow\Relations\RelationInterface;
 
 # todo: this class contains some bad designs & needs test
-class VirtualEntity implements EntityInterface
+final class VirtualEntity implements EntityInterface
 {
     /** @var array<int, int|string> */
     private $columns;

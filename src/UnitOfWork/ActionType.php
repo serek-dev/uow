@@ -16,7 +16,7 @@ use MyCLabs\Enum\Enum;
  *
  * @template-extends Enum<ActionType>
  */
-class ActionType extends Enum
+final class ActionType extends Enum
 {
     public const SELECT = 'select';
     public const INSERT = 'insert';

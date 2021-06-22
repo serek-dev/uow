@@ -7,7 +7,7 @@ namespace Stwarog\Uow\Utils;
 use ReflectionClass;
 use ReflectionException;
 
-class ReflectionHelper
+final class ReflectionHelper
 {
     /**
      * @param object $object

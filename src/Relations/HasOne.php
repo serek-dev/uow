@@ -9,7 +9,7 @@ use Stwarog\Uow\EntityInterface;
 use Stwarog\Uow\EntityManagerInterface;
 use Stwarog\Uow\Shared\AbstractOneToOneRelation;
 
-class HasOne extends AbstractOneToOneRelation implements InteractWithEntityManager, HasRelationFromToSchema
+final class HasOne extends AbstractOneToOneRelation implements InteractWithEntityManager, HasRelationFromToSchema
 {
     public function handleRelations(EntityManagerInterface $entityManager, EntityInterface $parentEntity): void
     {

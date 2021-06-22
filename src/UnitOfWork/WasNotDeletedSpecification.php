@@ -6,7 +6,7 @@ namespace Stwarog\Uow\UnitOfWork;
 
 use Stwarog\Uow\Exceptions\UnitOfWorkException;
 
-class WasNotDeletedSpecification implements UnitOfWorkSpecificationInterface
+final class WasNotDeletedSpecification implements UnitOfWorkSpecificationInterface
 {
     /**
      * @var UnitOfWork

@@ -7,7 +7,7 @@ namespace Stwarog\Uow\IdGenerators;
 use Stwarog\Uow\DBConnectionInterface;
 use Stwarog\Uow\EntityInterface;
 
-class NoIncrementIdStrategy implements IdGenerationStrategyInterface
+final class NoIncrementIdStrategy implements IdGenerationStrategyInterface
 {
     public function handle(EntityInterface $entity, DBConnectionInterface $db): void
     {

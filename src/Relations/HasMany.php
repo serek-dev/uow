@@ -8,7 +8,7 @@ use Stwarog\Uow\EntityInterface;
 use Stwarog\Uow\EntityManagerInterface;
 use Stwarog\Uow\Shared\AbstractHasManyRelation;
 
-class HasMany extends AbstractHasManyRelation implements RelationInterface, HasRelationFromToSchema
+final class HasMany extends AbstractHasManyRelation implements RelationInterface, HasRelationFromToSchema
 {
     public function handleRelations(EntityManagerInterface $entityManager, EntityInterface $parentEntity): void
     {

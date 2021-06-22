@@ -10,7 +10,7 @@ use Stwarog\Uow\EntityManagerInterface;
 use Stwarog\Uow\Shared\IterableTrait;
 use Stwarog\Uow\UnitOfWork\VirtualEntity;
 
-class ManyToMany implements RelationInterface, Iterator
+final class ManyToMany implements RelationInterface, Iterator
 {
     use IterableTrait;
 

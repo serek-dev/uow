@@ -1,9 +1,12 @@
 <?php
 
-
 namespace Stwarog\Uow\Shared;
 
-
+/**
+ * Trait IterableTrait
+ * Allows to type hint return types to expected var.
+ * Class that uses this must contain array<int, mixed> $data field.
+ */
 trait IterableTrait
 {
     /** @var int $position */
