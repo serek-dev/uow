@@ -8,7 +8,7 @@ use Exception;
 use Stwarog\Uow\Exceptions\RuntimeUOWException;
 use Stwarog\Uow\UnitOfWork\UnitOfWork;
 
-final class EntityManager implements EntityManagerInterface
+class EntityManager implements EntityManagerInterface
 {
     /** @var DBConnectionInterface */
     private $db;

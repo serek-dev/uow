@@ -48,9 +48,8 @@ class HasManyTest extends BaseTest
         $keyThroughFrom = 'key_through';
         $keyThroughTo = 'key_through_to';
         $tableThrough = 'table_through';
-        $modelTo = 'model';
         $keyTo = 'key_to';
-        $manyToMany = new ManyToMany($keyFrom, $keyThroughFrom, $tableThrough, $keyThroughTo, $modelTo, $keyTo);
+        $manyToMany = new ManyToMany($keyFrom, $keyThroughFrom, $tableThrough, $keyThroughTo, $keyTo);
 
         // With Related Entity
         $relatedEntity = new VirtualEntity('$table', [], []);

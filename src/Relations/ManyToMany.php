@@ -23,8 +23,6 @@ final class ManyToMany implements RelationInterface, Iterator
     /** @var string */
     private $keyThroughTo;
     /** @var string */
-    private $modelTo;
-    /** @var string */
     private $keyTo;
     /** @var EntityInterface[] */
     private $data = [];
@@ -34,14 +32,12 @@ final class ManyToMany implements RelationInterface, Iterator
         string $keyThroughFrom,
         string $tableThrough,
         string $keyThroughTo,
-        string $modelTo,
         string $keyTo
     ) {
         $this->keyFrom = $keyFrom;
         $this->keyThroughFrom = $keyThroughFrom;
         $this->tableThrough = $tableThrough;
         $this->keyThroughTo = $keyThroughTo;
-        $this->modelTo = $modelTo;
         $this->keyTo = $keyTo;
     }
 
