@@ -33,6 +33,7 @@ class HasManyTest extends BaseTest
     public function handleRelations__related_no_key_to_value__set_from_itself(): void
     {
         $this->markTestSkipped();
+        // @phpstan-ignore-next-line
         $from  = 'from_id';
         $table = 'table';
         $to    = 'to_id';

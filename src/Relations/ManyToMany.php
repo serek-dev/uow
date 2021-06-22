@@ -96,12 +96,9 @@ class ManyToMany implements RelationInterface, Iterator
         return empty($this->related);
     }
 
-    /**
-     * @return EntityInterface|bool
-     */
-    public function current()
+    public function current(): EntityInterface
     {
-        return current($this->related);
+        return $this->related[$this->key()];
     }
 
     public function next(): void

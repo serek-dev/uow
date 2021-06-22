@@ -10,9 +10,6 @@ use Stwarog\Uow\EntityManagerInterface;
 use Stwarog\Uow\Relations\HasRelationFromToSchema;
 use Stwarog\Uow\Relations\RelationInterface;
 
-/**
- * @template Tkey
- */
 class AbstractHasManyRelation implements RelationInterface, HasRelationFromToSchema, Iterator
 {
     /** @var string */
@@ -99,12 +96,9 @@ class AbstractHasManyRelation implements RelationInterface, HasRelationFromToSch
         $this->related = $relatedEntities;
     }
 
-    /**
-     * @return EntityInterface|bool
-     */
-    public function current()
+    public function current(): EntityInterface
     {
-        return current($this->related);
+        return $this->related[$this->key()];
     }
 
     public function next(): void

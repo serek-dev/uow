@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "25078d09b5b3f380936f0736e0d9580e",
-    "content-hash": "af73c28d305bcbb7418770fa9e7783b6",
+    "hash": "c5ef2749ffa7df993134060b8f301201",
+    "content-hash": "32a2290237f0b39824b9b5999bc12655",
     "packages": [
         {
             "name": "myclabs/php-enum",
@@ -700,6 +700,56 @@
             ],
             "description": "PHPStan - PHP Static Analysis Tool",
             "time": "2021-06-09 20:23:49"
+        },
+        {
+            "name": "phpstan/phpstan-phpunit",
+            "version": "0.12.20",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phpstan/phpstan-phpunit.git",
+                "reference": "efc009981af383eb3303f0ca9868c29acad7ce74"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phpstan/phpstan-phpunit/zipball/efc009981af383eb3303f0ca9868c29acad7ce74",
+                "reference": "efc009981af383eb3303f0ca9868c29acad7ce74",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1 || ^8.0",
+                "phpstan/phpstan": "^0.12.86"
+            },
+            "conflict": {
+                "phpunit/phpunit": "<7.0"
+            },
+            "require-dev": {
+                "php-parallel-lint/php-parallel-lint": "^1.2",
+                "phpstan/phpstan-strict-rules": "^0.12.6",
+                "phpunit/phpunit": "^9.5"
+            },
+            "type": "phpstan-extension",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.12-dev"
+                },
+                "phpstan": {
+                    "includes": [
+                        "extension.neon",
+                        "rules.neon"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "PHPStan\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "PHPUnit extensions and rules for PHPStan",
+            "time": "2021-06-17 08:28:30"
         },
         {
             "name": "phpunit/php-code-coverage",

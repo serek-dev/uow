@@ -15,7 +15,7 @@ use Stwarog\Uow\Relations\RelationInterface;
 # todo: this class contains some bad designs & needs test
 class VirtualEntity implements EntityInterface
 {
-    /** @var array<string> */
+    /** @var array<int, int|string> */
     private $columns;
     /** @var array<int, mixed> */
     private $values;
@@ -40,17 +40,13 @@ class VirtualEntity implements EntityInterface
         $this->objectHash = spl_object_hash($this);
     }
 
-    /**
-     * @return array<string>
-     */
+    /** @inheritdoc */
     public function columns(): array
     {
         return $this->columns;
     }
 
-    /**
-     * @return array<int, mixed>
-     */
+    /** @inheritdoc */
     public function values(): array
     {
         return $this->values;
@@ -107,11 +103,11 @@ class VirtualEntity implements EntityInterface
     }
 
     /**
-     * @return array<array<string, mixed>>
+     * @return array<string|int, mixed>
      */
     public function toArray(): array
     {
-        return array_combine($this->columns, $this->values);
+        return (array)array_combine($this->columns, $this->values);
     }
 
     /**

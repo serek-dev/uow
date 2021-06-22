@@ -87,7 +87,7 @@ class UnitOfWork
                 $id = $entity->idValue();
                 $idKey = $entity->idKey();
 
-                $hash = $this->hash(array_combine($columns, $values));
+                $hash = $this->hash((array)array_combine($columns, $values));
 
                 $idsAggregate = $this->data[ActionType::UPDATE][$table][$hash]['where'][0][2] ?? [];
                 $idsAggregate[] = $id;
@@ -125,7 +125,7 @@ class UnitOfWork
     }
 
     /**
-     * @param array<string> $array
+     * @param array<int, mixed> $array
      * @return string
      */
     private function hash(array $array): string

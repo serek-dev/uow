@@ -7,7 +7,7 @@ namespace Stwarog\Uow\UnitOfWork;
 interface PersistAble
 {
     /**
-     * @return array<string>
+     * @return array<int, mixed> - string instead of mixed irl
      */
     public function columns(): array;
 

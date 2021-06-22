@@ -13,6 +13,6 @@ class AutoIncrementIdStrategy extends AbstractGeneratorWithRequiredIdKeyStrategy
     public function handle(EntityInterface $entity, DBConnectionInterface $db): void
     {
         $this->verifyHasIdKey($entity);
-        $entity->setId($db->nextAutoIncrementNo($entity->table(), $entity->idKey()));
+        $entity->setId($db->nextAutoIncrementNo($entity->table(), $entity->idKey() ?? ''));
     }
 }

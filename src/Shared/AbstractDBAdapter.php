@@ -20,7 +20,7 @@ abstract class AbstractDBAdapter implements DBConnectionInterface
     protected $stopTimestamp;
 
     /**
-     * @return array{sql: string, time: float}
+     * @return array<string, mixed>
      */
     public function debug(): array
     {

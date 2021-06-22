@@ -36,7 +36,7 @@ class UnitOfWorkTest extends BaseTest
         $this->assertFalse($uow->has(ActionType::UPDATE(), $mock));
         $this->assertFalse($uow->has(ActionType::DELETE(), $mock));
         $this->assertTrue($uow->wasPersisted($mock));
-        $this->assertSame(1, count($uow->getData(ActionType::INSERT())));
+        $this->assertCount(1, $uow->getData(ActionType::INSERT()));
     }
 
     /**
@@ -55,7 +55,7 @@ class UnitOfWorkTest extends BaseTest
         }
 
         // Then
-        $this->assertSame($expectedCount, count($uow->getData(ActionType::INSERT())));
+        $this->assertCount($expectedCount, $uow->getData(ActionType::INSERT()));
     }
 
     public function insert__same_data_setDataProvider(): array
@@ -129,7 +129,7 @@ class UnitOfWorkTest extends BaseTest
 
         // Then
         $this->assertNotSame($before, $after);
-        $this->assertSame(1, count($uow->getData(ActionType::INSERT())));
+        $this->assertCount(1, $uow->getData(ActionType::INSERT()));
     }
 
     # update
@@ -196,7 +196,7 @@ class UnitOfWorkTest extends BaseTest
         $this->assertFalse($uow->has(ActionType::INSERT(), $mock));
         $this->assertTrue($uow->has(ActionType::UPDATE(), $mock));
         $this->assertFalse($uow->has(ActionType::DELETE(), $mock));
-        $this->assertSame(1, count($uow->getData(ActionType::UPDATE())));
+        $this->assertCount(1, $uow->getData(ActionType::UPDATE()));
     }
 
     # delete
@@ -249,7 +249,7 @@ class UnitOfWorkTest extends BaseTest
         $this->assertTrue($uow->has(ActionType::DELETE(), $mock1));
         $this->assertTrue($uow->has(ActionType::DELETE(), $mock2));
         $this->assertTrue($uow->has(ActionType::DELETE(), $mock3));
-        $this->assertSame(1, count($uow->getData(ActionType::DELETE())));
+        $this->assertCount(1, $uow->getData(ActionType::DELETE()));
     }
 
     # isEmpty
