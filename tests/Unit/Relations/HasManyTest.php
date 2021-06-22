@@ -44,31 +44,43 @@ class HasManyTest extends BaseTest
         $parentEntity = new VirtualEntity($table, $columns, $values);
 
         // And ManyToMany relation
-        $from = 'key_from';
-        $keyThrough = 'key_through';
+        $keyFrom = 'key_from';
+        $keyThroughFrom = 'key_through';
+        $keyThroughTo = 'key_through_to';
         $tableThrough = 'table_through';
         $modelTo = 'model';
         $keyTo = 'key_to';
-        $manyToMany = new ManyToMany($from, $keyThrough, $tableThrough, $keyThrough, $modelTo, $keyTo);
+        $manyToMany = new ManyToMany($keyFrom, $keyThroughFrom, $tableThrough, $keyThroughTo, $modelTo, $keyTo);
 
         // With Related Entity
         $relatedEntity = new VirtualEntity('$table', [], []);
         $manyToMany->setRelatedData([$relatedEntity]);
 
-        // Then
+        // Then first Entity Manager persist should store $relatedEntity
         $em->expects($this->at(0))
             ->method('persist')
             ->with($relatedEntity);
 
+        // And second call should contains new VirtualEntity
+        // with data from ManyToMany
         $em->expects($this->at(1))
             ->method('persist')
             ->willReturnCallback(function(VirtualEntity $newVirtualEntity) use (
+                $keyFrom,
+                $parentEntity,
+                $relatedEntity,
+                $keyThroughTo,
+                $keyTo,
+                $keyThroughFrom,
                 $tableThrough
             ) {
                 $this->assertSame($tableThrough, $newVirtualEntity->table());
+                $expectedColumns = [$keyThroughFrom, $keyThroughTo];
+                $this->assertSame($expectedColumns, $newVirtualEntity->columns());
+                $this->assertSame($parentEntity->get($keyFrom), $relatedEntity->get($keyTo));
             });
 
-        // When
+        // When ManyToMany relations are handled (in Entity Manager irl)
         $manyToMany->handleRelations($em, $parentEntity);
         foreach ($parentEntity->getPostPersistClosures() as $closure) {
             $closure($parentEntity);

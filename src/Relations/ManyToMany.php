@@ -106,10 +106,7 @@ class ManyToMany implements RelationInterface, Iterator
         next($this->related);
     }
 
-    /**
-     * @return int|string|null
-     */
-    public function key()
+    public function key(): int
     {
         return key($this->related);
     }
