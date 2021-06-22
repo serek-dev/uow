@@ -74,6 +74,6 @@ abstract class AbstractOneToOneRelation implements RelationInterface
         if (empty($relatedEntities)) {
             return;
         }
-        $this->relatedEntity = reset($relatedEntities);
+        $this->relatedEntity = array_values($relatedEntities)[0];
     }
 }
