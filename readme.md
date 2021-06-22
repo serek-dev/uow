@@ -37,6 +37,10 @@ foreign_key_check | boolean | true | Allows to globally disable foreign check (n
 * Reformatted code for PSR-12
 * Removed MIT license note in every file
 * BUG: Added return type in ManyToMany.php
+* !! Removed model to in ManyToMany.php
+* Usage of Added IterableTrait in AbstractHasManyRelation.php
+* Added final to all possible places
+* Fixed HasManyTest.php
 
 ##### 1.1.1 (2020-01-04)
 * *0abc29e8* removed exception throws on empty uow on flush
