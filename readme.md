@@ -27,10 +27,12 @@ It will execute Code Sniffer and PhpStan validation rules.
 Name | Type | Default | Description
 --- | --- | --- | --- 
 foreign_key_check | boolean | true | Allows to globally disable foreign check (not recommended) 
+transaction | boolean | true | Allows to globally disable transaction wrapp (not recommended) 
+debug | boolean | true | When enabled, all queries and debug info are stored |
 
 ### Change Log
 
-##### 1.3.0 (2021-07-10)
+##### 1.3.1 (2021-07-10)
 * Config option to disable transaction
 * Config option to disable foreign check & debug moved to decorator
 
