@@ -22,16 +22,25 @@ final class ConfigurableDbDecorator implements DBConnectionInterface
 
     public function startTransaction(): void
     {
+        if (!$this->isTransactionEnabled()) {
+            return;
+        }
         $this->db->startTransaction();
     }
 
     public function rollbackTransaction(): void
     {
+        if (!$this->isTransactionEnabled()) {
+            return;
+        }
         $this->db->rollbackTransaction();
     }
 
     public function commitTransaction(): void
     {
+        if (!$this->isTransactionEnabled()) {
+            return;
+        }
         $this->db->commitTransaction();
     }
 
@@ -68,5 +77,10 @@ final class ConfigurableDbDecorator implements DBConnectionInterface
     public function debug(): array
     {
         return $this->db->debug();
+    }
+
+    private function isTransactionEnabled(): bool
+    {
+        return $this->config['transaction'] ?? true;
     }
 }

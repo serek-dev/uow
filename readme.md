@@ -30,6 +30,9 @@ foreign_key_check | boolean | true | Allows to globally disable foreign check (n
 
 ### Change Log
 
+##### 1.3.0 (2021-07-10)
+* Config option to disable transaction
+
 ##### 1.2.0 (2021-06-09)
 * Dockerized tests for php v7.1
 * Make file for easier development
