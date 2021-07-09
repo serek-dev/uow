@@ -98,9 +98,7 @@ class EntityManager implements EntityManagerInterface
 
         $this->db->startTransaction();
         try {
-            $this->handleForeignKey(false);
             $this->db->handleChanges($this->uow);
-            $this->handleForeignKey(true);
         } catch (Exception $e) {
             $this->db->rollbackTransaction();
             throw $e;
@@ -108,23 +106,6 @@ class EntityManager implements EntityManagerInterface
             $this->uow->reset();
         }
         $this->db->commitTransaction();
-    }
-
-    private function handleForeignKey(bool $check): void
-    {
-        if (true === $this->foreignKeysCheck()) {
-            return;
-        }
-        $this->db->query(sprintf('SET FOREIGN_KEY_CHECKS=%d;', $check));
-    }
-
-    private function foreignKeysCheck(): bool
-    {
-        if (false === isset($this->config['foreign_key_check'])) {
-            return true;
-        }
-
-        return $this->config['foreign_key_check'];
     }
 
     /**

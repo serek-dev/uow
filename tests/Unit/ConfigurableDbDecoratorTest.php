@@ -7,6 +7,7 @@ use Generator;
 use PHPUnit\Framework\MockObject\MockObject;
 use Stwarog\Uow\ConfigurableDbDecorator;
 use Stwarog\Uow\DBConnectionInterface;
+use Stwarog\Uow\UnitOfWork\UnitOfWork;
 
 class ConfigurableDbDecoratorTest extends BaseTest
 {
@@ -65,5 +66,36 @@ class ConfigurableDbDecoratorTest extends BaseTest
             false,
             ['transaction' => false]
         ];
+    }
+
+    /**
+     * @dataProvider provideForeignKeysConfig
+     * @test
+     */
+    public function handleForeignKeys__withConfig(bool $expected, array $config = []): void
+    {
+        // Given
+        /** @var DBConnectionInterface&MockObject $db */
+        $db = $this->createMock(DBConnectionInterface::class);
+
+        $db->expects($this->exactly($expected ? 2 : 0))
+            ->method('query')
+            ->withConsecutive(
+                ['SET FOREIGN_KEY_CHECKS=0;'],
+                ['SET FOREIGN_KEY_CHECKS=1;']
+            );
+
+        // And decorator with config
+        $decorator = new ConfigurableDbDecorator($db, $config);
+
+        // When
+        $decorator->handleChanges(new UnitOfWork());
+    }
+
+    public function provideForeignKeysConfig(): Generator
+    {
+        yield 'no config, handles with foreign keys check' => [false, []];
+        yield 'config with true value, handles with foreign keys check' => [false, ['foreign_key_check' => true]];
+        yield 'config with false value, handles without foreign keys check' => [true, ['foreign_key_check' => false]];
     }
 }

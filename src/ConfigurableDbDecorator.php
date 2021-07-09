@@ -66,7 +66,14 @@ final class ConfigurableDbDecorator implements DBConnectionInterface
 
     public function handleChanges(UnitOfWork $bag): void
     {
+        if ($this->handleForeignKeys()) {
+            $this->db->handleChanges($bag);
+            return;
+        }
+
+        $this->db->query('SET FOREIGN_KEY_CHECKS=0;');
         $this->db->handleChanges($bag);
+        $this->db->query('SET FOREIGN_KEY_CHECKS=1;');
     }
 
     public function nextAutoIncrementNo(string $table, string $idKey = 'id'): string
@@ -82,5 +89,10 @@ final class ConfigurableDbDecorator implements DBConnectionInterface
     private function isTransactionEnabled(): bool
     {
         return $this->config['transaction'] ?? true;
+    }
+
+    private function handleForeignKeys(): bool
+    {
+        return $this->config['foreign_key_check'] ?? true;
     }
 }
