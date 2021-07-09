@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Stwarog\Uow;
 
+use Exception;
+use Stwarog\Uow\Exceptions\RuntimeUOWException;
 use Stwarog\Uow\UnitOfWork\UnitOfWork;
 
 final class ConfigurableDbDecorator implements DBConnectionInterface
@@ -83,7 +85,14 @@ final class ConfigurableDbDecorator implements DBConnectionInterface
 
     public function debug(): array
     {
-        return $this->db->debug();
+        if (!$this->isDebugEnabled()) {
+            throw new RuntimeUOWException('No debug config option enabled.');
+        }
+
+        return array_merge(
+            $this->db->debug(),
+            ['config' => $this->config]
+        );
     }
 
     private function isTransactionEnabled(): bool
@@ -94,5 +103,10 @@ final class ConfigurableDbDecorator implements DBConnectionInterface
     private function handleForeignKeys(): bool
     {
         return $this->config['foreign_key_check'] ?? true;
+    }
+
+    private function isDebugEnabled(): bool
+    {
+        return $this->config['debug'] ?? true;
     }
 }

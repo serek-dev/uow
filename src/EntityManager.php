@@ -14,8 +14,6 @@ class EntityManager implements EntityManagerInterface
     private $db;
     /** @var UnitOfWork */
     private $uow;
-    /** @var array<string, mixed> */
-    private $config = [];
 
     /**
      * EntityManager constructor.
@@ -27,7 +25,6 @@ class EntityManager implements EntityManagerInterface
     {
         $this->db = new ConfigurableDbDecorator($db, $config);
         $this->uow = $uow;
-        $this->config = $config;
     }
 
     public function persist(EntityInterface $entity): void
@@ -78,7 +75,7 @@ class EntityManager implements EntityManagerInterface
     private function handlePostPersistClosures(EntityInterface $entity): void
     {
         foreach ($entity->getPostPersistClosures() as $closure) {
-            call_user_func($closure, $entity);
+            $closure($entity);
         }
     }
 
@@ -113,13 +110,6 @@ class EntityManager implements EntityManagerInterface
      */
     public function debug(): array
     {
-        if (isset($this->config['debug']) && $this->config['debug'] === false) {
-            throw new RuntimeUOWException('No debug config option enabled.');
-        }
-
-        return array_merge(
-            $this->db->debug(),
-            ['config' => $this->config]
-        );
+        return $this->db->debug();
     }
 }
