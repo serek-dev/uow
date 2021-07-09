@@ -5,6 +5,7 @@ namespace Unit;
 use BaseTest;
 use Exception;
 use PHPUnit\Framework\MockObject\MockObject;
+use Stwarog\Uow\ConfigurableDbDecorator;
 use Stwarog\Uow\DBConnectionInterface;
 use Stwarog\Uow\EntityInterface;
 use Stwarog\Uow\EntityManager;
@@ -75,7 +76,9 @@ class EntityManagerTest extends BaseTest
         $entity
             ->expects($this->once())
             ->method('generateIdValue')
-            ->with($this->db);
+            ->willReturnCallback(function($db) {
+                $this->assertInstanceOf(ConfigurableDbDecorator::class, $db);
+            });
         $this->uow
             ->expects($this->once())
             ->method('insert')

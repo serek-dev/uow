@@ -25,7 +25,7 @@ class EntityManager implements EntityManagerInterface
      */
     public function __construct(DBConnectionInterface $db, UnitOfWork $uow, array $config = [])
     {
-        $this->db = $db;
+        $this->db = new ConfigurableDbDecorator($db, $config);
         $this->uow = $uow;
         $this->config = $config;
     }
