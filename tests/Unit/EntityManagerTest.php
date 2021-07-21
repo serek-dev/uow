@@ -14,6 +14,7 @@ use Stwarog\Uow\Exceptions\RuntimeUOWException;
 use Stwarog\Uow\RelationBag;
 use Stwarog\Uow\Relations\RelationInterface;
 use Stwarog\Uow\UnitOfWork\UnitOfWork;
+use Stwarog\Uow\UnitOfWork\VirtualEntity;
 
 class EntityManagerTest extends BaseTest
 {
@@ -87,6 +88,21 @@ class EntityManagerTest extends BaseTest
         // When
         $s = $this->service();
         $s->persist($entity);
+    }
+
+    /** @test */
+    public function persist__new_without_id__marks_model_as_dirty(): void
+    {
+        // Given Entity and UOW
+        $entity = new VirtualEntity('table', ['columns'], ['values']);
+        $uow = new UnitOfWork();
+        $service = new EntityManager($this->db, $uow);
+
+        // When persisted an entity
+        $service->persist($entity);
+
+        // Then it's isNew property should be = false
+        $this->assertFalse($entity->isNew());
     }
 
     /** @test */

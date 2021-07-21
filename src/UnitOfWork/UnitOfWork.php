@@ -25,6 +25,7 @@ class UnitOfWork
     {
         (new WasNotDeletedSpecification($this))->isSatisfiedBy($entity);
         $this->insert[$entity->objectHash()] = $entity;
+        $entity->noLongerNew();
     }
 
     public function update(PersistAble $entity): void

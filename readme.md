@@ -32,6 +32,9 @@ debug | boolean | true | When enabled, all queries and debug info are stored |
 
 ### Change Log
 
+##### 1.4.0 (2021-07-21)
+* Added no longer new method to PersistAble interface (called in UOW when persisted first time)
+
 ##### 1.3.1 (2021-07-10)
 * Config option to disable transaction
 * Config option to disable foreign check & debug moved to decorator

@@ -31,4 +31,9 @@ interface PersistAble
     public function originalClass();
 
     public function objectHash(): string;
+
+    /**
+     * Disables original object "isNew" attribute to be falsy.
+     */
+    public function noLongerNew(): void;
 }

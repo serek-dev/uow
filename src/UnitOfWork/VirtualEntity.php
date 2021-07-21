@@ -25,6 +25,8 @@ final class VirtualEntity implements EntityInterface
     private $objectHash;
     /** @var array<Closure> */
     private $closures = [];
+    /** @var bool */
+    private $isNew = true;
 
     /**
      * VirtualEntity constructor.
@@ -139,7 +141,7 @@ final class VirtualEntity implements EntityInterface
 
     public function isNew(): bool
     {
-        return true;
+        return $this->isNew;
     }
 
     public function objectHash(): string
@@ -158,5 +160,10 @@ final class VirtualEntity implements EntityInterface
     public function getPostPersistClosures(): array
     {
         return $this->closures;
+    }
+
+    public function noLongerNew(): void
+    {
+        $this->isNew = false;
     }
 }
