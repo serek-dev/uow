@@ -10,3 +10,4 @@ parameters:
         - tests
     excludePaths:
         - tests/Stubs/PersistAbleStub.php
+        - src/ConfigurableDbDecorator.php
