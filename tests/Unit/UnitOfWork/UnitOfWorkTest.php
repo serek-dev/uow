@@ -3,6 +3,7 @@
 namespace Unit\UnitOfWork;
 
 use BaseTest;
+use Generator;
 use ReflectionClass;
 use Stubs\PersistAbleStub;
 use Stwarog\Uow\Exceptions\UnitOfWorkException;
@@ -255,27 +256,50 @@ class UnitOfWorkTest extends BaseTest
     # isEmpty
 
     /**
-     * 0
      * @test
+     * @dataProvider provideIsEmptyReturnsExpectedValue
      */
-    public function isEmpty__nothing_was_persisted__true(): void
+    public function isEmpty__returns_expected_value(UnitOfWork $uow, bool $expected): void
     {
-        // When
-        $uow = new UnitOfWork();
-
-        // Then
-        $this->assertTrue($uow->isEmpty());
+        $this->assertSame($uow->isEmpty(), $expected);
     }
 
-    /** @test */
-    public function isEmpty__was_persisted__false(): void
+    /**
+     * @return Generator<string, array>
+     */
+    public function provideIsEmptyReturnsExpectedValue(): Generator
     {
-        // When
-        $uow = new UnitOfWork();
-        $uow->insert(PersistAbleStub::create($this)->stub);
+        $entity = PersistAbleStub::create($this)->keys()->stub;
+        $uow1 = new UnitOfWork();
 
-        // Then
-        $this->assertFalse($uow->isEmpty());
+        yield 'uow has no insert, update, delete should return true' => [
+            'uow' => $uow1,
+            'expected' => true
+        ];
+
+        $uow2 = new UnitOfWork();
+        $uow2->insert($entity);
+
+        yield 'uow has insert and no: update, delete should return false' => [
+            'uow' => $uow2,
+            'expected' => false
+        ];
+
+        $uow3 = new UnitOfWork();
+        $uow3->update($entity);
+
+        yield 'uow has update and no: insert, delete should return false' => [
+            'uow' => $uow3,
+            'expected' => false
+        ];
+
+        $uow4 = new UnitOfWork();
+        $uow4->delete($entity);
+
+        yield 'uow has delete and no: insert, update should return false' => [
+            'uow' => $uow4,
+            'expected' => false
+        ];
     }
 
     # reset

@@ -149,7 +149,7 @@ class UnitOfWork
 
     public function isEmpty(): bool
     {
-        return empty($this->insert) && empty($this->update && empty($this->delete));
+        return empty($this->insert) && empty($this->update) && empty($this->delete);
     }
 
     public function reset(): void

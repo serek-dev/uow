@@ -32,6 +32,9 @@ debug | boolean | true | When enabled, all queries and debug info are stored |
 
 ### Change Log
 
+##### 1.4.1 (2021-01-13)
+* BUGFIX isEmpty in UOW was returning invalid value when only delete added
+
 ##### 1.4.0 (2021-07-21)
 * Added no longer new method to PersistAble interface (called in UOW when persisted first time)
 
