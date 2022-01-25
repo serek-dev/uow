@@ -16,7 +16,8 @@ use Stwarog\Uow\Relations\RelationInterface;
 use Stwarog\Uow\UnitOfWork\UnitOfWork;
 use Stwarog\Uow\UnitOfWork\VirtualEntity;
 
-class EntityManagerTest extends BaseTest
+/** @covers \Stwarog\Uow\EntityManager */
+final class EntityManagerTest extends BaseTest
 {
     /** @var MockObject|DBConnectionInterface */
     private $db;

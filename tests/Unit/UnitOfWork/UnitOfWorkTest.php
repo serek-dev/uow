@@ -12,7 +12,8 @@ use Stwarog\Uow\UnitOfWork\PersistAble;
 use Stwarog\Uow\UnitOfWork\UnitOfWork;
 use Stwarog\Uow\UnitOfWork\VirtualEntity;
 
-class UnitOfWorkTest extends BaseTest
+/** @covers \Stwarog\Uow\UnitOfWork\UnitOfWork */
+final class UnitOfWorkTest extends BaseTest
 {
     # insert
 

@@ -8,7 +8,8 @@ use Stwarog\Uow\EntityInterface;
 use Stwarog\Uow\EntityManagerInterface;
 use Stwarog\Uow\Relations\BelongsTo;
 
-class BelongsToTest extends BaseTest
+/** @covers \Stwarog\Uow\Relations\BelongsTo */
+final class BelongsToTest extends BaseTest
 {
     /** @test */
     public function isEmpty__entity__skip(): void

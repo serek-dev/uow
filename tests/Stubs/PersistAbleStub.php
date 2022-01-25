@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\Uuid;
 use Stwarog\Uow\UnitOfWork\PersistAble;
 
-class PersistAbleStub
+final class PersistAbleStub
 {
     /** @var MockObject|PersistAble */
     public $stub;

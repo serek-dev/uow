@@ -10,7 +10,8 @@ use Stwarog\Uow\Relations\HasMany;
 use Stwarog\Uow\Relations\ManyToMany;
 use Stwarog\Uow\UnitOfWork\VirtualEntity;
 
-class HasManyTest extends BaseTest
+/** @covers \Stwarog\Uow\Relations\HasMany */
+final class HasManyTest extends BaseTest
 {
     /** @test */
     public function handleRelations_no_related_entities_skips(): void

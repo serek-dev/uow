@@ -9,7 +9,8 @@ use Stwarog\Uow\EntityInterface;
 use Stwarog\Uow\Exceptions\MissingIdKeyUOWException;
 use Stwarog\Uow\IdGenerators\AutoIncrementIdStrategy;
 
-class AutoIncrementIdStrategyTest extends BaseTest
+/** @covers \Stwarog\Uow\IdGenerators\AutoIncrementIdStrategy */
+final class AutoIncrementIdStrategyTest extends BaseTest
 {
     /** @test */
     public function handle__no_idKey__throws_exception(): void
@@ -21,6 +22,7 @@ class AutoIncrementIdStrategyTest extends BaseTest
         // Given
         /** @var EntityInterface|MockObject $entity */
         $entity = $this->createMock(EntityInterface::class);
+        $entity->method('originalClass')->willReturnSelf();
         $entity->expects($this->never())->method('setId');
         $entity->expects($this->once())->method('idKey')->willReturn('');
 
@@ -44,6 +46,7 @@ class AutoIncrementIdStrategyTest extends BaseTest
 
         /** @var EntityInterface|MockObject $entity */
         $entity = $this->createMock(EntityInterface::class);
+        $entity->method('originalClass')->willReturnSelf();
         $entity->expects($this->exactly(2))->method('idKey')->willReturn($idKey);
         $entity->expects($this->once())->method('setId')->with($newId);
         $entity->expects($this->once())->method('table')->willReturn($table);

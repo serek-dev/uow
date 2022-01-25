@@ -11,7 +11,8 @@ use Stwarog\Uow\DBConnectionInterface;
 use Stwarog\Uow\Exceptions\RuntimeUOWException;
 use Stwarog\Uow\UnitOfWork\UnitOfWork;
 
-class ConfigurableDbDecoratorTest extends BaseTest
+/** @covers \Stwarog\Uow\ConfigurableDbDecorator */
+final class ConfigurableDbDecoratorTest extends BaseTest
 {
     /**
      * @dataProvider provideTransactionMethods

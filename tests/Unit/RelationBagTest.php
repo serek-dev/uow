@@ -8,7 +8,8 @@ use Stwarog\Uow\Exceptions\OutOfRangeUOWException;
 use Stwarog\Uow\RelationBag;
 use Stwarog\Uow\Relations\RelationInterface;
 
-class RelationBagTest extends BaseTest
+/** @covers \Stwarog\Uow\RelationBag */
+final class RelationBagTest extends BaseTest
 {
     # isDirty
 

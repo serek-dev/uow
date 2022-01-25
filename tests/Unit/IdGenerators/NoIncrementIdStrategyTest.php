@@ -8,7 +8,8 @@ use Stwarog\Uow\DBConnectionInterface;
 use Stwarog\Uow\EntityInterface;
 use Stwarog\Uow\IdGenerators\NoIncrementIdStrategy;
 
-class NoIncrementIdStrategyTest extends BaseTest
+/** @covers \Stwarog\Uow\IdGenerators\NoIncrementIdStrategy */
+final class NoIncrementIdStrategyTest extends BaseTest
 {
     /** @test */
     public function handle(): void
