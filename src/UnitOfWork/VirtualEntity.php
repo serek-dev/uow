@@ -101,7 +101,7 @@ final class VirtualEntity implements EntityInterface
     {
         $results = $this->toArray();
 
-        return $results[$field];
+        return $results[$field] ?? null;
     }
 
     /**
