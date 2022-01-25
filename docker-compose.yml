@@ -2,7 +2,7 @@ version: '3'
 services:
   composer:
     container_name: stwarog-uow
-    image: composer:1.1 # for 7.1 php version
+    image: composer:2.0
     environment:
       - COMPOSER_CACHE_DIR=/app/.cache/composer
     volumes:
