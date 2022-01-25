@@ -21,6 +21,3 @@ build:
 stop:
 	docker-compose down -v --remove-orphans
 	docker network prune -f
-
-install:
-	docker-compose run --rm composer require phpstan/phpstan-phpunit --dev --ignore-platform-reqs
