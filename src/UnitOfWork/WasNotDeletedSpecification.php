@@ -8,10 +8,7 @@ use Stwarog\Uow\Exceptions\UnitOfWorkException;
 
 final class WasNotDeletedSpecification implements UnitOfWorkSpecificationInterface
 {
-    /**
-     * @var UnitOfWork
-     */
-    private $unitOfWork;
+    private UnitOfWork $unitOfWork;
 
     public function __construct(UnitOfWork $unitOfWork)
     {

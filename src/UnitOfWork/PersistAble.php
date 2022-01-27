@@ -25,10 +25,7 @@ interface PersistAble
 
     public function idKey(): ?string;
 
-    /**
-     * @return object
-     */
-    public function originalClass();
+    public function originalClass(): object;
 
     public function objectHash(): string;
 

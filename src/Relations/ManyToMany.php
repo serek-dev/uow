@@ -14,18 +14,13 @@ final class ManyToMany implements RelationInterface, Iterator
 {
     use IterableTrait;
 
-    /** @var string */
-    private $keyFrom;
-    /** @var string */
-    private $keyThroughFrom;
-    /** @var string */
-    private $tableThrough;
-    /** @var string */
-    private $keyThroughTo;
-    /** @var string */
-    private $keyTo;
+    private string $keyFrom;
+    private string $keyThroughFrom;
+    private string $tableThrough;
+    private string $keyThroughTo;
+    private string $keyTo;
     /** @var EntityInterface[] */
-    private $data = [];
+    private array $data = [];
 
     public function __construct(
         string $keyFrom,

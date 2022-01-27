@@ -10,11 +10,10 @@ use Stwarog\Uow\UnitOfWork\UnitOfWork;
 
 final class ConfigurableDbDecorator implements DBConnectionInterface
 {
-    /** @var DBConnectionInterface */
-    private $db;
+    private DBConnectionInterface $db;
 
     /** @var array<string, mixed> */
-    private $config;
+    private array $config;
 
     public function __construct(DBConnectionInterface $db, array $config = [])
     {

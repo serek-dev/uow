@@ -9,7 +9,7 @@ use Stwarog\Uow\Exceptions\UnitOfWorkException;
 interface UnitOfWorkSpecificationInterface
 {
     /**
-     * Should throws exception on failure and return true on success.
+     * Should throw exception on failure and return true on success.
      *
      * @param PersistAble $entity
      *

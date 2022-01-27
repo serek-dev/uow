@@ -17,22 +17,11 @@ interface EntityInterface extends TouchAble, HasIdStrategy, PersistAble, HasPost
      */
     public function generateIdValue(DBConnectionInterface $db): void;
 
-    /**
-     * @return RelationBag<RelationInterface>
-     */
     public function relations(): RelationBag;
 
     public function setId(string $id): void;
 
-    /**
-     * @param string $field
-     * @return mixed
-     */
-    public function get(string $field);
+    public function get(string $field): mixed;
 
-    /**
-     * @param string $field
-     * @param mixed $value
-     */
-    public function set(string $field, $value): void;
+    public function set(string $field, mixed $value): void;
 }

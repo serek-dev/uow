@@ -8,18 +8,17 @@ class UnitOfWork
 {
     /**
      * Unified and compiled (expected) set of values for DbConnection
-     * @var mixed
      */
-    private $data = [];
+    private mixed $data = [];
 
     # all of these 3 below, has to be unique (index = unique id)
 
     /** @var array<PersistAble> */
-    private $insert = [];
+    private array $insert = [];
     /** @var array<PersistAble> */
-    private $update = [];
+    private array $update = [];
     /** @var array<PersistAble> */
-    private $delete = [];
+    private array $delete = [];
 
     public function insert(PersistAble $entity): void
     {

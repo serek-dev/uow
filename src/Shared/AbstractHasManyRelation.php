@@ -14,14 +14,11 @@ class AbstractHasManyRelation implements RelationInterface, HasRelationFromToSch
 {
     use IterableTrait;
 
-    /** @var string */
-    protected $keyFrom;
-    /** @var string */
-    protected $tableTo;
-    /** @var string */
-    protected $keyTo;
+    protected string $keyFrom;
+    protected string $tableTo;
+    protected string $keyTo;
     /** @var array<int, EntityInterface> */
-    protected $data = [];
+    protected array $data = [];
 
     public function __construct(string $keyFrom, string $tableTo, string $keyTo)
     {

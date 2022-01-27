@@ -11,3 +11,4 @@ parameters:
     excludePaths:
         - tests/Stubs/PersistAbleStub.php
         - src/ConfigurableDbDecorator.php
+        - src/EntityManager.php # todo fix me

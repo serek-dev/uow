@@ -10,10 +10,8 @@ use Stwarog\Uow\UnitOfWork\UnitOfWork;
 
 class EntityManager implements EntityManagerInterface
 {
-    /** @var DBConnectionInterface */
-    private $db;
-    /** @var UnitOfWork */
-    private $uow;
+    private DBConnectionInterface $db;
+    private UnitOfWork $uow;
 
     /**
      * EntityManager constructor.

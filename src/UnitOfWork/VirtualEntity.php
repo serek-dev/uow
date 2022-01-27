@@ -16,17 +16,14 @@ use Stwarog\Uow\Relations\RelationInterface;
 final class VirtualEntity implements EntityInterface
 {
     /** @var array<int, int|string> */
-    private $columns;
+    private array $columns;
     /** @var array<int, mixed> */
-    private $values;
-    /** @var string */
-    private $table;
-    /** @var string */
-    private $objectHash;
+    private array $values;
+    private string $table;
+    private string $objectHash;
     /** @var array<Closure> */
-    private $closures = [];
-    /** @var bool */
-    private $isNew = true;
+    private array $closures = [];
+    private bool $isNew = true;
 
     /**
      * VirtualEntity constructor.
@@ -69,10 +66,7 @@ final class VirtualEntity implements EntityInterface
         return null;
     }
 
-    /**
-     * @return $this|object
-     */
-    public function originalClass()
+    public function originalClass(): object
     {
         return $this;
     }
@@ -81,9 +75,6 @@ final class VirtualEntity implements EntityInterface
     {
     }
 
-    /**
-     * @return RelationBag
-     */
     public function relations(): RelationBag
     {
         return new RelationBag();
@@ -93,11 +84,7 @@ final class VirtualEntity implements EntityInterface
     {
     }
 
-    /**
-     * @param string $field
-     * @return mixed
-     */
-    public function get(string $field)
+    public function get(string $field): mixed
     {
         $results = $this->toArray();
 
@@ -112,11 +99,7 @@ final class VirtualEntity implements EntityInterface
         return (array)array_combine($this->columns, $this->values);
     }
 
-    /**
-     * @param string $field
-     * @param mixed $value
-     */
-    public function set(string $field, $value): void
+    public function set(string $field, mixed $value): void
     {
         $results = $this->toArray();
         $results[$field] = $value;

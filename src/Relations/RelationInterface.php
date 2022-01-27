@@ -10,7 +10,7 @@ use Stwarog\Uow\TouchAble;
 interface RelationInterface extends InteractWithEntityManager, TouchAble
 {
     /**
-     * @return array<EntityInterface|RelationInterface>
+     * @return array
      */
     public function toArray(): array;
 

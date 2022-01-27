@@ -12,12 +12,9 @@ use const PHP_EOL;
 
 abstract class AbstractDBAdapter implements DBConnectionInterface
 {
-    /** @var string $sql */
-    protected $sql = '';
-    /** @var float $startTimestamp */
-    protected $startTimestamp;
-    /** @var float $stopTimestamp */
-    protected $stopTimestamp;
+    protected string $sql = '';
+    protected float $startTimestamp;
+    protected float $stopTimestamp;
 
     /**
      * @return array<string, mixed>

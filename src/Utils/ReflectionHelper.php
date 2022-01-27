@@ -9,13 +9,7 @@ use ReflectionException;
 
 final class ReflectionHelper
 {
-    /**
-     * @param object $object
-     * @param string $property
-     *
-     * @return mixed
-     */
-    public static function getValue($object, string $property)
+    public static function getValue(object $object, string $property): mixed
     {
         $reflection = new ReflectionClass($object);
         if ($reflection->hasProperty($property) === false) {

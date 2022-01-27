@@ -8,12 +8,12 @@ use Iterator;
 use Stwarog\Uow\Exceptions\OutOfRangeUOWException;
 use Stwarog\Uow\Relations\RelationInterface;
 
+/** @template T */
 class RelationBag implements Iterator
 {
     /** @var array<string, RelationInterface> */
-    private $data = [];
-    /** @var bool */
-    private $isDirty = false;
+    private array $data = [];
+    private bool $isDirty = false;
 
     public function add(string $field, RelationInterface $relation): void
     {
@@ -55,26 +55,17 @@ class RelationBag implements Iterator
         return $this->isDirty;
     }
 
-    /**
-     * @return RelationInterface|bool
-     */
-    public function current()
+    public function current(): RelationInterface|bool
     {
         return current($this->data);
     }
 
-    /**
-     * @return RelationInterface|bool
-     */
-    public function next()
+    public function next(): RelationInterface|bool
     {
         return next($this->data);
     }
 
-    /**
-     * @return int|string|null
-     */
-    public function key()
+    public function key(): int|string|null
     {
         return key($this->data);
     }

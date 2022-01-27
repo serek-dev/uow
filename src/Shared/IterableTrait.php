@@ -9,8 +9,7 @@ namespace Stwarog\Uow\Shared;
  */
 trait IterableTrait
 {
-    /** @var int $position */
-    private $position = 0;
+    private int $position = 0;
 
     public function rewind(): void
     {
