@@ -32,6 +32,9 @@ debug | boolean | true | When enabled, all queries and debug info are stored |
 
 ### Change Log
 
+##### 2.0.0 (2021-01-27)
+* Upgrade to PHP 8.0
+
 ##### 1.4.1 (2021-01-13)
 * BUGFIX isEmpty in UOW was returning invalid value when only delete added
 
